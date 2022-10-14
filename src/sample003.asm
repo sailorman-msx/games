@@ -93,8 +93,6 @@ Main:
     ; VRAMのパターンネームテーブルに埋める
     ; (横32文字 x 縦24行＝768バイト)
     ;--------------------------------------------
-    di
-
     ld hl, $1800
     ld  a, '0'
     call PutVRAM256Bytes
@@ -106,8 +104,6 @@ Main:
     ld hl, $1A00
     ld  a, '0'
     call PutVRAM256Bytes
-
-    ei
 
 MainEnd:
     jr MainEnd
