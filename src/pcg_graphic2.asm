@@ -100,7 +100,7 @@ CreateCharacterPatternLoop:
     ld hl, de
 
     ;
-    ; 画面上段のパターンジェネレータテーブルに書き込む
+    ; 画面上段のカラーテーブルに書き込む
     ;
     ld hl, $2000     ; HLレジスタに2000Hを加算する
     add hl, de
@@ -111,7 +111,7 @@ CreateCharacterPatternLoop:
     call LDIRVM
 
     ;
-    ; 画面中段のパターンジェネレータテーブルに書き込む
+    ; 画面中段のカラーテーブルに書き込む
     ;
     call GetCharacterVRAMAddress
 
@@ -125,7 +125,7 @@ CreateCharacterPatternLoop:
     call LDIRVM
 
     ;
-    ; 画面下段のパターンジェネレータテーブルに書き込む
+    ; 画面下段のカラーテーブルに書き込む
     ;
     call GetCharacterVRAMAddress
 
