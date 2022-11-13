@@ -151,16 +151,17 @@ CreateViewPort:
 
 CreateViewPortLoop1:
 
-    ld a, 45
-    add hl, a ; HLレジスタに45を足すと次のY座標になる
+    add hl, 45 ; HLレジスタに45を足すと次のY座標になる
 
     djnz CreateViewPortLoop1
 
 CreateViewPortLoop1End:
 
     ; 論理座標をもとにしてマップデータのX座標を求める
-    ld a, (WK_VIEWPORTPOSX)
-    add hl, a ; HLレジスタにY座標を加算する
+    ld  a, (WK_VIEWPORTPOSX)
+    ld  d, 0
+    ld  e, a
+    add hl, de ; HLレジスタにX座標を加算する
 
     ;--------------------------------------------------------------
     ; 上記処理にてマップデータの座標（ビューポートの左上のデータ）
