@@ -261,7 +261,7 @@ MoveEnemiesLoop1:
     ld a, (ix + 1)      ; EMEMYPOSX
     
     sub b               ; A = ENEMYPOSY - WK_VIEWPOERPOSY
-    cp 13
+    cp 31
 
     jp nc, MoveEnemiesLoop1End ; A >= 0 であれば12以上距離が離れてることになる
 
@@ -278,7 +278,7 @@ MoveEnemiesLoop1:
     ld a, (ix + 2)      ; EMEMYPOSY
     
     sub b               ; A = ENEMYPOSY - WK_VIEWPOERPOSY
-    cp 13              ;
+    cp 31              ;
     jp nc, MoveEnemiesLoop1End ; A >= 0 であれば12以上距離が離れてることになる
 
     ;-----------------
@@ -294,7 +294,7 @@ MoveEnemiesLoop1:
                                        ; テキキャラの移動情報を再構築する
 
     ld a, (ix + 5)              ; 進行カウンタの取得
-    cp 30 ; 進行カウンタが30未満の場合は進行カウンタをインクリメントするだけで次のデータ操作に進む
+    cp 15 ; 進行カウンタが15未満の場合は進行カウンタをインクリメントするだけで次のデータ操作に進む
     jr c, MoveEnemiesTileHalfMove
 
 MoveEnemiesMoveTile:
@@ -406,11 +406,11 @@ MoveEnemiesRestructEnemyInfo:
 
 MoveEnemiesTileHalfMove:
 
+MoveEnemiesNextData:
+
     ; 進行カウンタをインクリメントする
     inc a
     ld (ix + 5), a
-
-MoveEnemiesNextData:
 
     ; 次のテキ情報の先頭アドレスをIXレジスタにセットする
     ld de, 11
@@ -467,22 +467,22 @@ MoveEnemyTileMoveLoopEnd:
     jr z, MoveEnemyTileMoveEnd
     cp 2
     jr z, MoveEnemyTileMoveEnd
-    cp 11
-    jr z, MoveEnemyTileMoveEnd
-    cp 12
-    jr z, MoveEnemyTileMoveEnd
-    cp 13
-    jr z, MoveEnemyTileMoveEnd
-    cp 14
-    jr z, MoveEnemyTileMoveEnd
-    cp 15
-    jr z, MoveEnemyTileMoveEnd
-    cp 16
-    jr z, MoveEnemyTileMoveEnd
-    cp 17
-    jr z, MoveEnemyTileMoveEnd
-    cp 18
-    jr z, MoveEnemyTileMoveEnd
+    ;cp 11
+    ;jr z, MoveEnemyTileMoveEnd
+    ;cp 12
+    ;jr z, MoveEnemyTileMoveEnd
+    ;cp 13
+    ;jr z, MoveEnemyTileMoveEnd
+    ;cp 14
+    ;jr z, MoveEnemyTileMoveEnd
+    ;cp 15
+    ;jr z, MoveEnemyTileMoveEnd
+    ;cp 16
+    ;jr z, MoveEnemyTileMoveEnd
+    ;cp 17
+    ;jr z, MoveEnemyTileMoveEnd
+    ;cp 18
+    ;jr z, MoveEnemyTileMoveEnd
 
     ld a, (ix + 0)
 
