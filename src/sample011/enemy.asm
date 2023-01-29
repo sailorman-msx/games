@@ -261,7 +261,7 @@ MoveEnemiesLoop1:
     ld a, (ix + 1)      ; EMEMYPOSX
     
     sub b               ; A = ENEMYPOSY - WK_VIEWPOERPOSY
-    cp 31
+    cp 12
 
     jp nc, MoveEnemiesLoop1End ; A >= 0 であれば12以上距離が離れてることになる
 
@@ -278,14 +278,14 @@ MoveEnemiesLoop1:
     ld a, (ix + 2)      ; EMEMYPOSY
     
     sub b               ; A = ENEMYPOSY - WK_VIEWPOERPOSY
-    cp 31              ;
+    cp 12              ;
     jp nc, MoveEnemiesLoop1End ; A >= 0 であれば12以上距離が離れてることになる
 
     ;-----------------
     ; テキを進行方向に進める
     ; 進行距離が0であれば移動方向と移動距離を設定しなおす
     ; 進行距離が0でなければ進行カウンタをインクリメントする
-    ; 進行カウンタが30の場合は、インクリメントせず移動方向と移動距離を設定しなおす
+    ; 進行カウンタが15の場合は、インクリメントせず移動方向と移動距離を設定しなおす
     ;-----------------
     ld a, (ix + 4)              ; 進行距離の取得
 
@@ -467,22 +467,22 @@ MoveEnemyTileMoveLoopEnd:
     jr z, MoveEnemyTileMoveEnd
     cp 2
     jr z, MoveEnemyTileMoveEnd
-    ;cp 11
-    ;jr z, MoveEnemyTileMoveEnd
-    ;cp 12
-    ;jr z, MoveEnemyTileMoveEnd
-    ;cp 13
-    ;jr z, MoveEnemyTileMoveEnd
-    ;cp 14
-    ;jr z, MoveEnemyTileMoveEnd
-    ;cp 15
-    ;jr z, MoveEnemyTileMoveEnd
-    ;cp 16
-    ;jr z, MoveEnemyTileMoveEnd
-    ;cp 17
-    ;jr z, MoveEnemyTileMoveEnd
-    ;cp 18
-    ;jr z, MoveEnemyTileMoveEnd
+    cp 11
+    jr z, MoveEnemyTileMoveEnd
+    cp 12
+    jr z, MoveEnemyTileMoveEnd
+    cp 13
+    jr z, MoveEnemyTileMoveEnd
+    cp 14
+    jr z, MoveEnemyTileMoveEnd
+    cp 15
+    jr z, MoveEnemyTileMoveEnd
+    cp 16
+    jr z, MoveEnemyTileMoveEnd
+    cp 17
+    jr z, MoveEnemyTileMoveEnd
+    cp 18
+    jr z, MoveEnemyTileMoveEnd
 
     ld a, (ix + 0)
 
