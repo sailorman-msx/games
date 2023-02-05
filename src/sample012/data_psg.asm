@@ -150,6 +150,7 @@ BGM00_TRK_2:
     defb 12       ; 
     defb 210      ; Volume = 10
     defb 24       ; Tone Index=24 -> O3 C
+    defb 12       ; 
     defb 210      ; Volume = 10
     defb 29       ; Tone Index=29 -> O3 F
     defb 12       ; 
