@@ -4,18 +4,6 @@
 include "initialize.asm"
 
 ;--------------------------------------------
-; サウンドドライバのEXTERN宣言
-;--------------------------------------------
-EXTERN SOUNDDRV_INIT
-EXTERN SOUNDDRV_EXEC
-EXTERN SOUNDDRV_BGMPLAY
-EXTERN SOUNDDRV_SFXPLAY
-EXTERN SOUNDDRV_STOP
-EXTERN SOUNDDRV_PAUSE
-EXTERN SOUNDDRV_RESUME
-EXTERN SOUNDDRV_STATE
-
-;--------------------------------------------
 ; 乱数のSEED値の初期化
 ;--------------------------------------------
     call InitRandom
@@ -122,8 +110,8 @@ EnemyPtrTblInitLoop:
 ;--------------------------------------------
     call SOUNDDRV_INIT
 
-    ; ld hl, BGM_00
-    ; call SOUNDDRV_BGMPLAY
+    ld hl, BGM_00
+    call SOUNDDRV_BGMPLAY
 
 MainLoop:
     ; ■VSYNC_WAIT_FLGの初期化
@@ -198,6 +186,7 @@ GameProcEnd:
 ;-----------------------------------------------
 ; INCLUDE
 ;-----------------------------------------------
+include "psgdriver.asm"
 include "common.asm"
 include "vram.asm"
 include "sprite.asm"

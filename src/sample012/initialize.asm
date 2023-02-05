@@ -160,6 +160,15 @@ WK_MAP_VIEWAREA:equ $CE18 ; 576バイト(CE18H - D058H)
 ; 45 x 45 tile
 WK_MAPAREA:equ $D059       ; 2025バイト(D059H - D842H)
 
+; サウンドドライバ用ワークエリア
+SOUNDDRV_H_TIMI_BACKUP:equ $E000     ; 5バイト
+SOUNDDRV_STATE:equ $E005             ; 1バイト
+SOUNDDRV_WK_MIXING_TONE:equ $E006    ; 1バイト
+SOUNDDRV_WK_MIXING_NOISE:equ $E007   ; 1バイト
+SOUNDDRV_BGMWK:equ $E008             ; 16バイト*3 = 48バイト
+SOUNDDRV_DUMMYWK:equ $E038           ; 16バイト
+SOUNDDRV_SFXWK:equ $E048             ; 16バイト*3 = 48バイト
+
 ;
 ;--------------------------------------------
 ; 初期処理（お約束コード）

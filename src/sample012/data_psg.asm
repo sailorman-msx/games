@@ -12,7 +12,7 @@ BGM_00:
     defw 0
 
 BGM00_TRK_1:
-    defb 217, $10 ; Mixing Tone/Noise off
+    defb 217, 10B ; Mixing Tone/Noise off
     defb 210      ; Volume = 10
     defb 53       ; Tone Index=53 -> O5 F
     defb 12       ; テンポ T160 = 160/60 = 2.6 -> 8分音符=30/2.6=約12
@@ -61,6 +61,30 @@ BGM00_TRK_1:
     defb 49       ; Tone Index=49 -> O5 C
     defb 12       ; 
     defb 210      ; Volume = 10
+    defb 53       ; Tone Index=53 -> O5 F
+    defb 12       ; テンポ T160 = 160/60 = 2.6 -> 8分音符=30/2.6=約12
+    defb 200      ; Volume = 0 休符がわからないのでvol.を0にする
+    defb 53       ; Tone Index=53 -> O5 F
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 53       ; Tone Index=53 -> O5 F
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 49       ; Tone Index=49 -> O5 C
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 51       ; Tone Index=51 -> O5 D
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 49       ; Tone Index=49 -> O5 C
+    defb 12       ; 
+    defb 200      ; Volume = 0 休符
+    defb 49       ; Tone Index=49 -> O5 C
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 49       ; Tone Index=49 -> O5 C
+    defb 12       ; 
+    defb 210      ; Volume = 10
     defb 52       ; Tone Index=52 -> O5 E
     defb 12       ; 
     defb 210      ; Volume = 10
@@ -78,7 +102,7 @@ BGM00_TRK_1:
     defb 254      ; End of Data
 
 BGM00_TRK_2:
-    defb 217, $10 ; Mixing Tone/Noise off
+    defb 217, 10B ; Mixing Tone/Noise off
     defb 210      ; Volume = 10
     defb 29       ; Tone Index=29 -> O3 F
     defb 12       ; テンポ T160 = 160/60 = 2.6 -> 8分音符=30/2.6=約12
@@ -103,6 +127,29 @@ BGM00_TRK_2:
     defb 210      ; Volume = 10
     defb 24       ; Tone Index=24 -> O3 C
     defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 29       ; Tone Index=29 -> O3 F
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 29       ; Tone Index=29 -> O3 F
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 24       ; Tone Index=24 -> O3 C
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 24       ; Tone Index=24 -> O3 C
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 29       ; Tone Index=29 -> O3 F
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 29       ; Tone Index=29 -> O3 F
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 24       ; Tone Index=24 -> O3 C
+    defb 12       ; 
+    defb 210      ; Volume = 10
+    defb 24       ; Tone Index=24 -> O3 C
     defb 210      ; Volume = 10
     defb 29       ; Tone Index=29 -> O3 F
     defb 12       ; 
