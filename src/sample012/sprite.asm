@@ -27,6 +27,13 @@ CreateSpritePattern:
 ;------------------------------------------------
 MovePlayer:
 
+    push af
+    push bc
+    push de
+    push hl
+    push iy
+    push ix
+
     ;--------------------------------------------------------
     ; 移動処理の仕様
     ; ・前向いていた方向と異なる場合は移動はせず向きだけ変える
@@ -174,6 +181,13 @@ MovePlayerPutSprite:
     call PutSprite
 
 MovePlayerEnd:
+
+    pop ix
+    pop iy
+    pop hl
+    pop de
+    pop bc
+    pop af
 
     ret
 

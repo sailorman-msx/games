@@ -122,6 +122,12 @@ WK_SCROLL_PROC:equ $C068            ; 2*9 = 18バイト
 ; DEBUG PRINT用
 WK_DUMPDATA:equ $C07B    ; 16バイト
 WK_DUMPCHAR:equ $C08B    ; 32バイト
+ 
+; H.TIMIフックバックアップ用ワークエリア
+H_TIMI_BACKUP:equ $C0AB  ; 5バイト
+
+; H.TIMI垂直同期割込待ち用カウンタ
+VSYNC_WAIT_CNT:equ $C0B0 ; 1バイト
 
 ;
 ; テキキャラポインタテーブル

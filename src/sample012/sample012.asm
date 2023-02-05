@@ -109,12 +109,11 @@ EnemyPtrTblInitLoop:
 ; BGM演奏開始
 ;--------------------------------------------
     call SOUNDDRV_INIT
-
     ld hl, BGM_00
     call SOUNDDRV_BGMPLAY
 
 MainLoop:
-    ; ■VSYNC_WAIT_FLGの初期化
+    ; VSYNC_WAIT_FLGの初期化
     ;   この値は以下の制御を行うために使用する：
     ;   - メインロジック開始時に 0 に設定
     ;   - H.TIMI割り込み処理の中でデクリメント (1/60秒ごとに呼び出し)
@@ -122,11 +121,12 @@ MainLoop:
     ; ld a, 1
     ; ld (VSYNC_WAIT_CNT), a
 
-    ; ■ゲーム処理呼び出し
+    ; ゲーム処理呼び出し
+
     call GameProc
 
 VSYNC_Wait:
-    ; ■垂直帰線待ち
+    ; 垂直帰線待ち
     ; ld a, (VSYNC_WAIT_CNT)
     ; or a
     ; jr nz,VSYNC_Wait
@@ -152,11 +152,26 @@ GameProc:
     ; これを呼び出さないとカーソルキーを正常に判定できない
     call KILBUF
 
-    ; またはカーソルキーの方向を取得
+    ; ジョイスティックまたはカーソルキーの方向を取得
     ; GTSTCK呼び出し後、Aレジスタに方向がセットされる
+
+GameProc_IsCURSOR:
     ld a, 0
     call GTSTCK
-    
+    or 0
+    ;--------------------------------------------
+    ; ジョイスティックが押されたら移動処理を呼ぶ
+    ;--------------------------------------------
+    ; Aレジスタに0をOR演算する
+    ; ジョイスティックが押されるとAレジスタの
+    ; 値には0より大きい値が入るためOR演算の結果はゼロにならない
+    or 0
+    jr nz, GameProc_PlayerMove
+
+GameProc_IsJOYSTICK:
+    ld a, 1
+    call GTSTCK
+    or 0
     ;--------------------------------------------
     ; ジョイスティックが押されたら移動処理を呼ぶ
     ;--------------------------------------------
@@ -166,6 +181,7 @@ GameProc:
     or 0
     jr z, GameProcEnd
 
+GameProc_PlayerMove:
     ;--------------------------------------------
     ; プレイヤーの移動
     ; 移動は8ドット単位で移動する
@@ -186,6 +202,7 @@ GameProcEnd:
 ;-----------------------------------------------
 ; INCLUDE
 ;-----------------------------------------------
+include "interval.asm"
 include "psgdriver.asm"
 include "common.asm"
 include "vram.asm"
