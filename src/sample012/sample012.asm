@@ -182,6 +182,17 @@ GameProc_IsJOYSTICK:
     jr z, GameProcEnd
 
 GameProc_PlayerMove:
+
+    ; 斜め移動は許可しない
+    cp 2
+    jr z, GameProcEnd
+    cp 4
+    jr z, GameProcEnd
+    cp 6
+    jr z, GameProcEnd
+    cp 8
+    jr z, GameProcEnd
+
     ;--------------------------------------------
     ; プレイヤーの移動
     ; 移動は8ドット単位で移動する
