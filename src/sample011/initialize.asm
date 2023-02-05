@@ -1,4 +1,4 @@
-;--------------------------------------------
+;-------------------------------------------
 ; initialize.asm
 ; 初期処理
 ; 変数が増える場合はこちらに記述すること！
@@ -13,7 +13,9 @@ LDIRMV:equ $0059 ; VRAMからRAMにブロック転送する
 LDIRVM:equ $005C ; RAMからVRAMにブロック転送する
 CHGMOD:equ $005F ; SCREENモードを変更する
 SETGRP:equ $007E ; VDPのみをGRAPHIC2モードにする
-ERAFNK:EQU $00CC ;ファンクションキーを非表示にする
+GICINI:equ $0090 ; PSGの初期化アドレス
+WRTPSG:equ $0093 ; PSGレジスタへのデータ書込アドレス
+ERAFNK:equ $00CC ;ファンクションキーを非表示にする
 GTSTCK:equ $00D5 ; JOY STICKの状態を調べる
 GTTRIG:equ $00D8 ; トリガボタンの状態を返す
 CHGCLR:equ $0111 ; 画面の色を変える
@@ -27,6 +29,7 @@ BAKCLR:EQU $F3EA ;背景色のアドレス
 BDRCLR:equ $F3EB ; 背景色が格納されているアドレス
 CLIKSW:equ $F3DB ; キークリック音のON/OFFが格納されているアドレス
 INTCNT:equ $FCA2 ; MSX BIOSにて1/60秒ごとにインクリメントされる値が格納されているアドレス
+H_TIMI:equ $FD9F ; 垂直帰線割り込みフック
 
 ;--------------------------------------------
 ; 変数領域
@@ -117,8 +120,8 @@ WK_SCROLL_PROC:equ $C068            ; 2*9 = 18バイト
 
 ;
 ; DEBUG PRINT用
-WK_DUMPDATA:equ $C07A    ; 16バイト
-WK_DUMPCHAR:equ $C08A    ; 32バイト
+WK_DUMPDATA:equ $C07B    ; 16バイト
+WK_DUMPCHAR:equ $C08B    ; 32バイト
 
 ;
 ; テキキャラポインタテーブル

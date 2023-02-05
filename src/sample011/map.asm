@@ -13,6 +13,11 @@
 ;--------------------------------------------
 CreateMapArea:
 
+    push af
+    push bc
+    push de
+    push hl
+
     ;--------------------------------------------
     ; MAPDATA_2BIT_TILESのデータを読み込み
     ; 1バイトあたり2タイルずつMAPAREAを埋めていく
@@ -61,16 +66,24 @@ CreateMapAreaLoop2:
 
 CreateMapAreaEnd:
 
+    pop hl
+    pop de
+    pop bc
+    pop af
+
     ret
 
 ;-----------------------------------------------
-; SUB-ROUTINE: CreateMapArea
+; SUB-ROUTINE: GenTileData
 ; Aレジスタに格納されている情報を2bitずつに分解し
 ; MAPAREAに4バイト分格納する
 ;-----------------------------------------------
 GenTileData:
 
+    push af
     push bc
+    push de
+    push hl
 
     ld c, a ; Aレジスタの値をCレジスタに退避
 
@@ -119,7 +132,10 @@ GenTileData:
     inc ix
     ld (WK_MAPAREA_ADDR), ix
 
+    pop hl
+    pop de
     pop bc
+    pop af
 
     ret
 
@@ -137,6 +153,11 @@ GenTileData:
 ; ビューポート座標はタイルデータと1対1の関係
 ;-------------------------------------------------------
 CreateViewPort:
+
+    push af
+    push bc
+    push de
+    push hl
 
     ; ビューポートの起点座標によって
     ; ビューポート情報を以下のような形で格納する
@@ -310,7 +331,9 @@ CreateViewPortLoop3:
     ld a, (WK_VIEWPORT_RANGEX)
     add a, a
     dec a
-    add hl, a
+    ld d, 0
+    ld e, a
+    add hl, de
     
     ; 左下のキャラクター情報をセット
     ld a, (ix + 1)
@@ -344,7 +367,9 @@ CreateViewPortLoop3End:
     ld a, (WK_VIEWPORT_RANGEX)
     add a, a
     ld hl, (WK_VIEWPORT_ADDR)
-    add hl, a
+    ld d, 0
+    ld e, a
+    add hl, de
     ld (WK_VIEWPORT_ADDR), hl
 
     ; タイル情報のアドレスを加算して次の下タイル行の先頭を決定する
@@ -368,6 +393,11 @@ CreateViewPortNextTile:
 
 CreateViewPortEnd:
 
+    pop hl
+    pop de
+    pop bc
+    pop af
+
     ret
 
 ;-----------------------------------------------
@@ -380,6 +410,11 @@ CreateViewPortEnd:
 ;
 ;-----------------------------------------------
 DisplayViewPort:
+
+    push af
+    push bc
+    push de
+    push hl
 
     ;----------------------------------------------
     ; ここからビューポートを画面に表示する処理
@@ -402,7 +437,9 @@ DisplayViewPort:
 
     add a, a  ; AレジスタにAレジスタの値をかけて2倍にしその値をAレジスタに格納する
     add a, a  ; さらに2倍にする
-    add hl, a ; その結果をHLレジスタに加算する
+    ld d, 0
+    ld e, a
+    add hl, de ; その結果をHLレジスタに加算する
 
 DisplayViewPortRowTileSkipEnd:
 
@@ -424,7 +461,9 @@ DisplayViewPortLoop1:
     ; アドレスを進める数は横タイル数(WK_VIEWPORT_RANGEX)*2
     ld a, (WK_VIEWPORT_RANGEX)
     add a, a
-    add hl, a
+    ld d, 0
+    ld e, a
+    add hl, de
 
     ld (WK_VIEWPORT_ADDR), hl
 
@@ -441,5 +480,10 @@ DisplayViewPortLoop1:
     jr DisplayViewPortLoop1
 
 DisplayViewPortEnd:
+
+    pop hl
+    pop de
+    pop bc
+    pop af
 
     ret
