@@ -4,7 +4,7 @@
 ;
 ; licence:MIT Licence
 ; copyright-holders:Hitoshi Iwai(aburi6800)
-; arranged by:Hitoshi Inoue(burapunch2000)
+; modified by:Hitoshi Inoue(brapunch2000)
 ;
 ; ====================================================================================================
 

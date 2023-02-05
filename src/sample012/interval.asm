@@ -3,6 +3,7 @@
 ; interval.asm
 ;
 ; copyright and license 
+; License: MIT License
 ; author : Hitoshi Iwai (aburi6800)
 ; modify : Hitoshi Inoue (brapunch2000)
 ; ====================================================================================================
@@ -65,7 +66,13 @@ INIT_H_TIMI_HANDLER:
 ; ====================================================================================================
 H_TIMI_HANDLER:
 
-    ; ■VSYNC_WAIT_CNTデクリメント
+    ; VSYNC_ENEMYMOVE_CNTインクリメント
+    LD A,(VSYNC_ENEMYMOVE_CNT)
+    INC A
+    LD (VSYNC_ENEMYMOVE_CNT), A
+
+    OR A
+    ; VSYNC_WAIT_CNTデクリメント
     ;   1/60ごとに-1される
     ;   メインルーチンの最初の設定値により
     ;     1 = 60フレーム
