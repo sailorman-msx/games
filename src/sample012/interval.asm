@@ -2,10 +2,10 @@
 ;
 ; interval.asm
 ;
-; copyright and license 
-; License: MIT License
-; author : Hitoshi Iwai (aburi6800)
-; modify : Hitoshi Inoue (brapunch2000)
+; licence:MIT Licence
+; copyright-holders:Hitoshi Iwai(aburi6800)
+; modified by:Hitoshi Inoue(brapunch2000)
+;
 ; ====================================================================================================
 
 ; ====================================================================================================
