@@ -206,27 +206,27 @@ SFX_00:
 
 SFX00_TRK_1:
     defb 217, 10B ; Mixing Tone/Noise off
-    defb 212      ; Volume = 10
-    defb 6        ; 
+    defb 215      ; Volume = 10
+    defb 3        ; 
     defb 26       ; O3 D16
     defb 212      ; Volume = 10
-    defb 6        ; 
+    defb 3        ; 
     defb 24       ; O3 C16
     defb 200      ; Volume = 0 休符
-    defb 6        ; 
+    defb 3        ; 
     defb 24       ; 
     defb 255      ; End of Data
 
 SFX00_TRK_2:
     defb 217, 10B ; Mixing Tone/Noise off
     defb 200      ; Volume = 0 休符
-    defb 6        ; 
+    defb 3        ; 
     defb 26       ; 
-    defb 212      ; Volume = 10
-    defb 6        ; 
+    defb 215      ; Volume = 10
+    defb 3        ; 
     defb 24       ; O2 C16
     defb 200      ; Volume = 0 休符
-    defb 6        ; 
+    defb 3        ; 
     defb 24       ; 
     defb 255      ; End of Data
 
