@@ -340,7 +340,13 @@ MoveFireballLoop:
     ld hl, WK_VRAM4X4_TBL
     ld iy, hl
     ld a, (iy+5)
-    cp '$'
+    cp $98 ; テキキャラはぶつかり対象にしない
+    jp c, MoveFireballCheckWall
+    jp MoveFireballMoveY_Plus
+
+MoveFireballCheckWall:
+
+    cp '$' ; 床はぶつかり対象にしない
     jp z, MoveFireballMoveY_Plus
 
     ; 弾を消す

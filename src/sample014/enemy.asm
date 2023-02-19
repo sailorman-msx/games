@@ -337,20 +337,20 @@ MoveEnemiesLoop1:
     ld (WK_ENEMY_POSY), a
 
     ; 弾のMAP座標と合致していたら衝突処理を行う
-    ; ただし、ビューポート座標から12タイル以上離れていたら
+    ; ただし、ビューポート座標から10タイル以上離れていたら
     ; 衝突処理は行わない
     ld a, (WK_VIEWPORTPOSX)
     ld b, a
     ld a, (WK_ENEMY_POSX)
     sub b  ; A = A - B
-    cp 12
+    cp 10
     jp nc, MoveEnemiesMoveTileInit
 
     ld a, (WK_VIEWPORTPOSY)
     ld b, a
     ld a, (WK_ENEMY_POSY)
     sub b  ; A = A - B
-    cp 12
+    cp 10
     jp nc, MoveEnemiesMoveTileInit
     
     ; 弾との衝突判定処理呼び出し
