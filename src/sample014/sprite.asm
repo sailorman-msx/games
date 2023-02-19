@@ -329,6 +329,24 @@ MoveFireballLoop:
     or 0
     jp z, MoveFireballLoopEnd
 
+    ;
+    ; 弾が壁にぶつかっていたら弾を消す
+    ;
+    ld a, (ix + 3)
+    ld (WK_CHECKPOSX), a ; 弾のX座標
+    ld a, (ix + 4)
+    ld (WK_CHECKPOSY), a ; 弾のY座標
+    call GetVRAM4x4
+    ld hl, WK_VRAM4X4_TBL
+    ld iy, hl
+    ld a, (iy+5)
+    cp '$'
+    jp z, MoveFireballMoveY_Plus
+
+    ; 弾を消す
+    call ResetFireball
+    jp MoveFireballLoopEnd ; 次の弾の処理を行う
+
 MoveFireballMoveY_Plus:
 
     ld a, (ix + 6) ; Yの移動量
@@ -450,6 +468,20 @@ MoveFireballMoveX_Minus:
     ld (WK_FIREBALL_TRIG), a
 
 MoveFireballLoopEnd:
+
+    ; プレイヤーと同じ単位の座標をセットする
+    ld a, (ix + 1)
+    srl a  ; / 2
+    srl a  ; / 4
+    srl a  ; / 8
+    ld (ix + 3), a
+
+    ; プレイヤーと同じ単位の座標をセットする
+    ld a, (ix + 2)
+    srl a  ; / 2
+    srl a  ; / 4
+    srl a  ; / 8
+    ld (ix + 4), a
 
     inc b
     ld a, 2
@@ -715,43 +747,61 @@ UndoMoveLeftScroll:
 
     ; スプライトのX座標が5以上であればスクロールは行わない
     cp 5
-    jr nc, UndoMoveEnd
+    jp nc, UndoMoveEnd
 
     ; ビューポートX座標が0の場合はスクロールはせずスプライトだけ動かす
     ld a, (WK_VIEWPORTPOSX)
     or 0
-    jr z, UndoMoveEnd
+    jp z, UndoMoveEnd
 
     ; ビューポートX座標を-1してビューポートを左にスクロールさせる
+    ld a, (WK_VIEWPORTPOSX)
     dec a
     ld (WK_VIEWPORTPOSX), a
 
+    ld hl, WK_FIREBALL_DATA_TBL
+    ld ix, hl
     call ResetFireball
-    call CreateViewPort
-    call DisplayViewPort
+    ld b, 0
+    ld c, 8
+    add hl, bc
+    ld ix, hl
+    call ResetFireball
+    
+    ; call CreateViewPort
+    ; call DisplayViewPort
 
-    jr UndoMoveSetOldPos
+    jp UndoMoveSetOldPos
 
 UndoMoveRightScroll:
     
     ld a, (WK_PLAYERPOSX)
 
-    ; スプライトのX座標が16でなければスクロールは行わない
-    cp 16
-    jr nz, UndoMoveEnd
+    ; スプライトのX座標が17でなければスクロールは行わない
+    cp 17
+    jp nz, UndoMoveEnd
 
     ; ビューポートX座標が36の場合はスクロールはせずスプライトも動かす
     ld a, (WK_VIEWPORTPOSX)
     cp 36
-    jr z, UndoMoveEnd
+    jp z, UndoMoveEnd
 
     ; ビューポートX座標を+1してビューポートを左にスクロールさせる
+    ld a, (WK_VIEWPORTPOSX)
     inc a
     ld (WK_VIEWPORTPOSX), a
 
+    ld hl, WK_FIREBALL_DATA_TBL
+    ld ix, hl
     call ResetFireball
-    call CreateViewPort
-    call DisplayViewPort
+    ld b, 0
+    ld c, 8
+    add hl, bc
+    ld ix, hl
+    call ResetFireball
+    
+    ; call CreateViewPort
+    ; call DisplayViewPort
 
     jr UndoMoveSetOldPos
 
@@ -769,12 +819,21 @@ UndoMoveUpScroll:
     jr z, UndoMoveEnd
 
     ; ビューポートY座標を-1してビューポートを上にスクロールさせる
+    ld a, (WK_VIEWPORTPOSY)
     dec a
     ld (WK_VIEWPORTPOSY), a
 
+    ld hl, WK_FIREBALL_DATA_TBL
+    ld ix, hl
     call ResetFireball
-    call CreateViewPort
-    call DisplayViewPort
+    ld b, 0
+    ld c, 8
+    add hl, bc
+    ld ix, hl
+    call ResetFireball
+    
+    ; call CreateViewPort
+    ; call DisplayViewPort
 
     jr UndoMoveSetOldPos
 
@@ -782,8 +841,8 @@ UndoMoveDownScroll:
     
     ld a, (WK_PLAYERPOSY)
 
-    ; スプライトのY座標が16でなければスクロールは行わない
-    cp 16
+    ; スプライトのY座標が17でなければスクロールは行わない
+    cp 17
     jr nz, UndoMoveEnd
 
     ; ビューポートY座標が35の場合はスクロールはせずスプライトも動かす
@@ -792,13 +851,21 @@ UndoMoveDownScroll:
     jr z, UndoMoveEnd
 
     ; ビューポートY座標を+1してビューポートを下にスクロールさせる
-
+    ld a, (WK_VIEWPORTPOSY)
     inc a
     ld (WK_VIEWPORTPOSY), a
 
+    ld hl, WK_FIREBALL_DATA_TBL
+    ld ix, hl
     call ResetFireball
-    call CreateViewPort
-    call DisplayViewPort
+    ld b, 0
+    ld c, 8
+    add hl, bc
+    ld ix, hl
+    
+    call ResetFireball
+    ; call CreateViewPort
+    ; call DisplayViewPort
 
 UndoMoveSetOldPos:
 
@@ -809,6 +876,9 @@ UndoMoveSetOldPos:
     ldir
 
 UndoMoveEnd:
+
+    call CreateViewPort
+    call DisplayViewPort
 
     pop hl
     pop bc
@@ -1018,6 +1088,8 @@ PutFireballSprite:
 ;--------------------------------------------
 ; SUB-ROUTINE: ResetFireball
 ; スクロールさせた場合は弾を消す
+; IXレジスタにWK_FIREBALL_DATA_TBLの弾のアドレスを
+; セットしてから呼び出すこと
 ;--------------------------------------------
 ResetFireball:
 
@@ -1041,13 +1113,6 @@ ResetFireball:
     ld (ix + 6), a
     ld (ix + 7), a
     ld (ix + 8), a
-    ld (ix + 9), a
-    ld (ix + 10), a
-    ld (ix + 11), a
-    ld (ix + 12), a
-    ld (ix + 13), a
-    ld (ix + 14), a
-    ld (ix + 15), a
 
     ;--------------------------------------------
     ; 弾発射インターバル値を初期化する
@@ -1063,12 +1128,8 @@ ResetFireball:
     ld (ix +  0), a
     ld (ix +  1), a
     ld (ix +  3), a
-    ld (ix +  4), a
-    ld (ix +  5), a
-    ld (ix +  7), a
     ld a, 32     ; スプライトパターン番号は32固定
     ld (ix +  2), a
-    ld (ix +  6), a
 
     ; スプライトを表示する
     ld de, $1B08

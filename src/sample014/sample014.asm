@@ -355,9 +355,9 @@ SpriteDisplay:
     ld (WK_PLAYERCOLLISION), a
 
     ; ライフゲージがなくなったらGAME OVER画面を呼び出す
-    ld a, (WK_PLAYERLIFEGAUGE+0)
-    cp 1
-    jp c, GameOverProc
+    ;ld a, (WK_PLAYERLIFEGAUGE+0)
+    ;cp 1
+    ;jp c, GameOverProc
     
 SpriteDisplayEnd:
 

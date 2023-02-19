@@ -321,12 +321,65 @@ MoveEnemies:
     ld hl, WK_ENEMY_DATA_TBL   ; テキキャラ管理用テーブルの先頭アドレスをHLレジスタにセット
     ld (WK_ENEMY_DATA_IDX), hl ; HLレジスタの値をテキキャラインデックス変数にセット
 
+    call GetFireballMapPos
+
 MoveEnemiesLoop1:
 
     ld ix, (WK_ENEMY_DATA_IDX)
+
     ld a, (ix + 0)
     or a; テキキャラポインタテーブルの+0番目の値がゼロの場合は処理を抜ける
     jp z, MoveEnemiesEnd
+
+    ld a, (ix + 1)
+    ld (WK_ENEMY_POSX), a
+    ld a, (ix + 2)
+    ld (WK_ENEMY_POSY), a
+
+    ; 弾のMAP座標と合致していたら衝突処理を行う
+    ; ただし、ビューポート座標から12タイル以上離れていたら
+    ; 衝突処理は行わない
+    ld a, (WK_VIEWPORTPOSX)
+    ld b, a
+    ld a, (WK_ENEMY_POSX)
+    sub b  ; A = A - B
+    cp 12
+    jp nc, MoveEnemiesMoveTileInit
+
+    ld a, (WK_VIEWPORTPOSY)
+    ld b, a
+    ld a, (WK_ENEMY_POSY)
+    sub b  ; A = A - B
+    cp 12
+    jp nc, MoveEnemiesMoveTileInit
+    
+    ; 弾との衝突判定処理呼び出し
+    ld a, (WK_FIREBALL_TRIG)
+    or 0
+    jp z, MoveEnemiesMoveTileInit
+
+    call CheckFireballCollision
+    or 0
+    jp z, MoveEnemiesMoveTileInit
+
+    ; 当たった！！
+    ; ToDo: とりあえずタイルを壁に変更する
+    call FireballHit
+
+    ; 効果音を鳴らす
+    ld hl, SFX_02
+    call SOUNDDRV_SFXPLAY
+
+    ; テキキャラを初期化する
+    call RestructEnemyMoveData
+    ld a, (ix + 7)
+    ld (ix + 1), a ; 初期スポーン位置に戻す
+    ld a, (ix + 8)
+    ld (ix + 2), a ; 初期スポーン位置に戻す
+
+    jp MoveEnemiesNextData
+
+MoveEnemiesMoveTileInit:
 
     ;-----------------
     ; テキを進行方向に進める
@@ -345,7 +398,7 @@ MoveEnemiesLoop1:
 
     ; ld a, (VSYNC_ENEMYMOVE_CNT)
     ; cp 128 ; 垂直同期でカウントされる値が60未満の場合は進行カウンタをインクリメントするだけで次のデータ操作に進む
-    jr c, MoveEnemiesNextData
+    jp c, MoveEnemiesNextData
 
 MoveEnemiesMoveTile:
 
@@ -440,16 +493,14 @@ MoveEnemiesMoveEnd:
     dec a
     ld (ix + 4), a
     
+MoveEnemiesMoveEndNoCpllisionProc:
+
     ; 移動前の座標のタイル番号を床(0)に変更する
     call ResetEnemyMoveSrc
 
     ; 進行カウンタを0にする
     ld a, 0
     ld (ix + 5), a
-
-    ;
-    ; ld a, 0
-    ; ld (VSYNC_ENEMYMOVE_CNT), a
 
 MoveEnemiesLoop1End:
 
@@ -629,6 +680,47 @@ ResetEnemyMoveSrcLoopEnd:
     ret
 
 ;--------------------------------------------
+; SUB-ROUTINE: FireballHit
+; テキキャラの移動元MAP座標のタイル番号を壁(1)にする
+;--------------------------------------------
+FireballHit:
+
+    push bc
+    push de
+    push hl
+
+    ld hl, WK_MAPAREA
+
+    ld a, (WK_ENEMY_POSY)
+    cp 1
+    jr c, FireballHitLoopEnd
+    ld b, a
+
+    ld a, (WK_ENEMY_POSX)
+    ld c, a
+
+FireballHitLoop:
+
+    add hl, 45
+    djnz FireballHitLoop
+
+FireballHitLoopEnd:
+
+    ld d, 0
+    ld e, c
+
+    add hl, de
+
+    ; ToDo: ここは本当は当たり処理にする
+    ld (hl), 1 ; タイル番号1を移動前のMAP座標にセットする
+    
+    pop hl
+    pop de
+    pop bc
+
+    ret
+
+;--------------------------------------------
 ; SUB-ROUTINE: RestructEnemyMoveData
 ; テキキャラの移動情報を再構築する
 ;
@@ -659,3 +751,208 @@ RestructEnemyMoveDataLoop:
     pop bc
 
     ret
+
+;--------------------------------------------
+; SUB-ROUTINE: CheckFireballCollision
+; 弾の座標をMAP座標に変換して、その座標と
+; テキキャラの座標が一致しているか判定する
+; Aレジスタ=1（衝突している）
+; Aレジスタ=0（衝突していない）
+;--------------------------------------------
+CheckFireballCollision:
+
+    push ix
+    push de
+    push hl
+
+    ld hl, WK_FIREBALL_DATA_TBL
+    ld ix, hl  
+
+CheckFireballCollisionStep1:
+
+    ld a, (ix + 0)
+    or 0
+    jr z, CheckFireballCollisionStep2
+
+    ld a, (WK_FIREBALL_MAPX1)
+    ld b, a
+    ld a, (WK_ENEMY_POSX)
+    cp b
+    jr nz, CheckFireballCollisionStep2
+
+    ld a, (WK_FIREBALL_MAPY1)
+    ld b, a
+    ld a, (WK_ENEMY_POSY)
+    cp b
+    jr nz, CheckFireballCollisionStep2
+
+    ; 弾1が衝突している
+    
+    ; 弾1の情報を初期化する
+    call ResetFireball
+
+    ld a, 1
+    jr CheckFireballCollisionEnd
+
+CheckFireballCollisionStep2:
+
+    ld de, 8
+    add hl, de
+    ld ix, hl
+
+    ld a, (ix + 0)
+    or 0
+    jr z, CheckFireballCollisionNoCollision
+
+    ld a, (WK_FIREBALL_MAPX2)
+    ld b, a
+    ld a, (WK_ENEMY_POSX)
+    cp b
+    jr nz, CheckFireballCollisionNoCollision
+
+    ld a, (WK_FIREBALL_MAPY2)
+    ld b, a
+    ld a, (WK_ENEMY_POSY)
+    cp b
+    jr nz, CheckFireballCollisionNoCollision
+
+    ; 弾2が衝突している
+    
+    ; 弾2の情報を初期化する
+    call ResetFireball
+
+    ld a, 1
+    jr CheckFireballCollisionEnd
+
+CheckFireballCollisionNoCollision:
+
+    ld a, 0
+
+CheckFireballCollisionEnd:
+
+    pop hl
+    pop de
+    pop ix
+
+    ret
+
+;--------------------------------------------
+; SUB-ROUTINE: GetFireballMapPos
+; 弾の座標をMAP座標に変換する
+;--------------------------------------------
+GetFireballMapPos:
+
+    push ix
+
+    ; 弾の座標をMAP座標に変換する
+    ; WK_VIEWPORT_RANGEX = 10 の場合
+    ;   X = WK_VIEWPORTX + (弾のX座標 / 2)
+    ; WK_VIEWPORT_RANGEX = 12 の場合
+    ;   X = WK_VIEWPORTX + (弾のX座標 / 2) - 1
+    ; WK_VIEWPORT_RANGEY = 10 の場合
+    ;   Y = WK_VIEWPORTY + (弾のY座標 / 2)
+    ; WK_VIEWPORT_RANGEY = 12 の場合
+    ;   Y = WK_VIEWPORTY + (弾のY座標 / 2) - 1
+
+    ; （ビューポート起点座標とタイル数の関係）
+    ; WK_VIEWPORTPOSX = 0
+    ;   AND WK_VIEWPORTPOSY = 0
+    ;     WK_MAP_VIEWAREAは横10x縦10タイルぶんだけ格納する
+    ;   AND WK_VIEWPORTPOSY > 0
+    ;     WK_MAP_VIEWAREAは横10x縦12タイルぶんだけ格納する
+    ;
+    ; WK_VIEWPORTPOSX > 0
+    ;   AND WK_VIEWPORTPOSY = 0
+    ;     WK_MAP_VIEWAREAは横12x縦10タイルぶんだけ格納する
+    ;   AND WK_VIEWPORTPOSY > 0
+    ;     WK_MAP_VIEWAREAは横12x縦12タイルぶんだけ格納する
+
+    ld a, (WK_FIREBALL_TRIG)
+    or 0
+    jp z, GetFireballMapPosEnd
+
+GetFireballMapPosCheckRangeX:
+
+    ld a, (WK_VIEWPORT_RANGEX)
+    cp 12
+    jr z, GetFireballMapPosX12
+
+GetFireballMapPosX10:
+
+    ld b, 0
+    jr GetFireballMapPosCheckRangeY
+
+GetFireballMapPosX12:
+
+    ld b, 1
+
+GetFireballMapPosCheckRangeY:
+
+    ld a, (WK_VIEWPORT_RANGEY)
+    cp 12
+    jr z, GetFireballMapPosY12
+
+GetFireballMapPosY10:
+
+    ld c, 0
+    jr GetFireballMapPosConv
+
+GetFireballMapPosY12:
+
+    ld c, 1
+
+GetFireballMapPosConv:
+
+    ld hl, WK_FIREBALL_DATA_TBL
+    ld ix, hl
+
+    ; 弾のX座標をMAP座標に変換する
+    ld a, (ix + 3)
+    srl a ; 弾1のX座標を2で割りタイル座標にする
+    ld d, a ; D = A / 2
+    
+    ld a, (WK_VIEWPORTPOSX)
+    add a, d  ; A = A + D
+    sub a, b  ; A = A - B
+
+    ld (WK_FIREBALL_MAPX1), a ; 弾1のMAP座標Xをセット
+
+    ; 弾のY座標をMAP座標に変換する
+    ld a, (ix + 4)
+    srl a ; 弾1のY座標を2で割りタイル座標にする
+    ld d, a ; D = A / 2
+    
+    ld a, (WK_VIEWPORTPOSY)
+    add a, d  ; A = A + D
+    sub a, c  ; A = A - C
+
+    ld (WK_FIREBALL_MAPY1), a ; 弾1のMAP座標Yをセット
+
+    ; 弾のX座標をMAP座標に変換する
+    ld a, (ix + 11)
+    srl a ; 弾1のX座標を2で割りタイル座標にする
+    ld d, a ; D = A / 2
+    
+    ld a, (WK_VIEWPORTPOSX)
+    add a, d  ; A = A + D
+    sub a, b  ; A = A - B
+
+    ld (WK_FIREBALL_MAPX2), a ; 弾2のMAP座標Xをセット
+
+    ; 弾のY座標をMAP座標に変換する
+    ld a, (ix + 12)
+    srl a ; 弾1のY座標を2で割りタイル座標にする
+    ld d, a ; D = A / 2
+    
+    ld a, (WK_VIEWPORTPOSY)
+    add a, d  ; A = A + D
+    sub a, c  ; A = A - C
+
+    ld (WK_FIREBALL_MAPY2), a ; 弾2のMAP座標Yをセット
+
+GetFireballMapPosEnd:
+
+    pop ix
+
+    ret
+

@@ -159,6 +159,12 @@ CreateViewPort:
     push de
     push hl
 
+    ;==== 重要 ===========================================
+    ; ToDo:
+    ;  半タイル処理でどうしようもないバグになっているため
+    ;  いったんあきらめる
+    ;==== 重要 ===========================================
+    ;
     ; ビューポートの起点座標によって
     ; ビューポート情報を以下のような形で格納する
     ;
@@ -190,8 +196,10 @@ CreateViewPortRange1:
 
     ld a, 10
     ld (WK_VIEWPORT_RANGEX), a ; 横10タイル
-    ld a, 12
-    ld (WK_VIEWPORT_RANGEY), a ; 縦12タイル
+    ;ToDo: ld a, 12
+    ;ToDo: ld (WK_VIEWPORT_RANGEY), a ; 縦12タイル
+    ld a, 10
+    ld (WK_VIEWPORT_RANGEY), a ; 縦10タイル
 
     jr CreateViewPortRangeEnd
 
@@ -215,8 +223,10 @@ CreateViewPortRange2:
 
     ; X > 0 AND Y = 0
     ld a, 10
-    ld (WK_VIEWPORT_RANGEX), a ; 横12タイル
-    ld a, 12
+    ld (WK_VIEWPORT_RANGEX), a ; 横10タイル
+    ;ToDo: ld a, 12
+    ;ToDo: ld (WK_VIEWPORT_RANGEY), a ; 縦12タイル
+    ld a, 10
     ld (WK_VIEWPORT_RANGEY), a ; 縦10タイル
     jr CreateViewPortRangeEnd
 
@@ -224,9 +234,12 @@ CreateViewPortRange1POSYnot0:
 
     ; X > 0 AND Y > 0
 
-    ld a, 12
-    ld (WK_VIEWPORT_RANGEX), a ; 横12タイル
-    ld (WK_VIEWPORT_RANGEY), a ; 縦12タイル
+    ;ToDo: ld a, 12
+    ;ToDo: ld (WK_VIEWPORT_RANGEX), a ; 横12タイル
+    ;ToDo: ld (WK_VIEWPORT_RANGEY), a ; 縦12タイル
+    ld a, 10
+    ld (WK_VIEWPORT_RANGEX), a ; 横10タイル
+    ld (WK_VIEWPORT_RANGEY), a ; 縦10タイル
 
 CreateViewPortRangeEnd:
 
@@ -240,10 +253,11 @@ CreateViewPortRangeEnd:
     cp 1
     jr c, CreateViewPortLoop1End
 
-    ; テキの半キャラ表示処理のため
-    ; マップデータのY座標から-1する
-    dec a
-    jr z, CreateViewPortLoop1End  ; -1した座標が0の場合は行タイルのY座標加算はしない
+    ; ToDo: テキの半キャラ表示処理のため
+    ; ToDo: マップデータのY座標から-1する
+    ; ToDo: dec a
+    ; ToDo: jr z, CreateViewPortLoop1End  ; -1した座標が0の場合は行タイルのY座標加算はしない
+    ; ToDo: ld (WK_VIEWPORTPOSY), a
 
     ld b, a
 
@@ -258,13 +272,13 @@ CreateViewPortLoop1End:
     ; 論理座標をもとにしてマップデータのX座標を求める
     ld  a, (WK_VIEWPORTPOSX)
 
-    ; X座標が0の場合はX座標の計算は何もしない
-    cp 1
-    jr c, CreateViewPortLoop1End2
+    ; ToDo: X座標が0の場合はX座標の計算は何もしない
+    ; ToDo: cp 1
+    ; ToDo: jr c, CreateViewPortLoop1End2
 
-    ; テキの半キャラ表示処理のため
-    ; マップデータのX座標から-1する
-    dec a
+    ; ToDo: テキの半キャラ表示処理のため
+    ; ToDo: マップデータのVIEWPORTX座標に-1する
+    ; ToDo: dec a
 
     ld  d, 0
     ld  e, a
@@ -329,7 +343,7 @@ CreateViewPortLoop3:
     ; HLレジスタの値を加算してタイルの下部分をセットするアドレスに進める
     ; 加算する数値は横タイル数 * 2 - 1 (WK_VIEWPORT_RANGEX * 2 - 1)
     ld a, (WK_VIEWPORT_RANGEX)
-    add a, a
+    add a, a ; A = A * 2
     dec a
     ld d, 0
     ld e, a
@@ -425,21 +439,21 @@ DisplayViewPort:
 
     ld hl, WK_MAP_VIEWAREA
 
-    ; WK_VIEWPORTPOSY が1以上の場合
-    ; 1タイル行ぶん、描画開始位置をスキップする
-    ld a, (WK_VIEWPORTPOSY)
-    cp 1
-    jr c, DisplayViewPortRowTileSkipEnd
+    ; ToDo: WK_VIEWPORTPOSY が1以上の場合
+    ; ToDo: 1タイル行ぶん、描画開始位置をスキップする
+    ; ToDo: ld a, (WK_VIEWPORTPOSY)
+    ; ToDo: cp 1
+    ; ToDo: jr c, DisplayViewPortRowTileSkipEnd
 
-    ; 1タイル行スキップする
-    ; 1タイル行のキャラクター数は WK_VIEWPORT_RANGEX * 4 (例：10タイル行SKIPであれば10*4=40)
-    ld a, (WK_VIEWPORT_RANGEX)
+    ; ToDo: 1タイル行スキップする
+    ; ToDo: 1タイル行のキャラクター数は WK_VIEWPORT_RANGEX * 4 (例：10タイル行SKIPであれば10*4=40)
+    ; ToDo: ld a, (WK_VIEWPORT_RANGEX)
 
-    add a, a  ; AレジスタにAレジスタの値をかけて2倍にしその値をAレジスタに格納する
-    add a, a  ; さらに2倍にする
-    ld d, 0
-    ld e, a
-    add hl, de ; その結果をHLレジスタに加算する
+    ; ToDo: add a, a  ; AレジスタにAレジスタの値をかけて2倍にしその値をAレジスタに格納する
+    ; ToDo: add a, a  ; さらに2倍にする
+    ; ToDo: ld d, 0
+    ; ToDo: ld e, a
+    ; ToDo: add hl, de ; その結果をHLレジスタに加算する
 
 DisplayViewPortRowTileSkipEnd:
 
