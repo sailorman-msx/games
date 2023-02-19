@@ -309,8 +309,12 @@ FireballInfoSetMoveY_Plus:
 
     ; Y座標を加算
     ld a, (ix + 2)
-    add a, 8  ; 弾は8ドットずつ移動させる
+    add a, 16  ; プレイヤーの座標よりも1タイルぶん下を発射地点とする
     ld (ix + 2), a
+    ld a, (ix + 4)
+    inc a
+    inc a
+    ld (ix + 4), a
 
     jp FireballInfoSetMoveX_Plus
 
@@ -318,8 +322,11 @@ FireballInfoSetMoveY_Minus:
 
     ; Y座標を減算
     ld a, (ix + 2)
-    sub a, 8  ; 弾は8ドットずつ移動させる
-    ld (ix + 2), a
+    sub a, 16  ; プレイヤーの座標よりも1タイルぶん上を発射地点とする
+    ld a, (ix + 4)
+    dec a
+    dec a
+    ld (ix + 4), a
 
 FireballInfoSetMoveX_Plus:
 
@@ -333,8 +340,12 @@ FireballInfoSetMoveX_Plus:
 
     ; X座標を加算
     ld a, (ix + 1)
-    add a, 8  ; 弾は8ドットずつ移動させる
+    add a, 16  ; プレイヤーの座標よりも1タイルぶん右を発射地点とする
     ld (ix + 1), a
+    ld a, (ix + 3)
+    inc a
+    inc a
+    ld (ix + 3), a
 
     jp FireballInfoSetSetTime
 
@@ -342,8 +353,12 @@ FireballInfoSetMoveX_Minus:
 
     ; X座標を減算
     ld a, (ix + 1)
-    sub a, 8  ; 弾は8ドットずつ移動させる
+    sub a, 16   ; プレイヤーの座標よりも1タイルぶん左を発射地点とする
     ld (ix + 1), a
+    ld a, (ix + 3)
+    dec a
+    dec a
+    ld (ix + 3), a
 
 FireballInfoSetSetTime:
 
