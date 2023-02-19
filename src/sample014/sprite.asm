@@ -242,7 +242,7 @@ Fireball:
 
     ld a, (ix + 0)
     or 0
-    jr nz, FireballInfoSetEnd ; 空いていなければ処理終了とする
+    jp nz, FireballInfoSetEnd ; 空いていなければ処理終了とする
 
 FireballInfoSet:
 
@@ -296,6 +296,56 @@ FireballInfoSet:
 
     ld (ix + 5), c  ; X方向の移動量をセット
     ld (ix + 6), b  ; Y方向の移動量をセット
+
+FireballInfoSetMoveY_Plus:
+
+    ld a, (ix + 6) ; Yの移動量
+
+    cp 1
+    jp c, FireballInfoSetMoveX_Plus ; 移動量が0の場合はX座標の処理にジャンプ
+
+    cp 2
+    jp z, FireballInfoSetMoveY_Minus ; 移動量が2の場合はY座標の減算にジャンプ
+
+    ; Y座標を加算
+    ld a, (ix + 2)
+    add a, 8  ; 弾は8ドットずつ移動させる
+    ld (ix + 2), a
+
+    jp FireballInfoSetMoveX_Plus
+
+FireballInfoSetMoveY_Minus:
+
+    ; Y座標を減算
+    ld a, (ix + 2)
+    sub a, 8  ; 弾は8ドットずつ移動させる
+    ld (ix + 2), a
+
+FireballInfoSetMoveX_Plus:
+
+    ld a, (ix + 5) ; Xの移動量
+
+    cp 1
+    jp c, FireballInfoSetSetTime ; 移動量が0の場合は処理終了
+
+    cp 2
+    jp z, FireballInfoSetMoveX_Minus ; 移動量が2の場合はX座標の減算にジャンプ
+
+    ; X座標を加算
+    ld a, (ix + 1)
+    add a, 8  ; 弾は8ドットずつ移動させる
+    ld (ix + 1), a
+
+    jp FireballInfoSetSetTime
+
+FireballInfoSetMoveX_Minus:
+
+    ; X座標を減算
+    ld a, (ix + 1)
+    sub a, 8  ; 弾は8ドットずつ移動させる
+    ld (ix + 1), a
+
+FireballInfoSetSetTime:
 
     ; 弾が発射できた場合はWK_FIREBALL_INTTIMEに60をセットする
     ld a, WK_FIREBALL_TIMER
@@ -783,13 +833,13 @@ UndoMoveRightScroll:
     
     ld a, (WK_PLAYERPOSX)
 
-    ; スプライトのX座標が17でなければスクロールは行わない
-    cp 17
+    ; スプライトのX座標が16でなければスクロールは行わない
+    cp 16
     jp nz, UndoMoveEnd
 
-    ; ビューポートX座標が36の場合はスクロールはせずスプライトも動かす
+    ; ビューポートX座標が35の場合はスクロールはせずスプライトも動かす
     ld a, (WK_VIEWPORTPOSX)
-    cp 36
+    cp 35
     jp z, UndoMoveEnd
 
     ; ビューポートX座標を+1してビューポートを左にスクロールさせる
@@ -847,8 +897,8 @@ UndoMoveDownScroll:
     
     ld a, (WK_PLAYERPOSY)
 
-    ; スプライトのY座標が17でなければスクロールは行わない
-    cp 17
+    ; スプライトのY座標が16でなければスクロールは行わない
+    cp 16
     jr nz, UndoMoveEnd
 
     ; ビューポートY座標が35の場合はスクロールはせずスプライトも動かす

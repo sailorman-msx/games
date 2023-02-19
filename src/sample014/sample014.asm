@@ -210,9 +210,11 @@ GameProc_IsSPACE:
     cp $FF
     jr nz, GameProc_IsAbutton
 
+    ; ToDo: 弾は2発までとしたいが
+    ; 2発打つと変になるのでとりあえず1発までとしておく
     ld a, (WK_FIREBALL_TRIG)
-    cp 2
-    jr z, GameProc_IsCURSOR  ; 弾は2発までとする
+    cp 1
+    jr z, GameProc_IsCURSOR
 
     ; ファイアボール処理を呼び出す
     call Fireball
@@ -227,9 +229,11 @@ GameProc_IsAbutton:
     cp $FF
     jr nz, GameProc_IsCURSOR
 
+    ; ToDo: 弾は2発までとしたいが
+    ; 2発打つと変になるのでとりあえず1発までとしておく
     ld a, (WK_FIREBALL_TRIG)
-    cp 2
-    jr z, GameProc_IsCURSOR  ; 弾は2発までとする
+    cp 1
+    jr z, GameProc_IsCURSOR
 
     ; ファイアボール処理を呼び出す
     call Fireball
