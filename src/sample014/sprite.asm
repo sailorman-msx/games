@@ -513,7 +513,7 @@ MoveFireballMoveX_Plus:
     dec a
     ld (WK_FIREBALL_TRIG), a
 
-    jp MoveFireballPutSprite
+    jp MoveFireballLoopEnd
 
 MoveFireballMoveX_Minus:
 
