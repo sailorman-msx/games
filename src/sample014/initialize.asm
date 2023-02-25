@@ -152,7 +152,7 @@ WK_PLAYERLIFEGAUGE:equ $C0B3  ; 8バイト
 WK_PLAYERLIFEGAUGE_CHARS:equ $C0BB  ; 8バイト
 
 ; FIREBALL移動制御用(同時に発射できるのは2個まで)
-; 弾は4ドット単位で移動する
+; 弾は8ドット単位で移動する
 ;
 ; +0 : 発射していれば1、そうでなければ0
 ; +1 : 弾のX座標(8-152)
@@ -168,6 +168,13 @@ WK_FIREBALL_DATA_TBL:equ $C0C4 ; 8バイト x 2 = 16バイト
 WK_FIREBALLSPRATTR:equ $C0D4   ; 8バイト（スプライト2枚分）
 WK_FIREBALL_INTTIME:equ $C0DC  ; 1バイト（1/60秒ごとにデクリメントされゼロになると弾を発射できる)
 WK_FIREBALL_TIMER:equ 10       ; 定数（連続弾発射のためのインターバル値）
+WK_FIREBALL_MAPX1:equ $C0DD    ; 1バイト（弾のMAP座標X）
+WK_FIREBALL_MAPY1:equ $C0DE    ; 1バイト（弾のMAP座標Y）
+WK_FIREBALL_MAPX2:equ $C0DF    ; 1バイト（弾のMAP座標X）
+WK_FIREBALL_MAPY2:equ $C0E0    ; 1バイト（弾のMAP座標Y）
+
+WK_ENEMY_POSX:equ $C0E1         ; 1バイト
+WK_ENEMY_POSY:equ $C0E2         ; 1バイト
 
 ;
 ; テキキャラポインタテーブル
