@@ -295,8 +295,9 @@ SFX02_TRK_3:
     defb 255      ; End of Data
 
 ; SFX_03 : ドアが開く音
-; "T120O6C16R16C16D16D8", "T120O5C16R16C16D16D8"
 ; MML
+; "T120O6C16R16C16D16D8", "T120O5C16R16C16D16D8"
+;
 ;  TRK#1 : None
 ;  TRK#2 : T160 O6 C16 R16 C16 D16 D8
 ;  TRK#3 : T160 O5 C16 R16 C16 D16 D8
@@ -341,4 +342,78 @@ SFX03_TRK_3:
     defb 214      ; Volume = 14
     defb 50       ; O6 D8
     defb 6
+    defb 255      ; End of Data
+
+; SFX_04 : テレポート音
+; MML
+; "T160O6D#16D16C#16C16R16C16C#16D16D#8", "T160O4D#16D16C#16C16R16C16C#16D16D#8"
+;
+;  TRK#1 : None
+;  TRK#2 : T160 O6 D#16 R16 C#16 C16 R16 C16 C#16 D16 D#8
+;  TRK#3 : T160 O4 D#8      C#16 C16 R16 C16 C#16 D16 D#8
+;
+SFX_04:
+    defb 255 ; Priority
+    defw 0
+    defw SFX04_TRK_2
+    defw SFX04_TRK_3
+SFX04_TRK_2:
+    defb 217, 10B ; Mixing Tone/Noise off
+    defb 214      ; Volume = 14
+    defb 63       ; T160 O6 D#16
+    defb  3
+    defb 210      ; 休符
+    defb 63       ;
+    defb  3
+    defb 214      ; Volume = 14
+    defb 61       ; T160 O6 C#16
+    defb  3
+    defb 214      ; Volume = 14
+    defb 60       ; T160 O6 C16
+    defb  3
+    defb 210      ; 休符
+    defb 60       ; 
+    defb  3
+    defb 214      ; Volume = 14
+    defb 60       ; T160 O6 C16
+    defb  3
+    defb 214      ; Volume = 14
+    defb 61       ; T160 O6 C#16
+    defb  3
+    defb 214      ; Volume = 14
+    defb 62       ; T160 O6 D16
+    defb  3
+    defb 214      ; Volume = 14
+    defb 63       ; T160 O6 D#8
+    defb  6
+    defb 255      ; End of Data
+SFX04_TRK_3:
+    defb 217, 10B ; Mixing Tone/Noise off
+    defb 214      ; Volume = 14
+    defb 39       ; T160 O4 D#16
+    defb  3
+    defb 210      ; 休符
+    defb 39       ;
+    defb  3
+    defb 214      ; Volume = 14
+    defb 37       ; T160 O4 C#16
+    defb  3
+    defb 214      ; Volume = 14
+    defb 36       ; T160 O4 C16
+    defb  3
+    defb 210      ; 休符
+    defb 60       ; 
+    defb  3
+    defb 214      ; Volume = 14
+    defb 36       ; T160 O4 C16
+    defb  3
+    defb 214      ; Volume = 14
+    defb 37       ; T160 O4 C#16
+    defb  3
+    defb 214      ; Volume = 14
+    defb 38       ; T160 O4 D16
+    defb  3
+    defb 214      ; Volume = 14
+    defb 39       ; T160 O4 D#8
+    defb  6
     defb 255      ; End of Data

@@ -37,6 +37,23 @@ CHRPTN:
     defb $FC, $FC, $FC, $04, $FC, $FC, $FC, $FC ; CHAR PATTERN
     defb $21, $21, $21, $21, $21, $21, $21, $21 ; COLOR PATTERN
 
+    ; ドア
+    defb $75  ; CHAR CODE
+    defb $0F, $1E, $3E, $3E, $3E, $3E, $7E, $7E ; CHAR PATTERN
+    defb $F1, $F1, $F1, $F1, $F1, $F1, $F1, $71 ; COLOR PATTERN
+
+    defb $76  ; CHAR CODE
+    defb $7E, $7E, $7E, $40, $7E, $7E, $7E, $7E ; CHAR PATTERN
+    defb $71, $71, $71, $71, $51, $51, $51, $51 ; COLOR PATTERN
+
+    defb $77  ; CHAR CODE
+    defb $E0, $F0, $F8, $F8, $F8, $F8, $FC, $FC ; CHAR PATTERN
+    defb $F1, $F1, $F1, $F1, $F1, $F1, $F1, $71 ; COLOR PATTERN
+
+    defb $78  ; CHAR CODE
+    defb $FC, $FC, $FC, $04, $FC, $FC, $FC, $FC ; CHAR PATTERN
+    defb $71, $71, $71, $71, $51, $51, $51, $51 ; COLOR PATTERN
+
     ; ライフアイコン
     defb $80  ; CHAR CODE
     defb $D8, $F8, $F8, $F8, $70, $77, $20, $27 ; CHAR PATTERN

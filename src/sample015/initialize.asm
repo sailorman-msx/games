@@ -186,6 +186,9 @@ WK_PLAYER_COLLISIONTILE: equ $C0E6   ; 1バイト
 WK_SCORE:equ $C0E7  ; 8バイト(いちばん右端が10の位)
 WK_SCORE_CHARS:equ $C0EF  ; 8バイト(いちばん右端が10の位)
 
+; メッセージ表示用
+WK_MESSAGE_ADDR:equ $C0F7 ; 2バイト
+
 ;
 ; テキキャラポインタテーブル
 ; テキキャラ管理用1体分*100個ぶん
@@ -222,6 +225,10 @@ WK_MAP_VIEWAREA:equ $CE18 ; 576バイト(CE18H - D058H)
 ; MAPデータ格納用(タイルデータ格納エリア)
 ; 45 x 45 tile
 WK_MAPAREA:equ $D059       ; 2025バイト(D059H - D842H)
+
+; テレポートエリアデータ格納用
+WK_TELEPORT_DATA_TBL:equ $D843 ; 8バイト x 14 = 112バイト(D843H - D8B2H)
+WK_TELEPORT_INTTIME:equ $D8B3
 
 ; サウンドドライバ用ワークエリア
 SOUNDDRV_H_TIMI_BACKUP:equ $E000     ; 5バイト

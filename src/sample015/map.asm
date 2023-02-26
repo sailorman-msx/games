@@ -501,3 +501,118 @@ DisplayViewPortEnd:
     pop af
 
     ret
+
+;--------------------------------------------
+; SUB-ROUTINE: CheckWarpZone
+; ワープゾーンの判定を行う
+;--------------------------------------------
+CheckWarpZone:
+
+    push bc
+    push de
+    push hl
+    push ix
+    push iy
+
+    ; テレポート直後の場合は何もせず処理を抜ける
+    ld a, (WK_TELEPORT_INTTIME)
+    or 0
+    jp nz, CheckWarpZoneInterval
+
+    ; プレイヤーのMAP座標を取得する
+    ; 取得したMAP座標はWK_PLAYER_MAPPOSX, WK_PLAYER_MAPPOSYに
+    ; 格納される
+    call GetPlayerMapPos
+
+    ld hl, WK_TELEPORT_DATA_TBL
+    ld ix, hl
+
+    ld b, 14
+
+CheckWarpZoneLoop:
+
+    ld a, (ix + 0)
+    ld d, a
+    ld a, (WK_PLAYER_MAPPOSX)
+    cp d
+    jp nz, CheckWarpZoneLoopNextData
+
+    ; プレイヤーのMAP座標Xと一致
+
+    ld a, (ix + 1)
+    ld d, a
+    ld a, (WK_PLAYER_MAPPOSY)
+    cp d
+    jp nz, CheckWarpZoneLoopNextData
+
+    ; プレイヤーのMAP座標Yとも一致
+    ld hl, ix
+    call DoTeleportAction ; テレポート処理を呼び出す
+
+    jp CheckWarpZoneEnd
+    
+CheckWarpZoneLoopNextData:
+
+    ld hl, ix  ; ポインタを8バイト進める
+    ld de, 8
+    add hl, de
+    ld ix, hl
+    djnz CheckWarpZoneLoop
+
+    jp CheckWarpZoneEnd
+
+CheckWarpZoneInterval:
+
+    ld a, (WK_TELEPORT_INTTIME)
+    dec a
+    ld (WK_TELEPORT_INTTIME), a
+
+CheckWarpZoneEnd:
+
+    pop iy
+    pop ix
+    pop hl
+    pop de
+    pop bc
+
+    ret
+
+;--------------------------------------------
+; SUB-ROUTINE: DoTeleportAction
+; テレポート処理を実行する
+;--------------------------------------------
+DoTeleportAction:
+
+    ; 以下の座標値を更新して再描画する
+    ; WK_VIEWPORTPOSX, WK_VIEWPORTPOSY
+    ; WK_PLAYERPOSX, WK_PLAYERPOSY
+    ; WK_PLAYERPOSXOLD, WK_PLAYERPOSYOLD
+    ; WK_PLAYERDIST, WK_PLAYERDISTOLD
+
+    ; 弾は消す
+
+    ld a, (ix + 2)
+    ld (WK_VIEWPORTPOSX), a
+    ld a, (ix + 3)
+    ld (WK_VIEWPORTPOSY), a
+    ld a, (ix + 4)
+    ld (WK_PLAYERPOSX), a
+    ld (WK_PLAYERPOSXOLD), a
+    ld a, (ix + 5)
+    ld (WK_PLAYERPOSY), a
+    ld (WK_PLAYERPOSYOLD), a
+
+    ld a, 5
+    ld (WK_PLAYERDIST), a
+    ld (WK_PLAYERDISTOLD), a
+
+    ld a, 20
+    ld (WK_TELEPORT_INTTIME), a
+
+    call ResetFireball
+    
+    ; 効果音を鳴らす
+    ld hl, SFX_04
+    call SOUNDDRV_SFXPLAY
+
+    ret

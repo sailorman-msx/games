@@ -50,6 +50,17 @@ EnemyPtrTblInitLoop:
     ld (WK_VIEWPORTPOSY), a ; ビューポート左上Y座標
 
 ;--------------------------------------------
+; テレポート位置をメモリに展開する
+;--------------------------------------------
+    ld hl, TELEPORT_DATA
+    ld de, WK_TELEPORT_DATA_TBL
+    ld bc, 112 ; 112バイトぶんをメモリに展開する
+    ldir
+
+    ld a, 0
+    ld (WK_TELEPORT_INTTIME), a
+
+;--------------------------------------------
 ; マップデータ（初期画面）のデータを
 ; VRAM(1800H-1AFFH)に書き込む
 ;--------------------------------------------
@@ -57,6 +68,15 @@ EnemyPtrTblInitLoop:
     ld hl, MAPDATA_DEFAULT
     ld bc, 768
     call LDIRVM
+
+;--------------------------------------------
+; ゴールタイルをセットする
+;--------------------------------------------
+    ld de, 111
+    ld hl, WK_MAPAREA
+    add hl, de
+    ld a, 4   ; ゴールのドアタイルは#4
+    ld (hl), a
 
 ;--------------------------------------------
 ; ビューポートにマップ情報を表示する
@@ -188,6 +208,10 @@ GameProc_Init2:
     cp 1
     jr nc, GameProcMoveEnemy
 
+    ; テレポート位置か判定する
+    call CheckWarpZone
+
+    ; テキとの衝突を判定する
     call CheckEnemyCollision
     cp 1
     jr c, GameProcMoveEnemy
@@ -202,6 +226,12 @@ GameProcMoveEnemy:
 
     call CreateViewPort
     call DisplayViewPort
+
+    ; テレポート中は動かせないようにする
+    ; テレポート中は入力を受け付けない
+    ld a, (WK_TELEPORT_INTTIME)
+    or 0
+    jr nz, GameProc_StatusDisplay
 
     ;--------------------------------------------
     ; 入力を受け付ける
@@ -251,6 +281,7 @@ GameProc_IsAbutton:
     ; GTSTCK呼び出し後、Aレジスタに方向がセットされる
 
 GameProc_IsCURSOR:
+
     ld a, 0
     call GTSTCK
     or 0
@@ -298,6 +329,11 @@ GameProc_PlayerMove:
     ld (WK_PLAYERDIST), a
 
     call MovePlayer
+
+    ; テキキャラのセリフを表示する
+    call DisplayMessage
+
+GameProc_StatusDisplay:
 
     ; ステータス表示（アイテム利用）を行う
     call DisplayFireballEnable
@@ -414,4 +450,6 @@ include "data_pcg.asm"
 include "data_map.asm"
 include "data_enemy.asm"
 include "data_psg.asm"
+include "messages.asm"
+include "data_messages.asm"
 include "debugprn.asm"
