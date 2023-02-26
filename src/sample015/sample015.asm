@@ -365,6 +365,21 @@ GameProc_PlayerMoveEnd:
     ld hl, SFX_00
     call SOUNDDRV_SFXPLAY
 
+    ; ビューポート座標のXが22以上であれば
+    ; テキキャラから受けるダメージを倍にする
+    ld b, 1
+    ld a, (WK_VIEWPORTPOSX)
+    cp 22
+    jp c, GameProc_Damage1
+
+    ; ライフゲージをデクリメントする
+    call DecLifeGauge
+
+    ; ライフゲージを表示する
+    call DisplayLifeGauge
+
+GameProc_Damage1:
+
     ; ライフゲージをデクリメントする
     call DecLifeGauge
 
