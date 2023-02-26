@@ -102,108 +102,152 @@ CHRPTN:
     defb $80, $80, $80, $F0, $F0, $80, $F0, $F0 ; CHAR PATTERN
     defb $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1 ; COLOR PATTERN
 
+    ; 最後のカギ
+    defb $8B
+    defb $0F, $1F, $38, $30, $30, $38, $1F, $0F ; CHAR PATTERN
+    defb $F1, $F1, $F1, $F1, $F1, $F1, $F1, $71 ; COLOR PATTERN
+
+    defb $8C
+    defb $01, $01, $01, $01, $01, $01, $01, $01 ; CHAR PATTERN
+    defb $71, $71, $71, $71, $51, $51, $51, $51 ; COLOR PATTERN
+
+    defb $8D
+    defb $F0, $F8, $1C, $0C, $0C, $1C, $F8, $F0 ; CHAR PATTERN
+    defb $F1, $F1, $F1, $F1, $F1, $F1, $F1, $71 ; COLOR PATTERN
+
+    defb $8E
+    defb $80, $80, $80, $F0, $F0, $80, $F0, $F0 ; CHAR PATTERN
+    defb $71, $71, $71, $71, $51, $51, $51, $51 ; COLOR PATTERN
+
 CHRPTN_HEXFONT:
 
+    ; --- 0123
     defb '0'
-    defb $7E, $46, $56, $56, $56, $56, $46, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $0E,$19,$31,$31,$31,$33,$3F,$1E
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb '1'
-    defb $38, $18, $18, $18, $18, $18, $18, $18 ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $06,$0E,$3C,$0C,$08,$18,$38,$38
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb '2'
-    defb $7E, $06, $06, $7E, $40, $40, $40, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $1C,$36,$22,$06,$0C,$31,$7E,$7C
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb '3'
-    defb $7E, $06, $06, $7E, $06, $06, $06, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $1C,$36,$22,$0C,$02,$46,$7C,$38
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    ; --- 4567
     defb '4'
-    defb $76, $76, $76, $76, $76, $7E, $06, $06 ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $0C,$0C,$1A,$12,$64,$7F,$1E,$38
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb '5'
-    defb $7E, $40, $40, $7E, $06, $06, $06, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $26,$1F,$10,$3E,$33,$03,$7E,$38
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb '6'
-    defb $7E, $40, $40, $7E, $46, $46, $46, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $0E,$18,$30,$3C,$66,$46,$7C,$38
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb '7'
-    defb $7E, $06, $06, $06, $06, $06, $06, $06 ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $42,$7F,$33,$04,$0C,$18,$38,$38
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    ; 
+    ; --- 89
     defb '8'
-    defb $7E, $46, $46, $7E, $46, $46, $46, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $1C,$3F,$26,$18,$24,$66,$7E,$3C
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb '9'
-    defb $7E, $46, $46, $46, $7E, $06, $06, $06 ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $3C,$67,$67,$3E,$0C,$18,$38,$38
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    ; 
+    ; --- ABC
     defb 'A'
-    defb $7C, $46, $46, $46, $7E, $46, $46, $46 ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $02,$06,$06,$4A,$73,$3B,$67,$66
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'B'
-    defb $78, $44, $44, $78, $46, $46, $46, $7C ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $3E,$13,$16,$5C,$76,$33,$67,$7E
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'C'
-    defb $7E, $40, $40, $40, $40, $40, $40, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $0C,$1A,$32,$20,$61,$62,$76,$3C
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    ; 
+    ; --- DEFG
     defb 'D'
-    defb $70, $48, $4C, $46, $46, $46, $46, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $3C,$12,$11,$51,$71,$23,$7E,$78
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'E'
-    defb $7E, $40, $40, $7E, $40, $40, $40, $7E ; ChAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $23,$3E,$10,$5C,$70,$21,$67,$7C
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'F'
-    defb $7E, $40, $40, $7E, $40, $40, $40, $40 ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $43,$7E,$10,$52,$7C,$24,$60,$70
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'G'
-    defb $3E, $40, $40, $40, $4E, $46, $46, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $0C,$1A,$32,$20,$67,$62,$76,$3C
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    ; 
+    ; --- HIJK
+    defb 'H'
+    defb $31,$11,$12,$52,$7E,$22,$6E,$67
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    defb 'I'
+    defb $06,$02,$04,$04,$2C,$1C,$18,$18
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    defb 'J'
+    defb $07,$02,$02,$46,$24,$64,$6C,$38
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    defb 'K'
+    defb $41,$31,$13,$26,$38,$6E,$67,$63
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    ; 
+    ; --- LMNO
+    defb 'L'
+    defb $18,$08,$10,$10,$30,$60,$7F,$76
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'M'
-    defb $2C, $56, $56, $56, $46, $46, $46, $46 ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $61,$33,$15,$29,$2A,$62,$67,$63
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    defb 'N'
+    defb $61,$31,$13,$2A,$26,$62,$67,$63
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'O'
-    defb $3C, $46, $46, $46, $46, $46, $46, $3C ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $3E,$13,$21,$21,$61,$62,$3E,$18
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    ; 
+    ; --- PQRS
+    defb 'P'
+    defb $6E,$33,$11,$51,$72,$3C,$60,$60
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    defb 'Q'
+    defb $0E,$13,$21,$21,$65,$62,$7F,$39
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'R'
-    defb $7E, $46, $46, $7E, $48, $44, $46, $46 ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $6E,$33,$11,$53,$7E,$28,$66,$63
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'S'
-    defb $7E, $40, $40, $7E, $06, $06, $06, $7E ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $0E,$13,$11,$4C,$26,$63,$73,$3E
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    ; 
+    ; --- TUVW
+    defb 'T'
+    defb $67,$3E,$10,$10,$30,$60,$60,$60
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    defb 'U'
+    defb $63,$31,$11,$21,$21,$62,$7E,$3C
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'V'
-    defb $46, $46, $46, $46, $46, $26, $24, $18 ; CHAR PATTERN
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $61,$31,$13,$22,$24,$68,$70,$60
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    defb 'W'
+    defb $63,$21,$29,$69,$6B,$7A,$7E,$34
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    ; 
+    ; --- XYZ
     defb 'X'
-    defb $44, $44, $28, $10, $28, $44, $44, $44
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $31,$11,$0A,$0C,$3C,$76,$67,$63
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
     defb 'Y'
-    defb $44, $44, $28, $10, $10, $10, $10, $10
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
-    defb '='
-    defb $00, $00, $00, $7E, $00, $7E, $00, $00
-    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
-
+    defb $31,$11,$1A,$0C,$0C,$18,$18,$18
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    defb 'Z'
+    defb $33,$1E,$04,$08,$10,$71,$7F,$66
+    defb $F1,$F1,$F1,$F1,$F1,$71,$71,$51
+    
 CHRPTN_ENEMY_TYPE1: ; 16x16 dot character.
 
     ; 方向=上

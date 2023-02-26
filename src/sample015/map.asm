@@ -524,6 +524,55 @@ CheckWarpZone:
     ; 格納される
     call GetPlayerMapPos
 
+    ;----------------------------------------------------
+    ; 特定の位置の場合、最後のカギをMAP上にプロットする
+    ;----------------------------------------------------
+    ld a, (WK_PLAYER_MAPPOSX)
+    cp 21
+    jp nz, CheckWarpZoneNotGoal
+    
+    ld a, (WK_PLAYER_MAPPOSY)
+    cp 1
+    jp nz, CheckWarpZoneNotGoal
+
+    ld hl, WK_MAPAREA
+    ld de, 64
+    add hl, de
+    ld a, 5
+    ld (hl), a
+
+    ld hl, WK_MAPAREA
+    ld de, 236
+    add hl, de
+    ld a, 0
+    ld (hl), a
+
+    ; ライフゲージを満タンにする
+    ld a, 2
+    ld hl, WK_PLAYERLIFEGAUGE
+    ld (hl), 2 ; +0
+    inc hl
+    ld (hl), 2 ; +1
+    inc hl
+    ld (hl), 2 ; +2
+    inc hl
+    ld (hl), 2 ; +3
+    inc hl
+    ld (hl), 2 ; +4
+    inc hl
+    ld (hl), 2 ; +5
+    inc hl
+    ld (hl), 2 ; +6
+    inc hl
+    ld (hl), 2 ; +7
+    inc hl
+
+    call DisplayLifeGauge
+
+    jp CheckWarpZoneEnd
+
+CheckWarpZoneNotGoal:    
+
     ld hl, WK_TELEPORT_DATA_TBL
     ld ix, hl
 

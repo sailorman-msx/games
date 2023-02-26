@@ -1,5 +1,8 @@
 DisplayMessage:
     
+    cp 10
+    jp z, DisplayMessageNoKey
+
     ; ランダムにセリフを決める
     call RandomValue
    
@@ -27,6 +30,13 @@ DisplayMessage:
     ld hl, MESSAGE_04
     ld (WK_MESSAGE_ADDR), hl
 
+    jp DisplayMessageDispToVRAM
+
+DisplayMessageNoKey:
+
+    ld hl, MESSAGE_05
+    ld (WK_MESSAGE_ADDR), hl
+    
 DisplayMessageDispToVRAM:
 
     ld hl, (WK_MESSAGE_ADDR)

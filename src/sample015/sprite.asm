@@ -816,6 +816,9 @@ CheckVRAM4x4End:
 ;------------------------------------------------
 GetCollisionItem:
 
+    push ix
+    push iy
+
     ld hl, WK_MAPAREA
 
     ; プレイヤーのMAP座標を取得する
@@ -856,11 +859,51 @@ GetCollisionItemLoopEnd:
     cp 2
     jp z, GetCollisionItemIsDoor
 
-    ; ToDo: 他にアイテムがあれば処理を追加する
+    ; タイル番号は最後のドアか？
+    ld a, (hl)
+    cp 4
+    jp z, GetCollisionFinalDoor
+
+    ; タイル番号は最後のカギか？
+    ld a, (hl)
+    cp 5
+    jp z, GetCollisionItemIsKey
 
     jp GetCollisionItemEnd
 
 GetCollisionItemIsKey:
+
+    ld a, 0
+    ld (hl), a
+
+    ; 最後のカギであればライフゲージを満タンにする
+    ; ライフゲージを満タンにする
+    cp 5
+    jp nz, GetCollisionItemIsNormalKey
+
+    ld de, hl
+    ld a, 2
+    ld hl, WK_PLAYERLIFEGAUGE
+    ld (hl), 2 ; +0
+    inc hl
+    ld (hl), 2 ; +1
+    inc hl
+    ld (hl), 2 ; +2
+    inc hl
+    ld (hl), 2 ; +3
+    inc hl
+    ld (hl), 2 ; +4
+    inc hl
+    ld (hl), 2 ; +5
+    inc hl
+    ld (hl), 2 ; +6
+    inc hl
+    ld (hl), 2 ; +7
+    inc hl
+
+    call DisplayLifeGauge
+
+GetCollisionItemIsNormalKey:
 
     ; すでにカギを保有していたら何もせず終了する
     ld a, (WK_HAVEKEY)
@@ -871,10 +914,6 @@ GetCollisionItemIsKey:
     ld a, 1
     ld (WK_HAVEKEY), a
     
-    ; タイル情報を床に変更する
-    ld a, 0
-    ld (hl), a
-
     ; 効果音を鳴らす
     ld hl, SFX_01
     call SOUNDDRV_SFXPLAY
@@ -900,7 +939,30 @@ GetCollisionItemIsDoor:
     ld hl, SFX_03
     call SOUNDDRV_SFXPLAY
 
+GetCollisionFinalDoor:
+
+    ; カギを保有していなかったらメッセージを表示する
+    ld a, (WK_HAVEKEY)
+    or 0
+    jp nz, GetCollisionFinalDoorOpen
+
+    ld a, 10
+    call DisplayMessage
+
+    jp GetCollisionItemEnd
+
+GetCollisionFinalDoorOpen:
+
+    ; ゲームクリア画面を表示する
+    pop iy
+    pop ix
+
+    jp GameClearProc
+
 GetCollisionItemEnd:
+
+    pop iy
+    pop ix
 
     ret
 
