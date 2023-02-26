@@ -70,19 +70,19 @@ CHRPTN:
 
     ; カギ
     defb $87
-    defb $0F, $1F, $3F, $3F, $3F, $3F, $1F, $0F ; CHAR PATTERN
+    defb $0F, $1F, $38, $30, $30, $38, $1F, $0F ; CHAR PATTERN
     defb $A1, $A1, $B1, $B1, $B1, $B1, $A1, $B1 ; COLOR PATTERN
 
     defb $88
-    defb $07, $03, $01, $01, $01, $01, $01, $01 ; CHAR PATTERN
+    defb $01, $01, $01, $01, $01, $01, $01, $01 ; CHAR PATTERN
     defb $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1 ; COLOR PATTERN
 
     defb $89
-    defb $F0, $F8, $FC, $FC, $FC, $FC, $F8, $F0 ; CHAR PATTERN
+    defb $F0, $F8, $1C, $0C, $0C, $1C, $F8, $F0 ; CHAR PATTERN
     defb $A1, $A1, $B1, $B1, $B1, $B1, $A1, $B1 ; COLOR PATTERN
 
     defb $8A
-    defb $E0, $C0, $80, $F0, $F0, $80, $E0, $80 ; CHAR PATTERN
+    defb $80, $80, $80, $F0, $F0, $80, $F0, $F0 ; CHAR PATTERN
     defb $B1, $B1, $B1, $B1, $B1, $B1, $B1, $B1 ; COLOR PATTERN
 
 CHRPTN_HEXFONT:
@@ -173,6 +173,18 @@ CHRPTN_HEXFONT:
 
     defb 'V'
     defb $46, $46, $46, $46, $46, $26, $24, $18 ; CHAR PATTERN
+    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
+
+    defb 'X'
+    defb $44, $44, $28, $10, $28, $44, $44, $44
+    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
+
+    defb 'Y'
+    defb $44, $44, $28, $10, $10, $10, $10, $10
+    defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
+
+    defb '='
+    defb $00, $00, $00, $7E, $00, $7E, $00, $00
     defb $F1, $F1, $F1, $F1, $71, $71, $71, $71 ; COLOR PATTERN
 
 CHRPTN_ENEMY_TYPE1: ; 16x16 dot character.

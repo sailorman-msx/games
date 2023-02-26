@@ -11,6 +11,11 @@ GameOverProc:
     ld bc, 768
     call LDIRVM
 
+    ; スコア表示する
+    ld b, 1
+    ld c, 0
+    call AddScore
+
 GameOverLoop:
     jr GameOverLoop
 

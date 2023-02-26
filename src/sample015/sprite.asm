@@ -970,9 +970,6 @@ UndoMoveLeftScroll:
     ld ix, hl
     call ResetFireball
     
-    ; call CreateViewPort
-    ; call DisplayViewPort
-
     jp UndoMoveSetOldPos
 
 UndoMoveRightScroll:
@@ -1002,9 +999,6 @@ UndoMoveRightScroll:
     ld ix, hl
     call ResetFireball
     
-    ; call CreateViewPort
-    ; call DisplayViewPort
-
     jr UndoMoveSetOldPos
 
 UndoMoveUpScroll:
@@ -1034,9 +1028,6 @@ UndoMoveUpScroll:
     ld ix, hl
     call ResetFireball
     
-    ; call CreateViewPort
-    ; call DisplayViewPort
-
     jr UndoMoveSetOldPos
 
 UndoMoveDownScroll:
@@ -1066,8 +1057,6 @@ UndoMoveDownScroll:
     ld ix, hl
     
     call ResetFireball
-    ; call CreateViewPort
-    ; call DisplayViewPort
 
 UndoMoveSetOldPos:
 

@@ -372,6 +372,61 @@ MoveEnemiesLoop1:
 
     ; テキキャラを初期化する
     call RestructEnemyMoveData
+
+    ; 1度倒したテキキャラはスポーン位置をランダムに
+    ; 変更する
+    ; ただし、再決定したスポーン位置がもとの位置から
+    ; 20タイル以上離れたところにしないようにする
+    ; そうしないと再スポーン位置に偏りができてしまいます。
+
+MoveEnemiesMoveTileSetRespawnPosY:
+
+    call RandomValue
+    ld a, (WK_RANDOM_VALUE)
+    cp 45
+    jp nc, MoveEnemiesMoveTileSetRespawnPosY
+
+    ; 元の場所から20タイル離れていたら
+    ; 再度位置を決め直す
+    ld b, a
+    ld a, (ix + 2)
+    sub b  ; A = A - B(ランダムな数値)
+    call MathAbsolute ; A = ABS(A)
+    cp 20
+    jp nc, MoveEnemiesMoveTileSetRespawnPosY
+
+    ld (WK_ENEMY_POSY), a
+
+MoveEnemiesMoveTileSetRespawnPosX:
+
+    call RandomValue
+    ld a, (WK_RANDOM_VALUE)
+    cp 45
+    jp nc, MoveEnemiesMoveTileSetRespawnPosX
+
+    ; 元の場所から20タイル離れていたら
+    ; 再度位置を決め直す
+    ld b, a
+    ld a, (ix + 1)
+    sub b  ; A = A - B(ランダムな数値)
+    call MathAbsolute ; A = ABS(A)
+    cp 20
+    jp nc, MoveEnemiesMoveTileSetRespawnPosX
+
+    ld (WK_ENEMY_POSX), a
+
+    ; リスポーン位置のタイルが床でなければ
+    ; 再度リスポーン位置を決め直す
+    call GetMapPosTile
+    or 0
+    jp nz, MoveEnemiesMoveTileSetRespawnPosY
+
+    ld a, (WK_ENEMY_POSX)
+    ld (ix + 7), a
+
+    ld a, (WK_ENEMY_POSY)
+    ld (ix + 8), a
+
     ld a, (ix + 7)
     ld (ix + 1), a ; 初期スポーン位置に戻す
     ld a, (ix + 8)
@@ -642,6 +697,38 @@ MoveEnemyTileMoveEnd:
     ret
 
 ;--------------------------------------------
+; SUB-ROUTINE: GetMapPosTile
+; 指定したMAP位置のタイル番号を取得する
+; WK_ENEMY_POSX: MAP座標X
+; WK_ENEMY_POSY: MAP座標Y
+; Aレジスタにタイル番号がセットされる
+;--------------------------------------------
+GetMapPosTile:
+
+   ld hl, WK_MAPAREA 
+
+   ld a, (WK_ENEMY_POSY)   ; MAPPOSY座標
+   or 0
+   jp z, GetMapPosTileLoopEnd
+
+   ld b, a
+
+   ld d, 0
+   ld e, 45
+
+GetMapPosTileLoop:
+   add hl, de
+   djnz GetMapPosTileLoop
+
+GetMapPosTileLoopEnd:
+   ld a, (WK_ENEMY_POSX)
+   add hl, a
+
+   ld a, (hl)
+
+   ret
+
+;--------------------------------------------
 ; SUB-ROUTINE: MoveEnemyTileMove
 ; テキキャラの移動元MAP座標のタイル番号を床(0)にする
 ;--------------------------------------------
@@ -683,7 +770,7 @@ ResetEnemyMoveSrcLoopEnd:
 
 ;--------------------------------------------
 ; SUB-ROUTINE: FireballHit
-; テキキャラの移動元MAP座標のタイル番号を壁(1)にする
+; テキキャラの移動元MAP座標のタイル番号を床(0)にする
 ;--------------------------------------------
 FireballHit:
 
@@ -715,6 +802,11 @@ FireballHitLoopEnd:
 
     ld (hl), 0 ; タイル番号1を移動前のMAP座標にセットする
     
+    ; スコアに10を加算する
+    ld b, 1
+    ld c, 1
+    call AddScore
+
     pop hl
     pop de
     pop bc

@@ -182,6 +182,10 @@ WK_PLAYER_MAPPOSX: equ $C0E4   ; 1バイト
 WK_PLAYER_MAPPOSY: equ $C0E5   ; 1バイト
 WK_PLAYER_COLLISIONTILE: equ $C0E6   ; 1バイト
 
+; スコア表示用
+WK_SCORE:equ $C0E7  ; 8バイト(いちばん右端が10の位)
+WK_SCORE_CHARS:equ $C0EF  ; 8バイト(いちばん右端が10の位)
+
 ;
 ; テキキャラポインタテーブル
 ; テキキャラ管理用1体分*100個ぶん
