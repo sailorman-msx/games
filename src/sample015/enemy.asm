@@ -722,7 +722,9 @@ GetMapPosTileLoop:
 
 GetMapPosTileLoopEnd:
    ld a, (WK_ENEMY_POSX)
-   add hl, a
+   ld d, 0
+   ld e, a
+   add hl, de
 
    ld a, (hl)
 
