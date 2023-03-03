@@ -176,7 +176,11 @@ WK_FIREBALL_MAPY2:equ $C0E0    ; 1バイト（弾のMAP座標Y）
 WK_ENEMY_POSX:equ $C0E1        ; 1バイト
 WK_ENEMY_POSY:equ $C0E2        ; 1バイト
 
-WK_HAVEKEY:equ $C0E3           ; 1バイト（0:カギを持っていない 1:カギを持っている）
+; カギ保有状態
+; 0:カギを持っていない
+; 1:カギを持っている
+; 2:最後のカギを持っている
+WK_HAVEKEY:equ $C0E3           ; 1バイト
 
 WK_PLAYER_MAPPOSX: equ $C0E4   ; 1バイト
 WK_PLAYER_MAPPOSY: equ $C0E5   ; 1バイト
@@ -188,6 +192,15 @@ WK_SCORE_CHARS:equ $C0EF  ; 8バイト(いちばん右端が10の位)
 
 ; メッセージ表示用
 WK_MESSAGE_ADDR:equ $C0F7 ; 2バイト
+
+; ゲームステータス
+; 0: タイトル画面処理
+; 1: オープニング画面処理
+; 2: ゲーム処理
+; 3: ゲームオーバー処理
+; 4: ゲームクリア処理
+WK_GAMESTATUS:equ $C0F9   ; 1バイト
+WK_GAMESTATUS_INTTIME:equ $C0FA ; シーン切り替えのタイマー(1バイト)
 
 ;
 ; テキキャラポインタテーブル

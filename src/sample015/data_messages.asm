@@ -1,3 +1,7 @@
+;--------------------------------------------
+; data_message.asm
+; 表示メッセージデータ
+;--------------------------------------------
 MESSAGE_01:
 ;     012345678
 defm "NO COWARD"
@@ -24,6 +28,24 @@ defm "EARNEST !"
 defm "         "
 defm "         "
 MESSAGE_05:
+defm "HOPE     "
+defm "EXISTS AT"
+defm "DEAD END."
+defm "         "
+defm "         "
+MESSAGE_06:
+defm "PEACEFUL "
+defm "PLACE TO "
+defm "RECOVER. "
+defm "         "
+defm "         "
+MESSAGE_07:
+defm "IF YOU   "
+defm "BEAT US, "
+defm "WE'LL    "
+defm "REWARD   "
+defm "YOU.     "
+MESSAGE_90:
 defm "DO YOU   "
 defm "HAVE THE "
 defm "KEY?     "

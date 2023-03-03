@@ -924,12 +924,18 @@ GetCollisionItemIsDoor:
 
     ; カギを保有していなければ何もせず終了する
     ld a, (WK_HAVEKEY)
-    or 0
-    jp z, GetCollisionItemEnd
+    cp 1
+    jp c, GetCollisionItemEnd
 
     ; カギを保有してない状態にする
+    ; 最後のカギを保有しているときは実施しない（最後の鍵はなくならない）
+    cp 2
+    jp z, GetCollisionItemIsDoorFinalKey
+
     ld a, 0
     ld (WK_HAVEKEY), a
+
+GetCollisionItemIsDoorFinalKey:
 
     ; タイル情報を床に変更する
     ld a, 0

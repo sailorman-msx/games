@@ -106,17 +106,6 @@ EnemyPtrTblInitLoop:
     ld hl, PLAYERMOVE_TBL
     ldir
 
-    ; プレイヤーのジョイスティック方向にあわせた
-    ; スプライトを初期表示する
-    ld a, $02
-
-    ld ix, SPRDISTPTN_TBL + 2
-    call CreateWorkSpriteAttr
-
-    ld de, $1B00
-    ld bc, 8
-    call PutSprite
-
     ;
     ; プレイヤーのライフゲージを作成する
     ; 値が2だとLIFEGAUGEのFULL状態を画面に表示する
@@ -135,18 +124,15 @@ EnemyPtrTblInitLoop:
     ld (ix + 1), a
     ld (ix + 0), a
 
-    ; ライフゲージを表示する
-    call DisplayLifeGauge
-    
     ; カギ保有情報を初期化する
     ld a, 0
     ld (WK_HAVEKEY), a
 
-    ; ステータス表示（アイテム利用）を行う
-    call DisplayFireballEnable
-
-    ; ステータス表示（カギ保有状態）を行う
-    call DisplayHaveKey
+    ; ゲームステータスを初期化する
+    ; タイトル画面を表示する
+    ld a, 0
+    ld (WK_GAMESTATUS), a
+    ld (WK_GAMESTATUS_INTTIME), a
 
 ;-------------------------------------------------
 ; メインループ(割り込み処理でGameProcを呼び出す)
@@ -157,12 +143,6 @@ EnemyPtrTblInitLoop:
 
     call INIT_H_TIMI_HANDLER
 
-;--------------------------------------------
-; BGM演奏開始
-;--------------------------------------------
-    ld hl, BGM_00
-    call SOUNDDRV_BGMPLAY
-
 MainLoop:
     ; VSYNC_WAIT_FLGの初期化
     ;   この値は以下の制御を行うために使用する：
@@ -172,8 +152,22 @@ MainLoop:
     ld a, 1
     ld (VSYNC_WAIT_CNT), a
 
-    ; ゲーム処理呼び出し
-    call GameProc
+    ; 処理呼び出し
+    ld a, (WK_GAMESTATUS)
+    cp 1
+    jp c, TitleDisplayProc ; タイトル画面
+
+    cp 1
+    jp z, OpeningProc      ; オープニングアニメーション
+
+    cp 2
+    jp z, GameProc         ; ゲームメイン処理
+
+    cp 3
+    jp z, GameOverProc   ; ゲームオーバー処理
+
+    cp 4
+    jp z, GameClearProc  ; ゲームクリア画面
 
 VSYNC_Wait:
     ; 垂直帰線待ち
@@ -445,7 +439,7 @@ GameProcEnd:
     ; アイテムとの重なりをチェックする
     call GetCollisionItem
 
-    ret  
+    jp VSYNC_Wait
     
 ;-----------------------------------------------
 ; INCLUDE
@@ -459,6 +453,8 @@ include "enemy.asm"
 include "status.asm"
 include "gameover.asm"
 include "gameclear.asm"
+include "title.asm"
+include "opening.asm"
 include "map.asm"
 include "data_sprite.asm"
 include "pcg_graphic2.asm"

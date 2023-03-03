@@ -12,8 +12,8 @@ DisplayMessage:
     ld a, (WK_RANDOM_VALUE)
     and 00000111B
 
-    or 0
-    jp z, DisplayMessageDispToVRAM
+    cp 1
+    jp c, DisplayMessageDispToVRAM
 
     ld hl, MESSAGE_02
     ld (WK_MESSAGE_ADDR), hl
@@ -30,11 +30,29 @@ DisplayMessage:
     ld hl, MESSAGE_04
     ld (WK_MESSAGE_ADDR), hl
 
+    cp 3
+    jp z, DisplayMessageDispToVRAM
+
+    ld hl, MESSAGE_05
+    ld (WK_MESSAGE_ADDR), hl
+
+    cp 4
+    jp z, DisplayMessageDispToVRAM
+
+    ld hl, MESSAGE_06
+    ld (WK_MESSAGE_ADDR), hl
+
+    cp 5
+    jp z, DisplayMessageDispToVRAM
+
+    ld hl, MESSAGE_07
+    ld (WK_MESSAGE_ADDR), hl
+
     jp DisplayMessageDispToVRAM
 
 DisplayMessageNoKey:
 
-    ld hl, MESSAGE_05
+    ld hl, MESSAGE_90
     ld (WK_MESSAGE_ADDR), hl
     
 DisplayMessageDispToVRAM:

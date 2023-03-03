@@ -2,6 +2,60 @@
 ; data_map.asm
 ; 固定データ(マップ作成用)
 ;--------------------------------------------
+MAPDATA_TITLE:
+; タイトル画面の背景
+defb "                                " ; + 0
+defb "                                " ; + 1
+defb "                                " ; + 2
+defb "                                " ; + 3
+defb "  %  % %%%  %%  %  % %%% %% %   " ; + 4
+defb "  %  % %   %  % %  % %   %% %   " ; + 5
+defb "  %%%% %%% %%%% %  % %%% % %%   " ; + 6
+defb "  %  % %   %  % %  % %   % %%   " ; + 7
+defb "  %  % %%% %  %  %%  %%% %  %   " ; + 8
+defb "                                " ; + 9
+defb "      %%%   %%   %%  %%%%       " ; +10
+defb "      %  % %  % %  % %  %       " ; +11
+defb "      %  % %  % %  % %%%        " ; +12
+defb "      %  % %  % %  % %  %       " ; +13
+defb "      %%%   %%   %%  %  %       " ; +14
+defb "                                " ; +15
+defb "    PUSH SPACE OR A BUTTON      " ; +16
+defb "            TO START            " ; +17
+defb "                                " ; +18
+defb "                                " ; +19
+defb "                                " ; +20
+defb " PRESENTED BY SAILORMAN STUDIO  " ; +21
+defb "                                " ; +22
+defb "                                " ; +23
+
+MAPDATA_OPENING:
+; オープニング画面の背景
+defb "                                " ; + 0
+defb "                                " ; + 1
+defb "                                " ; + 2
+defb "                                " ; + 3
+defb "                                " ; + 4
+defb "                                " ; + 5
+defb "                                " ; + 6
+defb "                                " ; + 7
+defb " ONE DAY. YOU DIE.              " ; + 8
+defb " WHEN YOU CAME TO, YOU WERE IN  " ; + 9
+defb " A STRANGE PLACE.               " ; +10
+defb "                                " ; +11
+defb " ",$22, "WHERE AM I ?",$22,"                 " ; +12
+defb "                                " ; +13
+defb " THERE IS A DOOR IN FRONT OF    " ; +14
+defb " YOU.                           " ; +15
+defb "                                " ; +16
+defb " LET'S FIND THE DOOR TO HEAVEN. " ; +17
+defb "                                " ; +18
+defb "                                " ; +19
+defb "                                " ; +20
+defb "                                " ; +21
+defb "                                " ; +22
+defb "                                " ; +23
+
 MAPDATA_DEFAULT:
 ; ゲーム背景の描画データ
 ; MAPデータ非圧縮方式(768バイト)
@@ -83,6 +137,9 @@ defb "#$$$$$$$$$$$$$$$$$$$$#         #" ; +20
 defb "################################" ; +21
 defb $80, "         SCORE 000000000       " ; +22
 defb "                                " ; +23
+
+MAPDATA_BLANKLINE:
+defb "                                "
 
 MAPDATA_2BIT_TILES:
 ;
