@@ -78,56 +78,6 @@ EnemyPtrTblInitLoop:
     ld a, 4   ; ゴールのドアタイルは#4
     ld (hl), a
 
-;--------------------------------------------
-; ビューポートにマップ情報を表示する
-;--------------------------------------------
-    call CreateViewPort
-    call DisplayViewPort
-
-    ld a, 3
-    ld (WK_PLAYERPOSX), a    ; プレイヤーのX座標の初期化
-    ld (WK_PLAYERPOSXOLD), a ; プレイヤーのX座標の初期化
-    ld (WK_PLAYERPOSY), a    ; プレイヤーのY座標の初期化
-    ld (WK_PLAYERPOSYOLD), a ; プレイヤーのX座標の初期化
-
-    ld a, 5
-    ld (WK_PLAYERDIST), a    ; プレイヤーの向きの初期化（下向き）
-    ld (WK_PLAYERDISTOLD), a ; プレイヤーの向きの初期化（下向き）
-
-    ld a, $0D
-    ld (WK_PLAYERSPRCLR1), a ; スプライトの表示色
-
-    ld a, $0F
-    ld (WK_PLAYERSPRCLR2), a ; スプライトの表示色
-
-    ; 現在の位置をOLD変数にセット
-    ld bc, 8
-    ld de, WK_PLAYERMOVE_TBL
-    ld hl, PLAYERMOVE_TBL
-    ldir
-
-    ;
-    ; プレイヤーのライフゲージを作成する
-    ; 値が2だとLIFEGAUGEのFULL状態を画面に表示する
-    ; 値が1だとLIFEGAUGEのHALF状態を画面に表示する
-    ; 値が0だとLIFEGAUGEは画面には表示しない
-    ; WK_PLAYERLIFEGAUGE+0 の値が0だとGAME OVER処理が行われる
-    ;
-    ld ix, WK_PLAYERLIFEGAUGE
-    ld a, 2
-    ld (ix + 7), a
-    ld (ix + 6), a
-    ld (ix + 5), a
-    ld (ix + 4), a
-    ld (ix + 3), a
-    ld (ix + 2), a
-    ld (ix + 1), a
-    ld (ix + 0), a
-
-    ; カギ保有情報を初期化する
-    ld a, 0
-    ld (WK_HAVEKEY), a
-
     ; ゲームステータスを初期化する
     ; タイトル画面を表示する
     ld a, 0
@@ -164,10 +114,10 @@ MainLoop:
     jp z, GameProc         ; ゲームメイン処理
 
     cp 3
-    jp z, GameOverProc   ; ゲームオーバー処理
+    jp z, GameOverProc     ; ゲームオーバー処理
 
     cp 4
-    jp z, GameClearProc  ; ゲームクリア画面
+    jp z, GameClearProc    ; ゲームクリア画面
 
 VSYNC_Wait:
     ; 垂直帰線待ち
@@ -202,16 +152,38 @@ GameProc_Init2:
     cp 1
     jr nc, GameProcMoveEnemy
 
+    ; ライフゲージがなくなったらGAME OVER画面を呼び出す
+    ld a, (WK_PLAYERLIFEGAUGE+0)
+    cp 1
+    jp nc, GameProc_Init3
+
+    ld a, 3
+    ld (WK_GAMESTATUS), a
+    ld a, 180
+    ld (WK_GAMESTATUS_INTTIME), a ; 180/60秒後にゲームオーバー画面に遷移する
+
+    ; 効果音を鳴らす
+    ld hl, SFX_06
+    call SOUNDDRV_SFXPLAY
+
+    jp GameProcEnd
+    
+GameProc_Init3:
     ; テレポート位置か判定する
     call CheckWarpZone
 
     ; テキとの衝突を判定する
+    ; ただしテレポート期間中は当たり判定は行わない
+    ld a, (WK_TELEPORT_INTTIME)
+    or 0
+    jr nz, GameProcMoveEnemy
+
     call CheckEnemyCollision
     cp 1
     jr c, GameProcMoveEnemy
 
-    ; 当たり判定情報に30をセットする
-    ld a, 30
+    ; 当たり判定情報に15をセットする
+    ld a, 15
     ld (WK_PLAYERCOLLISION), a
     
 GameProcMoveEnemy:
@@ -225,7 +197,7 @@ GameProcMoveEnemy:
     ; テレポート中は入力を受け付けない
     ld a, (WK_TELEPORT_INTTIME)
     or 0
-    jr nz, GameProc_StatusDisplay
+    jr nz, GameProc_PlayerMoveEnd
 
     ;--------------------------------------------
     ; 入力を受け付ける
@@ -289,6 +261,7 @@ GameProc_IsCURSOR:
     jr nz, GameProc_PlayerMove
 
 GameProc_IsJOYSTICK:
+
     ld a, 1
     call GTSTCK
     or 0
@@ -327,15 +300,29 @@ GameProc_PlayerMove:
     ; テキキャラのセリフを表示する
     call DisplayMessage
 
-GameProc_StatusDisplay:
-
-    ; ステータス表示（アイテム利用）を行う
-    call DisplayFireballEnable
-
-    ; ステータス表示（カギ保有状態）を行う
-    call DisplayHaveKey
-
 GameProc_PlayerMoveEnd:
+
+    ; PEACEFULモードであれば
+    ; PEACEFULカウンタをデクリメントする
+    ; 値が1になったらライフに1を加算する
+    ld a, (WK_PEACEFUL_COUNT)
+    or 0
+    jp z, GameProc_PeacefulEnd
+
+    dec a
+    ld (WK_PEACEFUL_COUNT), a
+
+    cp 1
+    jp nz, GameProc_PeacefulEnd
+
+    ; ライフを加算する
+    call IncLifeGauge
+
+    ; PEACEFULカウントを初期化する
+    ld a, 0
+    ld (WK_PEACEFUL_COUNT), a
+
+GameProc_PeacefulEnd:
 
     ; ワーク用スプライトアトリビュートテーブルを
     ; 作成する
@@ -352,33 +339,26 @@ GameProc_PlayerMoveEnd:
     jr z, SpriteColorNormal  ; 当たり判定情報が0なら何もせず終了
 
     ; 衝突時のSFXを鳴らす
-    ; (WK_PLAYERCOLLISIONの値が30の場合のみ)
-    cp 30
+    ; (WK_PLAYERCOLLISIONの値が15の場合のみ)
+    cp 15
     jr nz, SoundSFXEnd
 
     ld hl, SFX_00
     call SOUNDDRV_SFXPLAY
 
-    ; ビューポート座標のXが22以上であれば
+    ; EPISODEカウントが2以上であれば
     ; テキキャラから受けるダメージを倍にする
-    ld b, 1
-    ld a, (WK_VIEWPORTPOSX)
-    cp 22
+    ld a, (WK_EPISODE_COUNT)
+    cp 2
     jp c, GameProc_Damage1
 
     ; ライフゲージをデクリメントする
     call DecLifeGauge
 
-    ; ライフゲージを表示する
-    call DisplayLifeGauge
-
 GameProc_Damage1:
 
     ; ライフゲージをデクリメントする
     call DecLifeGauge
-
-    ; ライフゲージを表示する
-    call DisplayLifeGauge
 
 SoundSFXEnd:
 
@@ -415,11 +395,6 @@ SpriteDisplay:
     dec a ; 当たり判定情報をデクリメントする
     ld (WK_PLAYERCOLLISION), a
 
-    ; ライフゲージがなくなったらGAME OVER画面を呼び出す
-    ld a, (WK_PLAYERLIFEGAUGE+0)
-    cp 1
-    jp c, GameOverProc
-    
 SpriteDisplayEnd:
 
     ; WK_FIREBALL_TRIGの値が0でなければ
@@ -435,6 +410,18 @@ SpriteDisplayEnd:
     call MoveFireball
 
 GameProcEnd:
+
+    ; ステータス表示（アイテム利用）を行う
+    call DisplayFireballEnable
+
+    ; ステータス表示（カギ保有状態）を行う
+    call DisplayHaveKey
+
+    ; エピソードタイトル表示を行う
+    call DisplayEpisodeTitle
+
+    ; ライフゲージを表示する
+    call DisplayLifeGauge
 
     ; アイテムとの重なりをチェックする
     call GetCollisionItem

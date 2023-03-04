@@ -417,3 +417,153 @@ SFX04_TRK_3:
     defb 39       ; T160 O4 D#8
     defb  6
     defb 255      ; End of Data
+
+; SFX_05 : EPISODEクリア時の効果音
+; MML
+; "T120O5F8R16F16R16F16R16F16G4","T120O4D8R16D16R16D16R16D16G4"
+;
+;  TRK#1 : None
+;  TRK#2 : T120 O5 F8 R16 F16 R16 F16 R16 F16 G4
+;  TRK#3 : T120 O4 D8 R16 D16 R16 D16 R16 D16 G4
+;
+SFX_05:
+    defb 255 ; Priority
+    defw 0
+    defw SFX05_TRK_2
+    defw SFX05_TRK_3
+SFX05_TRK_2:
+    defb 217, 10B ; Mixing Tone/Noise off
+    defb 214      ; Volume = 14
+    defb 53       ; T120 O5 F8
+    defb 15
+    defb 210      ; 休符 R16
+    defb 53
+    defb 7
+    defb 214      ; Volume = 14
+    defb 53       ; T120 O5 F16
+    defb 7
+    defb 210      ; 休符 R16
+    defb 53
+    defb 7
+    defb 214      ; Volume = 14
+    defb 53       ; T120 O5 F16
+    defb 7
+    defb 210      ; 休符 R16
+    defb 53
+    defb 7
+    defb 214      ; Volume = 14
+    defb 53       ; T120 O5 F16
+    defb 7
+    defb 214      ; Volume = 14
+    defb 55       ; T120 O5 G4
+    defb 30
+    defb 255
+    
+SFX05_TRK_3:
+    defb 217, 10B ; Mixing Tone/Noise off
+    defb 214      ; Volume = 14
+    defb 38       ; T120 O4 D8
+    defb 15
+    defb 210      ; 休符 R16
+    defb 38
+    defb 7
+    defb 214      ; Volume = 14
+    defb 38       ; T120 O4 D16
+    defb 7
+    defb 210      ; 休符 R16
+    defb 38
+    defb 7
+    defb 214      ; Volume = 14
+    defb 38       ; T120 O4 D16
+    defb 7
+    defb 210      ; 休符 R16
+    defb 38
+    defb 7
+    defb 214      ; Volume = 14
+    defb 38       ; T120 O4 D16
+    defb 7
+    defb 214      ; Volume = 14
+    defb 43       ; T120 O4 G4
+    defb 30
+    defb 255
+
+; SFX_06 : GAMEOVER時の効果音
+; MML
+;   T160 O5 A8 G8 F8 G8 F8 E8 F8 E8 D8 C4
+;   T160 O3 A8 G8 F8 G8 F8 E8 F8 E8 D8 C4
+;
+;  TRK#1 : None
+;  TRK#2 : T160 O5 A8 G8 F8 G8 F8 E8 F8 E8 D8 C4
+;  TRK#3 : T160 O3 A8 G8 F8 G8 F8 E8 F8 E8 D8 C4
+;
+SFX_06:
+    defb 255 ; Priority
+    defw SFX06_TRK_1
+    defw SFX06_TRK_2
+    defw 0
+SFX06_TRK_1:
+    defb 217, 10B ; Mixing Tone/Noise off
+    defb 214      ; Volume = 14
+    defb 57       ; T160 O5 A8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 55       ; T160 O5 G8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 53       ; T160 O5 F8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 55       ; T160 O5 G8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 53       ; T160 O5 F8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 52       ; T160 O5 E8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 53       ; T160 O5 F8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 52       ; T160 O5 E8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 50       ; T160 O5 D8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 48       ; T160 O5 C4
+    defb 15
+    defb 255
+SFX06_TRK_2:
+    defb 217, 10B ; Mixing Tone/Noise off
+    defb 214      ; Volume = 14
+    defb 33       ; T160 O3 A8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 31       ; T160 O3 G8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 29       ; T160 O3 F8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 31       ; T160 O3 G8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 29       ; T160 O3 F8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 28       ; T160 O3 E8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 29       ; T160 O3 F8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 28       ; T160 O3 E8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 26       ; T160 O3 D8
+    defb 7
+    defb 214      ; Volume = 14
+    defb 24       ; T160 O3 C4
+    defb 15
+    defb 255

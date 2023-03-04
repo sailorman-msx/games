@@ -202,6 +202,20 @@ WK_MESSAGE_ADDR:equ $C0F7 ; 2バイト
 WK_GAMESTATUS:equ $C0F9   ; 1バイト
 WK_GAMESTATUS_INTTIME:equ $C0FA ; シーン切り替えのタイマー(1バイト)
 
+; シナリオエピソード
+; 1 : EPISODE1 BLUTE FORCE
+; 2 : EPISODE2 TELEPORT INFERNO
+; 3 : EPISODE3 WHERE IS FINAL KEY
+; 4 : EPISODE4 GO TO HEAVEN
+WK_EPISODE_COUNT:equ $C0FB ; 1バイト
+
+; PEACEFUL判定カウンタ
+; ビューポート内にテキキャラがいなければ
+; PEACEFULモードとなる
+; PEACEFULモードだと1秒間に1ポイントライフが加算される
+WK_PEACEFUL_FLG:equ $C0FC ; 1バイト ビューポート内にテキキャラがいたら1がセットされる
+WK_PEACEFUL_COUNT:equ $C0FD ; 1バイト
+
 ;
 ; テキキャラポインタテーブル
 ; テキキャラ管理用1体分*100個ぶん

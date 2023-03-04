@@ -159,6 +159,10 @@ CreateViewPort:
     push de
     push hl
 
+    ; PEACEFUL判定フラグを初期化
+    ld a, 0
+    ld (WK_PEACEFUL_FLG), a
+
     ;==== 重要 ===========================================
     ; ToDo:
     ;  半タイル処理でどうしようもないバグになっているため
@@ -318,6 +322,26 @@ CreateViewPortLoop3:
     ; ビューポート情報にセットする
     ;-------------------------------------------
 
+    ld d, a ; タイル番号をDレジスタに退避
+
+    ; PEACEFULモード
+    ; タイル番号が6以上であればPEACEFULモードを
+    ; 無効化する
+    cp 6
+    jp nc, CreateViewPortLoop3NoPeaceful
+
+    jp CreateViewPortLoop3PeacefulEnd
+
+CreateViewPortLoop3NoPeaceful:
+
+    ; PEACEFUL判定フラグをONにする
+    ld a, 1
+    ld (WK_PEACEFUL_FLG), a
+
+CreateViewPortLoop3PeacefulEnd:
+
+    ld a, d
+
     ; タイル番号に4をかけると表示するタイルの左上のキャラクターが決定する
     add a, a
     add a, a
@@ -406,6 +430,31 @@ CreateViewPortNextTile:
     jp CreateViewPortLoop2
 
 CreateViewPortEnd:
+
+    ; PEACEFUL判定フラグがONであれば
+    ; PEACEFULカウンタを0にする
+    ld a, (WK_PEACEFUL_FLG)   
+    cp 1
+    jp z, CreateViewPortEndScary
+
+    ; すでにPEACEFULモードになっていたら
+    ; 何もしない
+    ld a, (WK_PEACEFUL_COUNT)
+    or 0
+    jp nz, CreateViewPortEndRet
+
+    ld a, 61
+    ld (WK_PEACEFUL_COUNT), a
+
+    jp CreateViewPortEndRet
+
+CreateViewPortEndScary:
+
+    ld a, 0
+    ld (WK_PEACEFUL_COUNT), a
+    jp CreateViewPortEndRet
+
+CreateViewPortEndRet:
 
     pop hl
     pop de
@@ -535,6 +584,11 @@ CheckWarpZone:
     cp 1
     jp nz, CheckWarpZoneNotGoal
 
+    ; 既に最後のカギを保有している場合はプロットしない
+    ld a, (WK_HAVEKEY)
+    cp 2
+    jp z, CheckWarpZoneNotGoal
+ 
     ld hl, WK_MAPAREA
     ld de, 64
     add hl, de
@@ -663,5 +717,22 @@ DoTeleportAction:
     ; 効果音を鳴らす
     ld hl, SFX_04
     call SOUNDDRV_SFXPLAY
+
+    ; 初めてのテレポートであればエピソードを
+    ; 進める
+    ld a, (WK_EPISODE_COUNT)
+    cp 1
+    jp nz, DoTeleportActionEnd
+
+    ld a, 2
+    ld (WK_EPISODE_COUNT), a
+
+    ; 効果音を鳴らす
+    ld hl, SFX_05
+    call SOUNDDRV_SFXPLAY
+
+    call DisplayEpisodeTitle
+
+DoTeleportActionEnd:
 
     ret

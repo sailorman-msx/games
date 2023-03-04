@@ -29,6 +29,10 @@ DisplayHaveKey:
     or 0
     jr z, DisplayHaveKeyEnd
     
+    cp 2
+    jr z, DisplayHaveFinalKey
+
+    ; 通常のカギ
     ld hl, $1978
     ld  a, $87
     call WRTVRM
@@ -43,6 +47,27 @@ DisplayHaveKey:
 
     ld hl, $1999
     ld  a, $8A
+    call WRTVRM
+
+    jp DisplayHaveKeyEnd
+
+DisplayHaveFinalKey:
+
+    ; 最後のカギ
+    ld hl, $1978
+    ld  a, $8B
+    call WRTVRM
+
+    ld hl, $1998
+    ld  a, $8C
+    call WRTVRM
+
+    ld hl, $1979
+    ld  a, $8D
+    call WRTVRM
+
+    ld hl, $1999
+    ld  a, $8E
     call WRTVRM
 
 DisplayHaveKeyEnd:
@@ -108,6 +133,103 @@ DisplayFireballEnable:
     call WRTVRM
 
 DisplayFireballEnableEnd:
+
+    ret
+
+;-------------------------------------------- 
+; ライフゲージを加算する
+;--------------------------------------------
+IncLifeGauge:
+
+    ld ix, WK_PLAYERLIFEGAUGE
+
+    ld a, (ix + 0)
+    cp 2
+    jr z, IncLifeGauge1
+
+    inc a
+    ld (ix + 0), a
+
+    jr IncLifeGaugeEnd
+
+IncLifeGauge1:
+
+    ld a, (ix + 1)
+    cp 2
+    jr z, IncLifeGauge2
+
+    inc a
+    ld (ix + 1), a
+
+    jr IncLifeGaugeEnd
+
+IncLifeGauge2:
+
+    ld a, (ix + 2)
+    cp 2
+    jr z, IncLifeGauge3
+
+    inc a
+    ld (ix + 2), a
+
+    jr IncLifeGaugeEnd
+
+IncLifeGauge3:
+
+    ld a, (ix + 3)
+    cp 2
+    jr z, IncLifeGauge4
+
+    inc a
+    ld (ix + 3), a
+
+    jr IncLifeGaugeEnd
+
+IncLifeGauge4:
+
+    ld a, (ix + 4)
+    cp 2
+    jr z, IncLifeGauge5
+
+    inc a
+    ld (ix + 4), a
+
+    jr IncLifeGaugeEnd
+
+IncLifeGauge5:
+
+    ld a, (ix + 5)
+    cp 2
+    jr z, IncLifeGauge6
+
+    inc a
+    ld (ix + 5), a
+
+    jr IncLifeGaugeEnd
+
+IncLifeGauge6:
+
+    ld a, (ix + 6)
+    cp 2
+    jr z, IncLifeGauge7
+
+    inc a
+    ld (ix + 6), a
+
+    jr IncLifeGaugeEnd
+
+IncLifeGauge7:
+
+    ld a, (ix + 7)
+    cp 2
+    jr z, IncLifeGaugeEnd
+
+    inc a
+    ld (ix + 7), a
+
+    jr IncLifeGaugeEnd
+
+IncLifeGaugeEnd:
 
     ret
 
@@ -292,12 +414,12 @@ DisplayLifeGauge0:
 
     ld a, (ix + 0)
     cp 1
-    jr c, DisplayLifeGaugeEnd
+    jr c, DisplayLifeGaugeMainEnd
 
     add a, $80
     ld (iy + 0), a
 
-DisplayLifeGaugeEnd:
+DisplayLifeGaugeMainEnd:
 
     ; WK_PLAYERLIFEGAUGE_CHARSの内容を
     ; 画面に出力する
@@ -307,6 +429,29 @@ DisplayLifeGaugeEnd:
 
     call LDIRVM
     
+    ; PEACEFULモードであれば
+    ; ライフゲージの下に
+    ; PEACEFULの文字を追加する
+    ld a, (WK_PEACEFUL_COUNT)
+    or 0
+    jp z, DisplayLifeGaugeEndScary
+    
+    ld hl, PEACEFUL_MESSAGE
+    ld bc, 9
+    ld de, $1AE9 ; 9行目
+    call LDIRVM
+
+    jp DisplayLifeGaugeEnd
+
+DisplayLifeGaugeEndScary:
+
+    ld hl, SCARY_MESSAGE
+    ld bc, 9
+    ld de, $1AE9 ; 9行目
+    call LDIRVM
+
+DisplayLifeGaugeEnd:
+
     ret
 
 ;-------------------------------------------- 

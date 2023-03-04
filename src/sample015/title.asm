@@ -6,6 +6,8 @@
 ;--------------------------------------------------
 TitleDisplayProc:
 
+    call KILBUF
+
    ; 画面表示を行う
    ;--------------------------------------------
    ; マップデータ（初期画面）のデータを
@@ -109,6 +111,12 @@ TitleDisplayProcBlinkString:
     ld (WK_PLAYERPOSY), a
     ld (WK_PLAYERPOSYOLD), a
 
+    ld a, $0D
+    ld (WK_PLAYERSPRCLR1), a
+
+    ld a, $0F
+    ld (WK_PLAYERSPRCLR2), a
+   
     ld a, $02
 
     ld ix, SPRDISTPTN_TBL + 2

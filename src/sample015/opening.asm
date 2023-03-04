@@ -71,22 +71,65 @@ OpeningProcToStart:
     ; ステータス表示（カギ保有状態）を行う
     call DisplayHaveKey
 
-    ; プレイヤーのジョイスティック方向にあわせた
-    ; スプライトを初期表示する
-    ld a, 3 
-    ld (WK_PLAYERPOSX), a
-    ld (WK_PLAYERPOSXOLD), a
+    ; エピソードタイトル表示を行う
+    call DisplayEpisodeTitle
+
+    ; キー入力バッファクリア
+    call KILBUF
+
+    ;--------------------------------------------
+    ; ビューポートにマップ情報を表示する
+    ;--------------------------------------------
+    call CreateViewPort
+    call DisplayViewPort
+
     ld a, 3
-    ld (WK_PLAYERPOSY), a
-    ld (WK_PLAYERPOSYOLD), a
-    ld a, $02
+    ld (WK_PLAYERPOSX), a    ; プレイヤーのX座標の初期化
+    ld (WK_PLAYERPOSXOLD), a ; プレイヤーのX座標の初期化
+    ld (WK_PLAYERPOSY), a    ; プレイヤーのY座標の初期化
+    ld (WK_PLAYERPOSYOLD), a ; プレイヤーのX座標の初期化
 
-    ld ix, SPRDISTPTN_TBL + 2
-    call CreateWorkSpriteAttr
+    ld a, 5
+    ld (WK_PLAYERDIST), a    ; プレイヤーの向きの初期化（下向き）
+    ld (WK_PLAYERDISTOLD), a ; プレイヤーの向きの初期化（下向き）
 
-    ld de, $1B00
+    ld a, $0D
+    ld (WK_PLAYERSPRCLR1), a ; スプライトの表示色
+
+    ld a, $0F
+    ld (WK_PLAYERSPRCLR2), a ; スプライトの表示色
+
+    ; 現在の位置をOLD変数にセット
     ld bc, 8
-    call PutSprite
+    ld de, WK_PLAYERMOVE_TBL
+    ld hl, PLAYERMOVE_TBL
+    ldir
+
+    ;
+    ; プレイヤーのライフゲージを作成する
+    ; 値が2だとLIFEGAUGEのFULL状態を画面に表示する
+    ; 値が1だとLIFEGAUGEのHALF状態を画面に表示する
+    ; 値が0だとLIFEGAUGEは画面には表示しない
+    ; WK_PLAYERLIFEGAUGE+0 の値が0だとGAME OVER処理が行われる
+    ;
+    ld ix, WK_PLAYERLIFEGAUGE
+    ld a, 2
+    ld (ix + 7), a
+    ld (ix + 6), a
+    ld (ix + 5), a
+    ld (ix + 4), a
+    ld (ix + 3), a
+    ld (ix + 2), a
+    ld (ix + 1), a
+    ld (ix + 0), a
+
+    ; カギ保有情報を初期化する
+    ld a, 0
+    ld (WK_HAVEKEY), a
+
+    ; エピソードカウンタを初期化する
+    ld a, 1
+    ld (WK_EPISODE_COUNT), a
 
     ;--------------------------------------------
     ; BGM演奏開始

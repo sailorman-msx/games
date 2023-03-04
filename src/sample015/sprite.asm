@@ -788,7 +788,7 @@ CheckVRAM4x4DoNotMoveDoor:
     ; カギを保有しているときは衝突判定はしない
     ld a, (WK_HAVEKEY)
     cp 1
-    jp z, CheckVRAM4x4MoveOkay
+    jp nc, CheckVRAM4x4MoveOkay
 
     ; カギを保有していなければ移動不可とする
     
@@ -873,13 +873,19 @@ GetCollisionItemLoopEnd:
 
 GetCollisionItemIsKey:
 
-    ld a, 0
-    ld (hl), a
-
     ; 最後のカギであればライフゲージを満タンにする
     ; ライフゲージを満タンにする
     cp 5
     jp nz, GetCollisionItemIsNormalKey
+
+    ; すでに所有していたら何もしない
+    ld a, (WK_HAVEKEY)
+    cp 2
+    jp z, GetCollisionItemEnd
+
+    ; タイル情報を床に変更する
+    ld a, 0
+    ld (hl), a
 
     ld de, hl
     ld a, 2
@@ -903,12 +909,31 @@ GetCollisionItemIsKey:
 
     call DisplayLifeGauge
 
+    ; カギ保有状態に2をセットする
+    ld a, 2
+    ld (WK_HAVEKEY), a
+
+    ; エピソードを進める
+    ld a, 4
+    ld (WK_EPISODE_COUNT), a
+    call DisplayEpisodeTitle
+
+    ; 効果音を鳴らす
+    ld hl, SFX_05
+    call SOUNDDRV_SFXPLAY
+
+    jp GetCollisionItemEnd
+
 GetCollisionItemIsNormalKey:
 
     ; すでにカギを保有していたら何もせず終了する
     ld a, (WK_HAVEKEY)
     cp 1
     jp z, GetCollisionItemEnd
+
+    ; タイル情報を床に変更する
+    ld a, 0
+    ld (hl), a
 
     ; カギ保有
     ld a, 1
@@ -935,6 +960,16 @@ GetCollisionItemIsDoor:
     ld a, 0
     ld (WK_HAVEKEY), a
 
+    ; タイル情報を床に変更する
+    ld a, 0
+    ld (hl), a
+
+    ; 効果音を鳴らす
+    ld hl, SFX_03
+    call SOUNDDRV_SFXPLAY
+
+    jp GetCollisionItemEnd
+
 GetCollisionItemIsDoorFinalKey:
 
     ; タイル情報を床に変更する
@@ -944,6 +979,8 @@ GetCollisionItemIsDoorFinalKey:
     ; 効果音を鳴らす
     ld hl, SFX_03
     call SOUNDDRV_SFXPLAY
+
+    jp GetCollisionItemEnd
 
 GetCollisionFinalDoor:
 
@@ -960,10 +997,8 @@ GetCollisionFinalDoor:
 GetCollisionFinalDoorOpen:
 
     ; ゲームクリア画面を表示する
-    pop iy
-    pop ix
-
-    jp GameClearProc
+    ld a, 4
+    ld (WK_GAMESTATUS), a
 
 GetCollisionItemEnd:
 

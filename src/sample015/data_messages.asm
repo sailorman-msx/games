@@ -51,3 +51,65 @@ defm "HAVE THE "
 defm "KEY?     "
 defm "HA-HA-HA "
 defm "         "
+;--------------------------------------------
+; エピソード名
+;--------------------------------------------
+EPISODE_TITLE:
+EPISODE_TITLE1:
+defm "         "
+defm " HEAVEN  "
+defm "  DOOR   "
+defm "         "
+defm "EPISODE 1"
+defm "BLUTE    "
+defm "FORCE    "
+defm "         "
+defm "         "
+EPISODE_TITLE2:
+defm "         "
+defm " HEAVEN  "
+defm "  DOOR   "
+defm "         "
+defm "EPISODE 2"
+defm "TELEPORT "
+defm "INFERNO  "
+defm "         "
+defm "         "
+EPISODE_TITLE3:
+defm "         "
+defm " HEAVEN  "
+defm "  DOOR   "
+defm "         "
+defm "EPISODE 3"
+defm "FINAL KEY"
+defm "         "
+defm "         "
+defm "         "
+EPISODE_TITLE4:
+defm "         "
+defm " HEAVEN  "
+defm "  DOOR   "
+defm "         "
+defm "EPISODE 4"
+defm "GO TO    "
+defm "HEAVEN   "
+defm "         "
+defm "         "
+EPISODE_TITLE5:
+defm "         "
+defm " HEAVEN  "
+defm "  DOOR   "
+defm "         "
+defm "         "
+defm "         "
+defm "         "
+defm "         "
+defm "         "
+PEACEFUL_MESSAGE:
+defm "PEACEFUL "
+SCARY_MESSAGE:
+defm "SCARY    "
+GAMEOVER_MESSAGE1:
+defm "           "
+GAMEOVER_MESSAGE2:
+defm " GAME OVER "
