@@ -48,9 +48,44 @@ OpeningProc_IsAbutton:
     ld a, 0
     ld (WK_GAMESTATUS_INTTIME), a
 
-    jp OpeningProcToStart
-
 OpeningProcToStart:
+
+    ;--------------------------------------------
+    ; マップデータを生成する
+    ;--------------------------------------------
+    call CreateMapArea
+
+    ;--------------------------------------------
+    ; テキキャラデータを生成する
+    ;--------------------------------------------
+    ld b, 100
+    ld hl, WK_ENEMY_PTR_TBL
+    ld de, 0x0000
+OpeningProcTblInitLoop:
+    ld (hl), de ; アドレスの値を初期化する
+    inc hl      ; アドレスを2バイト進める
+    inc hl
+    djnz OpeningProcTblInitLoop
+
+    ld a, 127
+    ld (WK_RANDOM_VALUE), a
+    call InitializeEnemyDatas ; テキキャラデータ生成メイン
+
+    ld a, 0
+    ld (WK_VIEWPORTPOSX), a ; ビューポート左上X座標
+    ld a, 0
+    ld (WK_VIEWPORTPOSY), a ; ビューポート左上Y座標
+
+    ;--------------------------------------------
+    ; テレポート位置をメモリに展開する
+    ;--------------------------------------------
+    ld hl, TELEPORT_DATA
+    ld de, WK_TELEPORT_DATA_TBL
+    ld bc, 112 ; 112バイトぶんをメモリに展開する
+    ldir
+
+    ld a, 0
+    ld (WK_TELEPORT_INTTIME), a
 
    ; 画面表示を行う
    ;--------------------------------------------
@@ -74,8 +109,14 @@ OpeningProcToStart:
     ; エピソードタイトル表示を行う
     call DisplayEpisodeTitle
 
-    ; キー入力バッファクリア
-    call KILBUF
+    ;--------------------------------------------
+    ; ゴールタイルをセットする
+    ;--------------------------------------------
+    ld de, 111
+    ld hl, WK_MAPAREA
+    add hl, de
+    ld a, 4   ; ゴールのドアタイルは#4
+    ld (hl), a
 
     ;--------------------------------------------
     ; ビューポートにマップ情報を表示する

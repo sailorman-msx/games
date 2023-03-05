@@ -82,7 +82,7 @@ GameOverProcToTitle:
     ld a, 0
     ld (WK_GAMESTATUS_INTTIME), a
 
-    jp GameOverProcEnd
+    jp TitleDisplayProc 
     
 GameOverProcDecTime:
 

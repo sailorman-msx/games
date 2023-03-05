@@ -19,71 +19,6 @@ include "initialize.asm"
 ;--------------------------------------------
     call CreateSpritePattern
 
-;--------------------------------------------
-; マップデータを生成する
-;--------------------------------------------
-    call CreateMapArea
-
-    ld a, 0
-    ld (WK_FLAME_ANIME_COUNT), a
-    ld (WK_FLAME_PATTERN), a
-
-;--------------------------------------------
-; テキキャラデータを生成する
-;--------------------------------------------
-    ld b, 100
-    ld hl, WK_ENEMY_PTR_TBL
-    ld de, 0x0000 
-EnemyPtrTblInitLoop:
-    ld (hl), de ; アドレスの値を初期化する
-    inc hl      ; アドレスを2バイト進める
-    inc hl
-    djnz EnemyPtrTblInitLoop
-
-    ld a, 127
-    ld (WK_RANDOM_VALUE), a
-    call InitializeEnemyDatas ; テキキャラデータ生成メイン
-
-    ld a, 0
-    ld (WK_VIEWPORTPOSX), a ; ビューポート左上X座標
-    ld a, 0
-    ld (WK_VIEWPORTPOSY), a ; ビューポート左上Y座標
-
-;--------------------------------------------
-; テレポート位置をメモリに展開する
-;--------------------------------------------
-    ld hl, TELEPORT_DATA
-    ld de, WK_TELEPORT_DATA_TBL
-    ld bc, 112 ; 112バイトぶんをメモリに展開する
-    ldir
-
-    ld a, 0
-    ld (WK_TELEPORT_INTTIME), a
-
-;--------------------------------------------
-; マップデータ（初期画面）のデータを
-; VRAM(1800H-1AFFH)に書き込む
-;--------------------------------------------
-    ld de, $1800
-    ld hl, MAPDATA_DEFAULT
-    ld bc, 768
-    call LDIRVM
-
-;--------------------------------------------
-; ゴールタイルをセットする
-;--------------------------------------------
-    ld de, 111
-    ld hl, WK_MAPAREA
-    add hl, de
-    ld a, 4   ; ゴールのドアタイルは#4
-    ld (hl), a
-
-    ; ゲームステータスを初期化する
-    ; タイトル画面を表示する
-    ld a, 0
-    ld (WK_GAMESTATUS), a
-    ld (WK_GAMESTATUS_INTTIME), a
-
 ;-------------------------------------------------
 ; メインループ(割り込み処理でGameProcを呼び出す)
 ;-------------------------------------------------
@@ -157,16 +92,16 @@ GameProc_Init2:
     cp 1
     jp nc, GameProc_Init3
 
-    ld a, 3
-    ld (WK_GAMESTATUS), a
-    ld a, 180
-    ld (WK_GAMESTATUS_INTTIME), a ; 180/60秒後にゲームオーバー画面に遷移する
+    ;ld a, 3
+    ;ld (WK_GAMESTATUS), a
+    ;ld a, 180
+    ;ld (WK_GAMESTATUS_INTTIME), a ; 180/60秒後にゲームオーバー画面に遷移する
 
     ; 効果音を鳴らす
-    ld hl, SFX_06
-    call SOUNDDRV_SFXPLAY
+    ;ld hl, SFX_06
+    ;call SOUNDDRV_SFXPLAY
 
-    jp GameProcEnd
+    ;jp GameProcEnd
     
 GameProc_Init3:
     ; テレポート位置か判定する

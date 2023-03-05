@@ -624,12 +624,17 @@ MoveEnemyTileMoveLoopEnd:
 
     ld a, (hl)
 
-    ; 移動先のMAP座標のタイル番号が#1,#2,#3とテキキャラのタイル番号の場合は移動させない
+    ; 移動先のMAP座標のタイル番号が#1,#2,#3,#4,#5
+    ; とテキキャラのタイル番号の場合は移動させない
     cp 1
     jp z, MoveEnemyTileMoveEnd
     cp 2
     jp z, MoveEnemyTileMoveEnd
     cp 3
+    jp z, MoveEnemyTileMoveEnd
+    cp 4
+    jp z, MoveEnemyTileMoveEnd
+    cp 5
     jp z, MoveEnemyTileMoveEnd
     cp 11
     jp z, MoveEnemyTileMoveEnd
