@@ -91,8 +91,19 @@ OpeningProcTblInitLoop:
    ; スコアを初期化する
    ;--------------------------------------------
     ld hl, WK_SCORE
-    ld ix, WK_SCORE
+    ld ix, hl
     ld a, 0
+    ld (ix + 0), a
+    ld (ix + 1), a
+    ld (ix + 2), a
+    ld (ix + 3), a
+    ld (ix + 4), a
+    ld (ix + 5), a
+    ld (ix + 6), a
+    ld (ix + 7), a
+    ld hl, WK_SCORE_CHARS
+    ld ix, hl
+    ld a, '0'
     ld (ix + 0), a
     ld (ix + 1), a
     ld (ix + 2), a
