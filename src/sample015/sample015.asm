@@ -92,16 +92,16 @@ GameProc_Init2:
     cp 1
     jp nc, GameProc_Init3
 
-    ;ld a, 3
-    ;ld (WK_GAMESTATUS), a
-    ;ld a, 180
-    ;ld (WK_GAMESTATUS_INTTIME), a ; 180/60秒後にゲームオーバー画面に遷移する
+    ld a, 3
+    ld (WK_GAMESTATUS), a
+    ld a, 180
+    ld (WK_GAMESTATUS_INTTIME), a ; 180/60秒後にゲームオーバー画面に遷移する
 
     ; 効果音を鳴らす
-    ;ld hl, SFX_06
-    ;call SOUNDDRV_SFXPLAY
+    ld hl, SFX_06
+    call SOUNDDRV_SFXPLAY
 
-    ;jp GameProcEnd
+    jp GameProcEnd
     
 GameProc_Init3:
     ; テレポート位置か判定する
