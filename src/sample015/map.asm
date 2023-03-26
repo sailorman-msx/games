@@ -563,16 +563,16 @@ CheckWarpZone:
     push ix
     push iy
 
+    ; 取得したMAP座標はWK_PLAYER_MAPPOSX, WK_PLAYER_MAPPOSYに
+    ; 格納される
+    call GetPlayerMapPos
+
     ; テレポート直後の場合は何もせず処理を抜ける
     ld a, (WK_TELEPORT_INTTIME)
     or 0
     jp nz, CheckWarpZoneInterval
 
     ; プレイヤーのMAP座標を取得する
-    ; 取得したMAP座標はWK_PLAYER_MAPPOSX, WK_PLAYER_MAPPOSYに
-    ; 格納される
-    call GetPlayerMapPos
-
     ;----------------------------------------------------
     ; 特定の位置の場合、最後のカギをMAP上にプロットする
     ;----------------------------------------------------
