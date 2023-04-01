@@ -133,13 +133,13 @@ CreateSpritePatternLoop:
     ret
 
 ;--------------------------------------------
-; SUB-ROUTINE: PutSprite
+; SUB-ROUTINE: ShuffleSprite
 ; ワーク用スプライトアトリビュートテーブルの内容を
 ; 素数を使った形式(KONAMI方式)でシャッフルし
 ; その後、VDPポートを直接叩いて
 ; アトリビュートテーブルの内容をVRAMに転送する。
 ;--------------------------------------------
-PutSprite:
+ShuffleSprite:
 
     ; VRAM書込み事前準備
     ; VDP書き込み用ポートに書き込みたいVRAMアドレスを
@@ -149,7 +149,14 @@ PutSprite:
     ld c, a
     inc c         ; 0007Hの値に1を加算するとWRITEモードのポート番号になる
 
-    ld hl, 1B00H
+    ; 直接、スプライトアトリビューﾄのVRAMアドレスを
+    ; 書き換えるとテアリングが発生する可能性があるため
+    ; 1C00Hにシャッフルした仮想アトリビュートテーブルを
+    ; セットする
+    ; シャッフルが終わったら1C00Hから128バイトぶんを
+    ; 1B00Hに書き込む
+
+    ld hl, $1C00
     ld a, l
     out (c), a    ; 12ステート
     nop           ;  4ステート
@@ -157,8 +164,8 @@ PutSprite:
     nop           ;  4ステート
 
     ld a, h
-    and 3FH
-    or 40H
+    and $3F
+    or $40
     out (c), a    ; 12ステート
     nop           ;  4ステート
     nop           ;  4ステート
@@ -176,7 +183,7 @@ PutSprite:
 
     ld a, (WK_SPRITE0_NUM)
 
-PutSpriteLoop:
+ShuffleSpriteLoop:
 
     ld l, a
 
@@ -211,7 +218,7 @@ PutSpriteLoop:
     and a, 7FH
 
     ; 32回分ループする
-    djnz PutSpriteLoop
+    djnz ShuffleSpriteLoop
 
     ; 次のシャッフル値の基準値（アドレス）を決める
 
@@ -221,4 +228,63 @@ PutSpriteLoop:
     ; 次のシャッフルの基準値を変更する
     ld (WK_SPRITE0_NUM), a
 
+    ret
+
+;--------------------------------------------
+; SUB-ROUTINE: PutSprite
+; VRAM 1C00Hから128バイト分を
+; VRAM 1B00Hに転送する
+;--------------------------------------------
+PutSprite:
+
+    ; VRAMの1C00Hから128バイトぶんを
+    ; データ表示用のワークテーブルに格納する
+    ld a, (WK_VDPPORT1)
+    ld c, a
+    inc c
+    ld hl, $1C00
+    ld a, l
+    out (c), a
+    nop
+    nop
+    nop
+    ld a, h
+    out (c), a
+    nop
+    nop
+    nop
+
+    ld a, (WK_VDPPORT0)
+    ld c, a
+    ld b, 128
+    ld hl, WK_DISP_SPR_ATTR_TBL
+    inir
+    nop
+    nop
+
+    ld a, (WK_VDPPORT1)
+    ld c, a
+    inc c
+    ld hl, $1B00
+    ld a, l
+    out (c), a
+    nop
+    nop
+    nop
+    ld a, h
+    and $3F
+    or $40
+    out (c), a
+    nop
+    nop
+    nop
+
+    ld a, (WK_VDPPORT0)
+    ld c, a
+    ld b, 128
+    ld hl, WK_DISP_SPR_ATTR_TBL
+    otir
+    nop
+    nop
+    
     ret

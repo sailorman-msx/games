@@ -38,10 +38,6 @@ include "initialize.asm"
 
 HTMIHookLoop:
 
-    ; VRAM 1C00Hから128バイトぶんを
-    ; VRAM 1B00Hに転送する
-    call PutSprite
-
     ; VSYNC_WAIT_FLGの初期化
     ;   この値は以下の制御を行うために使用する：
     ;   - メインロジック開始時に 0 に設定
