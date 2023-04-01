@@ -86,17 +86,19 @@ WK_SPRITEPOSY:equ $D013     ; 1バイト
 
 ; データ更新用（シャッフル用）
 WK_VIRT_SPR_ATTR_TBL:equ $D100 ; 128バイト (D100H - D17FH)
+; データ更新用（表示用）
+WK_DISP_SPR_ATTR_TBL:equ $D180 ; 128バイト (D180H - D1FFH)
 
 ; VRAMスプライトアトリビュートのスプライト番号
 ; シャッフルのつど、19 * 4=76 を加算していく
 ; 加算結果は常に0x7FでANDを行い32*4を超えないようにする
-WK_SPRITE0_NUM:equ $D180       ; 1バイト
+WK_SPRITE0_NUM:equ $D200       ; 1バイト
 
 ; 垂直同期待ちカウンタ
-VSYNC_WAIT_CNT:equ $D181       ; 1バイト
+VSYNC_WAIT_CNT:equ $D201       ; 1バイト
 
 ; H.TIMIフックバックアップ用ワークエリア 
-H_TIMI_BACKUP:equ $D182  ; 5バイト
+H_TIMI_BACKUP:equ $D202  ; 5バイト
 
 ; サウンドドライバ用ワークエリア
 SOUNDDRV_H_TIMI_BACKUP:equ $E000     ; 5バイト

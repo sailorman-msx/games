@@ -9,6 +9,12 @@ include "initialize.asm"
     ;--------------------------------------------
     call CreateCharacterPattern
 
+    ; 画面に床キャラを敷き詰める
+    ld bc, 768
+    ld hl, $1800
+    ld  a, '$'
+    call FILVRM 
+
     ;--------------------------------------------
     ; スプライトと仮想アトリビュートテーブルを
     ; 作成する
@@ -31,6 +37,11 @@ include "initialize.asm"
     call INIT_H_TIMI_HANDLER
 
 HTMIHookLoop:
+
+    ; VRAM 1C00Hから128バイトぶんを
+    ; VRAM 1B00Hに転送する
+    call PutSprite
+
     ; VSYNC_WAIT_FLGの初期化
     ;   この値は以下の制御を行うために使用する：
     ;   - メインロジック開始時に 0 に設定
@@ -42,17 +53,22 @@ HTMIHookLoop:
     jp MainProc
 
 VSYNC_Wait:
+
     ; 垂直帰線待ち
+    ; VSYNC_WAIT_CNTが0になるまで待つ
+
     ld a, (VSYNC_WAIT_CNT)
     or a
+
     jr nz,VSYNC_Wait
 
     jr HTMIHookLoop
 
 MainProc:
 
-    ; スプライトを表示する
-    call PutSprite
+    ; 仮想スプライトアトリビュートテーブルを
+    ; シャッフルする
+    call ShuffleSprite
 
 MainEnd:
 
