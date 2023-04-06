@@ -1,0 +1,2 @@
+InputProc:
+    ret
