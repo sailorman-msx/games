@@ -170,7 +170,7 @@ MoveSpriteReverseYMove:
     inc l
     ld a, (hl)
 
-    ; Yの移動方向をマイナス方向に変更する
+    ; Yの移動方向の符号を反転する
     neg
     ld (hl), a
 
