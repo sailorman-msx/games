@@ -1,5 +1,8 @@
 ;---------------------------------------------
 ; VRAM関連サブルーチン群
+; ()内はMSX1でのステート数
+; MSX1とそれ以外ではステート数が異なる
+; 参考：https://taku.izumisawa.jp/Msx/ktecho2
 ;---------------------------------------------
 
 ;--------------------------------------------
@@ -10,21 +13,23 @@
 VDPRED:
 
     push af
+    push bc
+    push de
     
     ld a, l                    ; 下位8ビット
     out (CONST_VDPPORT1), a    ; (12)
-    nop                        ; (04)
-    nop                        ; (04)
-    nop                        ; (04)
+    nop                        ; (05)
+    nop                        ; (05)
 
     ld a, h                    ; 下位8ビット
     and $3F                    ; 第7ビット、第6ビットを0にする
     
     out (CONST_VDPPORT1), a    ; (12)
-    nop                        ; (04)
-    nop                        ; (04)
-    nop                        ; (04)
+    nop                        ; (05)
+    nop                        ; (05)
 
+    pop de
+    pop bc
     pop af
 
     ret
@@ -37,22 +42,24 @@ VDPRED:
 VDPWRT:
 
     push af
+    push bc
+    push de
 
     ld a, l                    ; 下位8ビット
     out (CONST_VDPPORT1), a    ; (12)
-    nop                        ; (04)
-    nop                        ; (04)
-    nop                        ; (04)
+    nop                        ; (05)
+    nop                        ; (05)
 
     ld a, h                    ; 上位8ビット
     and $3F                    ; 第7ビット、第6ビットを0にする
     or  $40                    ; 第6ビットを1にする(WRITE-MODE)
     
     out (CONST_VDPPORT1), a    ; (12)
-    nop                        ; (04)
-    nop                        ; (04)
-    nop                        ; (04)
+    nop                        ; (05)
+    nop                        ; (05)
 
+    pop de
+    pop bc
     pop af
 
     ret
@@ -70,9 +77,8 @@ REDVRM:
 
     ; 読み込み
     in a, (CONST_VDPPORT0)    ; (12)
-    nop                       ; (04)
-    nop                       ; (04)
-    nop                       ; (04)
+    nop                       ; (05)
+    nop                       ; (05)
 
     ret
 
@@ -89,9 +95,8 @@ WRTVRM:
 
     ; 読み込み
     out (CONST_VDPPORT0), a   ; (12)
-    nop                       ; (04)
-    nop                       ; (04)
-    nop                       ; (04)
+    nop                       ; (05)
+    nop                       ; (05)
 
     ret
 
@@ -120,9 +125,9 @@ REDVRMSERIAL:
 REDVRMSERIALLOOP:
 
     in a, (CONST_VDPPORT0)     ; (12)
-    ld (hl), a                 ; (07)
+    ld (hl), a                 ; (8)
 
-    cpi                        ; (16)
+    cpi                        ; (18)
                                ; HL = HL + 1, BC = BC - 1
                                ; BC <> 0ならPEフラグが1になる
 
@@ -144,7 +149,8 @@ WRTVRMFIL:
 WRTVRMFILLOOP:
 
     out (CONST_VDPPORT0), a    ; (12)
-    cpi                        ; (16)
+
+    cpi                        ; (18)
                                ; HL = HL + 1, BC = BC - 1
                                ; BC <> 0ならPEフラグが1になる
 
@@ -166,7 +172,8 @@ WRTVRMSERIAL:
     ld (WK_HLREGBACK), hl
 
     ; HLレジスタにVRAMアドレスをセット
-    ld hl, de
+    ld h, d
+    ld l, e
 
     ; 読み込み宣言
     call VDPWRT
@@ -177,138 +184,12 @@ WRTVRMSERIAL:
 WRTVRMSERIALLOOP:
 
     ld a, (hl)
-    out (CONST_VDPPORT0), a     ; (12)
+    out (CONST_VDPPORT0), a    ; (12)
 
-    cpi                         ; (16)
-                                ; HL = HL + 1, BC = BC - 1
-                                ; BC <> 0ならPEフラグが1になる
+    cpi                        ; (18)
+                               ; HL = HL + 1, BC = BC - 1
+                               ; BC <> 0ならPEフラグが1になる
 
     jp pe, WRTVRMSERIALLOOP
 
     ret
-
-;---------------------------------------------
-; SUB-ROUTINE:GetVRAM4x4
-; 指定したX座標、Y座標周辺の画面情報を
-; 4x4のTBLに格納する
-;
-; WK_CHECKPOSX, WK_CHECKPOSYに座標値をセットして
-; から呼び出すこと
-; 
-; WK_VRAM4X4_TBL
-;
-; +--+--+--+--+
-; |00|01|02|03|
-; +--+--+--+--+
-; |04|05|06|07| <- 05がX座標、Y座標に対応
-; +--+--+--+--+
-; |08|09|0A|0B|
-; +--+--+--+--+
-; |0C|0D|0E|0F|
-; +--+--+--+--+
-;
-; 注意：
-; WK_CHECKPOSX, WK_CHECKPOSYは1以上の値とすること
-;
-;---------------------------------------------
-GetVRAM4x4:
-
-   push ix
-   push iy
-   push hl
-   push de
-
-   ; IXレジスタにWK_VRAM4X4_TBLのアドレスをセット
-   ld ix, WK_VRAM4X4_TBL
-
-   ; AレジスタにY座標をセット
-   ld a, (WK_CHECKPOSY)
-   dec a 
-
-   ld hl, 0
-
-   ; 画面の行を進める
-
-GetVRAM4x4Loop1:
-
-   or 0
-   jr z, GetVRAM4x4Loop1End
-   add hl, $20
-   
-   dec a
-   jr GetVRAM4x4Loop1
-
-GetVRAM4x4Loop1End:
-
-   ; AレジスタにX座標をセット
-   ld a, (WK_CHECKPOSX)
-   dec a
-
-   ld  b, 0
-   ld  c, a
-
-   add hl, bc
-
-   ; VRAMアドレスをHLレジスタに加算する
-   ; このアドレスがWK_VRAM4X4_TBLの00の箇所に該当する
-   ld bc, $1800
-   add hl, bc
-
-   ; WK_VRAM4X4_TBLにVRAMの値をセットする
-
-   ; 指定されたY座標の1行上の情報をTBLにセット
-
-   call REDVRM
-   ld (ix), a
-   call REDVRM
-   ld (ix+$01), a
-   call REDVRM
-   ld (ix+$02), a
-   call REDVRM
-   ld (ix+$03), a
-
-   ; 指定されたY座標の情報の値をセットする
-
-   add hl, 29 ; HLレジスタに29を加算する
-
-   call REDVRM
-   ld (ix+$04), a
-   call REDVRM
-   ld (ix+$05), a
-   call REDVRM
-   ld (ix+$06), a
-   call REDVRM
-   ld (ix+$07), a
-
-   ; 指定されたY座標の1行下の情報の値をセットする
-
-   add hl, 29 ; HLレジスタに29を加算する
-
-   call REDVRM
-   ld (ix+$08), a
-   call REDVRM
-   ld (ix+$09), a
-   call REDVRM
-   ld (ix+$0A), a
-   call REDVRM
-   ld (ix+$0B), a
-
-   ; 指定されたY座標の2行下の情報の値をセットする
-
-   add hl, 29 ; HLレジスタに29を加算する
-
-   call REDVRM
-   ld (ix+$0C), a
-   call REDVRM
-   ld (ix+$0D), a
-   call REDVRM
-   ld (ix+$0E), a
-   call REDVRM
-   ld (ix+$0F), a
-
-   pop de
-   pop hl
-   pop iy
-   pop ix
-
-   ret

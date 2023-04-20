@@ -165,10 +165,6 @@ CreateSpriteMoveTable:
     add hl, de
 
     ld a, (WK_STAGE_NUM)
-    ld c, a
-    add a, a
-    add a, c ; 3倍
-
     ld b, a
 
 CreateSpriteMoveTableLoop:
@@ -215,6 +211,11 @@ InitialSpriteMoveTableYLoop:
     call RandomValue
     ld a, (WK_RANDOM_VALUE)
 
+    and $1F ; 31以下の数値にしてから
+    sla a   ; 8の倍数にする
+    sla a
+    sla a
+
     ; 乱数値が167以上だったら再度乱数を取得する
     cp 167
     jp nc, InitialSpriteMoveTableYLoop
@@ -231,6 +232,11 @@ InitialSpriteMoveTableXLoop:
 
     call RandomValue
     ld a, (WK_RANDOM_VALUE)
+
+    and $1F ; 31以下の数値にしてから
+    sla a   ; 8の倍数にする
+    sla a
+    sla a
 
     ; 乱数値が233以上だったら再度乱数を取得する
     cp 233
@@ -299,251 +305,9 @@ InitialSpriteMoveTableMoveEnd:
     ret
 
 ;--------------------------------------------
-; SUB-ROUTINE: MoveSprite
-; スプライト座標管理用テーブルを更新する
+; SUB-ROUTINE: GetSpriteColor
+; ボールの色をランダムに取得する
 ;--------------------------------------------
-MoveSprite:
-
-    ld hl, WK_SPRITE_MOVETBL
-    ld (WK_HLREGBACK), hl
-
-    ; SPRITE#31の座標は更新しない
-    ld b, 31
-
-MoveSpriteLoop:
-
-    ; スプライトが透明だったら次のデータを加工する
-    inc l
-    inc l
-    inc l ; HL = HL + 3
-    ld a, (hl)
-    or 0
-    jp z, MoveSpriteEnd
-
-    dec l ; HL = HL + 2
-
-    ; スプライトがPLAYERだったら次のデータを加工する
-    ld a, (hl)
-    cp 16
-    jp nc, MoveSpriteEnd
-
-MoveSpriteX:
-
-    ; Aレジスタの値からX座標の移動量を取得する
-    ld hl, (WK_HLREGBACK)
-    inc l
-    inc l
-    inc l
-    inc l ; HL = HL + 4
-
-    ld a, (hl) ; 移動量を取得
-
-    cp 1
-    jp nz, MoveSpriteMinusX
-
-MoveSpritePlusX:
-
-    ld hl, (WK_HLREGBACK)
-    inc l
-    ld a, (hl)
-    inc a
-
-    ; X座標が233以上になったら移動方向を逆転する
-    cp 233
-    call nc, MoveSpriteReverseX
-
-    ld hl, (WK_HLREGBACK)
-    inc l
-    ld (hl), a
-
-    jp MoveSpriteY
-
-MoveSpriteMinusX:
-
-    ld hl, (WK_HLREGBACK)
-    inc l
-    ld a, (hl)
-    dec a
-
-    ; X座標がマイナスになったら移動方向を逆転する
-    cp 8
-    call c, MoveSpriteReverseX
-   
-    ld hl, (WK_HLREGBACK)
-    inc l
-    ld (hl), a
-
-MoveSpriteY:
-
-    ; Aレジスタの値からY座標の移動量を取得する
-    ld hl, (WK_HLREGBACK)
-    inc l
-    inc l
-    inc l
-    inc l
-    inc l ; HL = HL + 5 
-
-    ld a, (hl) ; 移動量を取得
-
-    cp 1
-    jp nz, MoveSpriteMinusY
-
-MoveSpritePlusY:
-
-    ld hl, (WK_HLREGBACK)
-    ld a, (hl)
-    inc a
-
-    ; Y座標が167以上になったら移動方向を逆転する
-    cp 167
-    call nc, MoveSpriteReverseY
-
-    ld hl, (WK_HLREGBACK)
-    ld (hl), a
-
-    jp MoveSpriteEnd
-
-MoveSpriteMinusY:
-
-    ld hl, (WK_HLREGBACK)
-    ld a, (hl)
-    dec a
-
-    ; Y座標がマイナスになったら移動方向を逆転する
-    cp 24
-    call z, MoveSpriteReverseY
-   
-    ld hl, (WK_HLREGBACK)
-    ld (hl), a
-
-MoveSpriteEnd:
-
-    ld hl, (WK_HLREGBACK)
-    inc l   
-    inc l   
-    inc l   
-    inc l   
-    inc l   
-    inc l   
-    ld (WK_HLREGBACK), hl ; アドレスを6進める
-
-    dec b
-    jp nz, MoveSpriteLoop
-
-    ret
-
-MoveSpriteReverseX:
-
-    ld hl, (WK_HLREGBACK)
-    inc l
-    inc l ; HL = HL + 2
-    ld a, (hl) ; パターン番号を変える
-    add a, 4
-    
-    cp 16
-    jp nz, MoveSpriteReverseXtoMinus
-
-    ld a, 0
-
-MoveSpriteReverseXtoMinus:
-
-    ld (hl), a
-
-    call GetSpriteColor
-
-    inc l
-    ld (hl), a
-
-    ld hl, (WK_HLREGBACK)
-
-    inc l
-    inc l
-    inc l
-    inc l
-    ld a, (hl)
-
-    cp 1
-    jp nz,  MoveSpriteReverseXtoPlus
-
-    ; Xの移動方向の符号を反転する
-    ; 2の補数でマイナス値に変換する
-    neg
-    ld (hl), a
-
-    ld a, 232
-
-    jp MoveSpriteReverseXEnd
-
-MoveSpriteReverseXtoPlus:
-
-    ; Xの移動方向の符号を反転する
-    ; 2の補数でプラス値に変換する
-    neg
-    ld (hl), a
-
-    ld a, 8
-
-MoveSpriteReverseXEnd:
-
-    ret
-
-MoveSpriteReverseY:
-
-    ld hl, (WK_HLREGBACK)
-    inc l
-    inc l
-
-    ld a, (hl) ; パターン番号を変える
-    add a, 4
-    
-    cp 16
-    jp nz, MoveSpriteReverseYtoMinus
-
-    ld a, 0
-
-MoveSpriteReverseYtoMinus:
-
-    ld (hl), a
-
-    call GetSpriteColor
-
-    inc l
-    ld (hl), a
-    
-    ld hl, (WK_HLREGBACK)
-
-    inc l
-    inc l
-    inc l
-    inc l
-    inc l
-    ld a, (hl)
-
-    cp 1
-    jp nz, MoveSpriteReverseYtoPlus
-
-    ; Yの移動方向をマイナス方向に変更する
-    ; 2の補数でマイナス値に変換する
-    neg
-    ld (hl), a
-
-    ld a, 167
-
-    jp MoveSpriteReverseYEnd
-
-MoveSpriteReverseYtoPlus:
-
-    ; Yの移動方向をプラス方向に変更する
-    ; 2の補数でプラス値に変換する
-    neg
-    ld (hl), a
-
-    ld a, 24
-
-MoveSpriteReverseYEnd:
-
-    ret
-
 GetSpriteColor:
 
 GetSpriteColorLoop:
@@ -663,21 +427,17 @@ ShuffleSpriteLoop:
     ; VRAMへの書き換えを行ったら最低21ステート間隔を
     ; あける必要があるらしい
 
-    outi  ; 16ステート
-    inc b ;  4ステート
-    nop   ;  4ステート
+    outi  ; 18ステート
+    inc b ;  5ステート
 
     outi
     inc b
-    nop
 
     outi
     inc b
-    nop
 
     outi
     inc b
-    nop
 
     add a, 28   ; A = A + 7 * 4
 

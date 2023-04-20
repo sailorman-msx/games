@@ -98,7 +98,9 @@ WK_BCREGBACK:equ $C834   ; 2バイト
 ; VRAM当たり判定用
 WK_CHECKPOSX:equ $C836   ; 1バイト
 WK_CHECKPOSY:equ $C837   ; 1バイト
-WK_VRAM4X4_TBL:equ $C838 ; 16バイト
+WK_CONFLICTX:equ $C838    ; 1バイト
+WK_CONFLICTY:equ $C839    ; 1バイト
+WK_VRAM4X4_TBL:equ $C840 ; 16バイト
 
 ; キャラクタデータ作成用
 WK_CHARDATAADR:equ $D000 ; 2バイト
