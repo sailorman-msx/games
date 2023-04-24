@@ -1,0 +1,6 @@
+#!/bin/bash
+# for Linux or macOS only.
+
+z80asm -b $1.asm
+dd bs=$2 conv=sync if=$1.bin of=$1.msx
+xxd -u -g 4 $1.msx
