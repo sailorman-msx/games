@@ -5,8 +5,8 @@
 ; キャラクタパターンとカラーテーブル
 CHRPTN:
     defb $80  ; CHAR CODE
-    defb $FC, $FC, $FC, $00, $CF, $CF, $CF, $00 ; CHAR PATTERN
-    defb $81, $81, $81, $11, $A1, $A1, $F1, $11 ; COLOR PATTERN
+    defb $FE, $FE, $FE, $00, $DF, $DF, $DF, $00 ; CHAR PATTERN
+    defb $81, $81, $81, $11, $81, $81, $D1, $D1 ; COLOR PATTERN
 
     defb $81  ; CHAR CODE
     defb $38, $38, $38, $7C, $BA, $38, $6C, $00 ; CHAR PATTERN
