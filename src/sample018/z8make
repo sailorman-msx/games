@@ -26,6 +26,6 @@ echo "REM  MACHINE LANGUAGE DATA             "
 echo "REM                                    "
 echo "REM  original source : $1.asm          "
 echo "REM ==================================="
-xxd -u -g 4 $1.msx | awk '{ print $2$3$4 }' | sed -e 's/^/DATA \"/' | sed -e 's/$/\"/'
+xxd -u -g 4 $1.msx | awk '{ print $2$3$4$5 }' | sed -e 's/^/DATA \"/' | sed -e 's/$/\"/'
 
 exit 0
