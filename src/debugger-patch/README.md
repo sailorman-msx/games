@@ -5,7 +5,7 @@
 
 ## How-to Apply Patch
 
-**STEP1 Install QT**
+**STEP1. Install QT**
 
 Since openMSX-debugger uses QT, you need to install QT with HomeBrew.
 
