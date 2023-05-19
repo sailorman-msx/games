@@ -3,7 +3,7 @@
 
 # This patch is to enable the openMSX-debugger to import the map file output by z80asm. It is mainly based on macOS, but Windows is not much different.
 
-**How-to install**
+## How-to Apply Patch
 
 **STEP1 Install QT**
 Since openMSX-debugger uses QT, you need to install QT with HomeBrew.
@@ -41,7 +41,7 @@ ls -l ~/openMSX-debugger/debugger-master/derived/openMSX_Debugger.app
 **STEP7. Start Finder and copy openMSX_Debugger.app to your application folder.**
 *You can recognize openMSX_Debugger.app by the penguin icon.
 
-**How-to MAP File usage.**
+## How-to MAP File usage
 
 **STEP1. z80asm will output a map file when assembling with the following options.**
 
@@ -63,7 +63,7 @@ Click the Add button on the Symbol Manager dialog and select the created map fil
 
 # このパッチはopenMSX-debuggerでz80asmが出力するmapファイルを取り込めるようにするためのパッチです。主にmacOSをベースとしていますがWindowsでもさほど違いはないでしょう。
 
-**How-to install**
+## パッチを適用してopenMSX-debuggerをビルドする
 
 **STEP1. QTをインストールする**
 openMSX-debuggerはQTを使っていますので、QTをHomeBrewでインストールする必要があります。QTをすでにインストール済みであればこの手順はスキップしてください。
@@ -106,7 +106,7 @@ ls -l ~/openMSX-debugger/debugger-master/derived/openMSX_Debugger.app
 
 *openMSX_Debugger.appはペンギンアイコンで表示されるのでわかります。
 
-**How-to MAP File usage.**
+## OpenMSX-debuggerでmapファイルを使う
 
 **STEP1. z80asmでは以下のようなオプションをつけるとアセンブル時にmapファイルを出力します。**
 
