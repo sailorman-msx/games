@@ -14,6 +14,7 @@ brew install qt5
 **STEP2. Download the source code of openMSX-debugger.**
 
 Snapshot / Source code (zip)
+
 https://github.com/openMSX/debugger/archive/debugger-master.zip
 
 **STEP3. Extract the source code zip.**
@@ -21,19 +22,25 @@ https://github.com/openMSX/debugger/archive/debugger-master.zip
 Extract the zip file to an appropriate directory.
 
 mkdir -p ~/Download/openMSX-debugger
+
 cp ~/Download/debugger-master.zip ~/openMSX-debugger/.
+
 cd ~/openMSX-debugger
+
 unzip debugger-master.zip 
 
 **STEP4. raw download (or git clone) our Git patch file and overwrite the patch file to the extracted source**
 
 cp ~/Download/SymbolManager.cpp ~/openMSX-debugger/debugger-master/src/.
+
 cp ~/Download/SymbolTable.cpp ~/openMSX-debugger/debugger-master/src/.
+
 cp ~/Download/SymbolTable.h ~/openMSX-debugger/debugger-master/src/.
 
 **STEP5. build openMSX-debugger.**
 
 cd ~/openMSX-debugger/debugger-master
+
 make
 
 If you have any error in make, please DM me at Twitter:@brapunch2000. We will fix it as soon as possible.
@@ -78,6 +85,7 @@ brew install qt5
 **STEP2.openMSX-debuggerのソースコードをダウンロードする。**
 
 Snapshot / Source code (zip)
+
 https://github.com/openMSX/debugger/archive/debugger-master.zip
 
 **STEP3.ソースコードのzipを展開する**
@@ -85,20 +93,26 @@ https://github.com/openMSX/debugger/archive/debugger-master.zip
 適当なディレクトリにダウンロードしたzipを展開します。
 
 mkdir -p ~/Download/openMSX-debugger
+
 cp ~/Download/debugger-master.zip ~/openMSX-debugger/.
+
 cd ~/openMSX-debugger
+
 unzip debugger-master.zip 
 
 **STEP4. 当Gitのパッチファイルをrawダウンロード（もしくはgit clone）してパッチファイルを展開後のソースに上書きしてください**
 。
 
 cp ~/Download/SymbolManager.cpp ~/openMSX-debugger/debugger-master/src/.
+
 cp ~/Download/SymbolTable.cpp ~/openMSX-debugger/debugger-master/src/.
+
 cp ~/Download/SymbolTable.h ~/openMSX-debugger/debugger-master/src/.
 
 **STEP5. openMSX-debuggerをビルドします。**
 
 cd ~/openMSX-debugger/debugger-master
+
 make
 
 *makeでエラーが出た場合はTwitter:@brapunch2000までDMをください。できるだけ早めに対処します。
