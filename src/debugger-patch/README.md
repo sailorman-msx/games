@@ -21,7 +21,7 @@ https://github.com/openMSX/debugger/archive/debugger-master.zip
 
 Extract the zip file to an appropriate directory.
 
-mkdir -p ~/Download/openMSX-debugger
+mkdir -p ~/openMSX-debugger
 
 cp ~/Download/debugger-master.zip ~/openMSX-debugger/.
 
@@ -92,7 +92,7 @@ https://github.com/openMSX/debugger/archive/debugger-master.zip
 
 適当なディレクトリにダウンロードしたzipを展開します。
 
-mkdir -p ~/Download/openMSX-debugger
+mkdir -p ~/openMSX-debugger
 
 cp ~/Download/debugger-master.zip ~/openMSX-debugger/.
 
