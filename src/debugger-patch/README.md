@@ -7,14 +7,17 @@ How-to install
 
 STEP1 Install QT
 Since openMSX-debugger uses QT, you need to install QT with HomeBrew.
+
 brew install qt5
 
 STEP2. Download the source code of openMSX-debugger.
+
 Snapshot / Source code (zip)
 https://github.com/openMSX/debugger/archive/debugger-master.zip
 
 STEP3. Extract the source code zip.
 Extract the zip file to an appropriate directory.
+
 mkdir -p ~/Download/openMSX-debugger
 cp ~/Download/debugger-master.zip ~/openMSX-debugger/.
 cd ~/openMSX-debugger
@@ -63,14 +66,17 @@ How-to install
 
 STEP1. QTをインストールする
 openMSX-debuggerはQTを使っていますので、QTをHomeBrewでインストールする必要があります。QTをすでにインストール済みであればこの手順はスキップしてください。
+
 brew install qt5
 
 STEP2.openMSX-debuggerのソースコードをダウンロードする。
+
 Snapshot / Source code (zip)
 https://github.com/openMSX/debugger/archive/debugger-master.zip
 
 STEP3.ソースコードのzipを展開する
-適当なディレクトリにだうんロードしたzipを展開します。
+適当なディレクトリにダウンロードしたzipを展開します。
+
 mkdir -p ~/Download/openMSX-debugger
 cp ~/Download/debugger-master.zip ~/openMSX-debugger/.
 cd ~/openMSX-debugger
