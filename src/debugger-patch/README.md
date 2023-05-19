@@ -1,7 +1,7 @@
 
 [English]
 
-# This patch is to enable the openMSX-debugger to import the map file output by z80asm. It is mainly based on macOS, but Windows is not much different.
+# This patch is to enable the openMSX-debugger_0.10 to import the map file output by z80asm. It is mainly based on macOS, but Windows is not much different.
 
 ## How-to Apply Patch
 
