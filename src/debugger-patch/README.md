@@ -6,6 +6,7 @@
 ## How-to Apply Patch
 
 **STEP1 Install QT**
+
 Since openMSX-debugger uses QT, you need to install QT with HomeBrew.
 
 brew install qt5
@@ -16,6 +17,7 @@ Snapshot / Source code (zip)
 https://github.com/openMSX/debugger/archive/debugger-master.zip
 
 **STEP3. Extract the source code zip.**
+
 Extract the zip file to an appropriate directory.
 
 mkdir -p ~/Download/openMSX-debugger
@@ -30,12 +32,14 @@ cp ~/Download/SymbolTable.cpp ~/openMSX-debugger/debugger-master/src/.
 cp ~/Download/SymbolTable.h ~/openMSX-debugger/debugger-master/src/.
 
 **STEP5. build openMSX-debugger.**
+
 cd ~/openMSX-debugger/debugger-master
 make
 
 If you have any error in make, please DM me at Twitter:@brapunch2000. We will fix it as soon as possible.
 
 **STEP6. If build succeeds, you should have the following directory.**
+
 ls -l ~/openMSX-debugger/debugger-master/derived/openMSX_Debugger.app
 
 **STEP7. Start Finder and copy openMSX_Debugger.app to your application folder.**
@@ -66,6 +70,7 @@ Click the Add button on the Symbol Manager dialog and select the created map fil
 ## パッチを適用してopenMSX-debuggerをビルドする
 
 **STEP1. QTをインストールする**
+
 openMSX-debuggerはQTを使っていますので、QTをHomeBrewでインストールする必要があります。QTをすでにインストール済みであればこの手順はスキップしてください。
 
 brew install qt5
