@@ -1,0 +1,84 @@
+#!python
+#
+# Converts the Disark output files included 
+# with Arkos Tracker2 to Z88DK:Z80ASM syntax.
+#
+# Conversion results are output to STDOUT.
+#
+# Verified with Python 3.9
+#
+# usage:
+#
+#  From the specified file.
+#
+#    $ arkos2z80asm inputfilepath
+#
+#  From the stdin.
+#
+#    $ cat inputfilepath | arkosz80asm
+#
+
+import os
+import sys
+
+TARGETFILE=""
+
+def convData():
+
+    global TARGETFILE
+
+    # stream from specified file
+    _buf = ""
+    if TARGETFILE != "":
+        _fd =  open(TARGETFILE,'r')
+        while True:
+            try:
+                _buf = next(_fd)
+                parse(_buf)
+            except StopIteration:
+                break
+        _fd.close()
+    # stream from STDIN
+    else:
+        _recs = sys.stdin.readlines()
+        for _x in range(len(_recs)):
+            _buf = _recs[_x]
+            parse(_buf)
+
+def parse(_buf):
+
+   # remove LineFeed and spaces
+   _buf = _buf.strip("\n").strip("\r").lstrip(" ").rstrip(" ")
+
+   # split
+   _split_list = _buf.split(" ")
+   # single ?
+   if len(_split_list) == 1:
+       # Label is upper
+       if _split_list[0].isupper() == True:
+           print("%s:" % _split_list[0])
+       else:
+           print("    %s" % _split_list[0])
+   # multiple ?
+   elif len(_split_list) > 1:
+       # first is upper ?
+       _out_buf = ""
+       if _split_list[0].isupper() == True:
+           if _split_list[1] == "equ": # EQU ?
+               _outbuf = _split_list[0] + ": "
+           else:
+               _outbuf = _split_list[0] + ":\n    "
+           for _x in range(len(_split_list)):
+               if _x != 0:
+                   _outbuf += _split_list[_x] + " "
+           print("%s" % _outbuf)
+       else:
+           _outbuf = "    "
+           for _x in range(len(_split_list)):
+               _outbuf += _split_list[_x] + " "
+           print("%s" % _outbuf)
+                       
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        TARGETFILE = sys.argv[1]
+    convData()
