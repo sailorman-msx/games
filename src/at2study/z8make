@@ -1,0 +1,37 @@
+#!/bin/bash
+# for Linux or macOS only.
+
+if [ "$#" != "2" ]; then
+    echo "Syntax error."
+    echo "Usage: z8make ASM.asm size"
+    echo " ASM => Assembler source file (Do not specify an extension)"
+    echo " size => dd file size (256 , 512, 1024, 32768 etc..)"
+    echo
+    echo "examples) z8make TESTCOD 256"
+    echo
+    exit 1
+fi
+
+if [ ! -e $1.asm ]; then
+    echo "Assembler source code not found. file=$1.asm"
+    echo
+    exit 1
+fi
+
+z80asm -b -m $1.asm
+if [ $? -ne 0 ]; then
+    echo "Error found."
+    echo
+    exit 1
+fi
+
+z88dk-dis -o 0x4000 -x $1.map $1.bin | sed 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/' > $1.dis
+
+dd bs=$2 conv=sync if=$1.bin of=$1.rom
+echo "BASIC CODE is below"
+echo "REM ==================================="
+echo "REM  MACHINE LANGUAGE DATA             "
+echo "REM ==================================="
+xxd -u -g 4 $1.rom | awk '{ print $2$3$4 }' | sed -e 's/^/DATA \"/' | sed -e 's/$/\"/'
+
+exit 0
