@@ -1,7 +1,7 @@
-#Mountain of the Mage
-##ACTION ROLE PLAYING GAME
+# Mountain of the Mage
+## ACTION ROLE PLAYING GAME
 
-#Usage
+# Usage
 
 A BUTTON or 'Z' key
   GAMESTART / SWORD ACTION
@@ -9,7 +9,7 @@ A BUTTON or 'Z' key
 B BUTTON or 'X' key
   OPEN MENU DIALOG
 
-:::Note warn
+::: Note warn
 
 THIS VERSION IS ALPHA TEST VERSION.
 IF YOU FIND A BUGS, LET KNOW ME. PLEASE.
