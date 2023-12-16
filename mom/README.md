@@ -9,7 +9,7 @@ A BUTTON or 'Z' key
 B BUTTON or 'X' key
   OPEN MENU DIALOG
 
-::: Note warn
+:::note warn
 
 THIS VERSION IS ALPHA TEST VERSION.
 IF YOU FIND A BUGS, LET KNOW ME. PLEASE.
