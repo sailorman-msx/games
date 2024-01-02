@@ -10,7 +10,7 @@ B BUTTON or 'X' key
   OPEN MENU DIALOG
 
 # Story
-[in ENGLISH]
+## in ENGLISH
 (Prologue)
 "Grandpa, what is this?"
 "Oh, this is called a coin."
@@ -47,7 +47,7 @@ I'm going to meet mage and punish him.
 
 All right, I'm off to the mage now!
 
-[in JAPANSESE]
+## in JAPANSESE
 
 （プロローグ）
 "おじいちゃん、これは何？"
