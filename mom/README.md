@@ -12,27 +12,47 @@ B BUTTON or 'X' key
 # Story
 ## in ENGLISH
 (Prologue)
+
 "Grandpa, what is this?"
+
 "Oh, this is called a coin."
+
 "What's a coin?"
+
 "A thousand years ago, there were things called money, and coins were one of them. Could get anything wanted with coins."
+
 "Great! How did such a useful thing disappear?"
+
 "Just a thousand years ago, something like this happened..."
 
 (The opening story about the boy.)
+
 Lately, I've been thinking about something that used to be funny.
+
 "That's fine."
+
 "What the mage says is absolute."
+
 It seems that there is a great mage.
+
 And If you pledge allegiance to him, will be rewarded with a lot of money.
+
 Everyone wants to be a mage.
+
 So the whole country became full of magicians.
+
 Some of them are squishy.
+
 But I heard that they are the result of people who couldn't become magicians.
+
 Recently, my dad started saying, "I'm going to be a magician!"
+
 I hate a father who tells lies.
+
 If this continues, the truth will become a lie and the lie will become the truth.
+
 All the adults want to be magicians.
+
 I don't understand why.
 
 Will I be a magician when I grow up? I don't want to be a magician.
@@ -43,7 +63,9 @@ I can't rely on the adults in this country anymore.
 
 I'm going to meet mage and punish him.
 
-"Lies and falsehoods are not good!" I'll tell to mage.
+"Lies and falsehoods are not good!" 
+
+I'll tell to mage.
 
 All right, I'm off to the mage now!
 
