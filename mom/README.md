@@ -134,7 +134,7 @@ All right, I'm off to the mage now!
 ようし、いまから魔導士のところに行ってくる！
 
 ## NOTE
-THIS VERSION IS BETA TEST VERSION.
+THIS VERSION IS 1st RELEASE VERSION.
 IF YOU FIND A BUGS, LET KNOW ME. PLEASE.
 Game progression is limited due to this being a test version. You will only be able to progress about one-third of the way through the entire game.
 NTSC only.
