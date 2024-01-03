@@ -1,0 +1,12 @@
+#!/bin/zsh
+for ((y=0; y<6; y++)); do
+    for ((x=0; x<6; x++)); do
+        echo "MAP_DATA0${x}0${y}:" > ./tmpdat
+        echo "; ENEMY DATA" >> ./tmpdat
+        echo "defb \$00" >> ./tmpdat
+        echo "; TILE DATA"  >> ./tmpdat
+        ./mapdatagen2.py "./0${x}0${y}.dat" >> ./tmpdat
+        cat ./tmpdat
+        echo
+    done
+done

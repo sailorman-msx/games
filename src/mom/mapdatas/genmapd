@@ -1,0 +1,12 @@
+#!/bin/bash
+for ((y=0; y<6; y++)); do
+    for ((x=0; x<6; x++)); do
+        echo "MAP_DATA0${x}0${y}:" > ./tmpdat
+        echo "; ENEMY DATA" >> ./tmpdat
+        echo "defb \$00" >> ./tmpdat
+        echo "; TILE DATA"  >> ./tmpdat
+        mapdatagen.py "0${x}0${y}.dat" 8 >> ./tmpdat
+        cat ./tmpdat
+        echo
+    done
+done
