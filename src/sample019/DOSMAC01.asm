@@ -348,7 +348,7 @@ H_TIMI_HANDLER_GO_BACKUPPROC:
 SkipPatterNameTableRedraw:
 
     ; ==============================================
-    ; H.TIMIを呼び出したあとで割込がDISABLEになる
+    ; インタースロット呼び出し後で割込がDISABLEになる
     ; 場合があるため必ずEIして終了する
     ; ==============================================
     ei ; Enable Interrupt.
