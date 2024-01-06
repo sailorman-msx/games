@@ -288,84 +288,6 @@ INIT_H_TIMI_HANDLER:
 
     ret
 
-;=================================
-; This program's own H.TIMI hook process. 
-; At the end of this process, it jumps to the 
-; original H.TIMI process.
-; この処理は独自のH.TIMI処理となる
-; この処理の終了後に本来のH.TIMI処理を呼び出す
-;=================================
-H_TIMI_HANDLER:
-
-    ; Decrement VBLANK_WAIT_FLG variable.
-    ; most every 1/60 second.
-    ; 1/60秒ごとにVBLANK_WAIT_FLGの内容をチェックし
-    ; 0であれば本来のH.TIMI処理を呼び出す
-    ;  
-    ld a, (VBLANK_WAIT_FLG)
-    or a
-    
-    ;
-    ; Call original H.TIMI hook procedure.
-    ; most every 1/60 second.
-    ; 本来のH.TIMI処理を呼び出す
-    ;
-    jr z, H_TIMI_HANDLER_GO_BACKUPPROC
-        
-    ; Set zero to VBLANK_WAIT_FLG variable.
-    ; VBLANK_WAIT_FLGの値をゼロにする
-    dec a
-    ld (VBLANK_WAIT_FLG), a
-
-H_TIMI_HANDLER_GO_BACKUPPROC:
-
-    ; If you want to confine the 
-    ; process within VBLANKING, 
-    ; describe the process here.
-    ; VBLANKING内に処理を閉じ込めたい場合は
-    ; ここに処理を記述する。
-
-    ; AKG Playerの処理
-    call PLY_AKG_PLAY
-
-    ; PATTERNNAMETB_REDRAWが1であれば
-    ; VIRTVRAMの内容をVRAMのパターンネームテーブル
-    ; 1820Hに書き込む
-
-    ld a, (PATTERNNAMETB_REDRAW)
-    or a
-    jr z, SkipPatterNameTableRedraw
-
-    ld a, $80
-    ld (DISP_CHAR_CODE), a
-    ld de, $80 * 8
-    call CREATE_CHAR_PATTERN
-
-    ld hl, VIRTVRAM + 32
-    ld de, $1820
-    ld bc, 736
-    call WRTVRMSERIAL
-
-    ld hl, TITLE_MSG
-    ld de, $1800
-    ld bc, 15
-    call WRTVRMSERIAL
-
-    xor a
-    ld (PATTERNNAMETB_REDRAW), a
-
-SkipPatterNameTableRedraw:
-
-    ; ==============================================
-    ; インタースロット呼び出し後で割込がDISABLEになる
-    ; 場合があるため必ずEIして終了する
-    ; ==============================================
-    ei ; Enable Interrupt.
-
-    ; Submit the original H.TIMI procedure.
-    ; H_TIMI_BACKUPに戻る
-    jp H_TIMI_BACKUP
-
 ;
 ; Redraw screen.
 ;
@@ -951,3 +873,84 @@ defm "MSX-DOS DEMO   " ; LENGTH 15 byte
 ; AKG Player include.
 ;   
 include "AKGPlay.asm"
+
+; ALIGNMENT
+DEFS $C000 - $0100 - $
+
+;=================================
+; This program's own H.TIMI hook process. 
+; At the end of this process, it jumps to the 
+; original H.TIMI process.
+; この処理は独自のH.TIMI処理となる
+; この処理の終了後に本来のH.TIMI処理を呼び出す
+;=================================
+H_TIMI_HANDLER:
+
+    ; Decrement VBLANK_WAIT_FLG variable.
+    ; most every 1/60 second.
+    ; 1/60秒ごとにVBLANK_WAIT_FLGの内容をチェックし
+    ; 0であれば本来のH.TIMI処理を呼び出す
+    ;  
+    ld a, (VBLANK_WAIT_FLG)
+    or a
+    
+    ;
+    ; Call original H.TIMI hook procedure.
+    ; most every 1/60 second.
+    ; 本来のH.TIMI処理を呼び出す
+    ;
+    jr z, H_TIMI_HANDLER_GO_BACKUPPROC
+        
+    ; Set zero to VBLANK_WAIT_FLG variable.
+    ; VBLANK_WAIT_FLGの値をゼロにする
+    dec a
+    ld (VBLANK_WAIT_FLG), a
+
+H_TIMI_HANDLER_GO_BACKUPPROC:
+
+    ; If you want to confine the 
+    ; process within VBLANKING, 
+    ; describe the process here.
+    ; VBLANKING内に処理を閉じ込めたい場合は
+    ; ここに処理を記述する。
+
+    ; AKG Playerの処理
+    call PLY_AKG_PLAY
+
+    ; PATTERNNAMETB_REDRAWが1であれば
+    ; VIRTVRAMの内容をVRAMのパターンネームテーブル
+    ; 1820Hに書き込む
+
+    ld a, (PATTERNNAMETB_REDRAW)
+    or a
+    jr z, SkipPatterNameTableRedraw
+
+    ld a, $80
+    ld (DISP_CHAR_CODE), a
+    ld de, $80 * 8
+    call CREATE_CHAR_PATTERN
+
+    ld hl, VIRTVRAM + 32
+    ld de, $1820
+    ld bc, 736
+    call WRTVRMSERIAL
+
+    ld hl, TITLE_MSG
+    ld de, $1800
+    ld bc, 15
+    call WRTVRMSERIAL
+
+    xor a
+    ld (PATTERNNAMETB_REDRAW), a
+
+SkipPatterNameTableRedraw:
+
+    ; ==============================================
+    ; インタースロット呼び出し後で割込がDISABLEになる
+    ; 場合があるため必ずEIして終了する
+    ; ==============================================
+    ei ; Enable Interrupt.
+
+    ; Submit the original H.TIMI procedure.
+    ; H_TIMI_BACKUPに戻る
+    jp H_TIMI_BACKUP
