@@ -69,6 +69,12 @@ SCROLLDESTADDR:equ $162E
 ; 画面書き換え可能フラグ(1バイト)
 PATTERNNAMETB_REDRAW:equ $162F
 
+; Zキー押されたフラグ
+ZKEY_PUSHED:equ $1630
+
+; Xキー押されたフラグ
+XKEY_PUSHED:equ $1631
+
 ; Page#3のスロット番号格納用
 RAMAD3:equ $F344
 
@@ -297,26 +303,17 @@ INIT_H_TIMI_HANDLER:
 ;
 REDRAW_SCREEN:
 
-    ; キー入力を受け付ける
-    ; BIOSを呼び出すためインタースロットコールで呼び出す
-    ld ix, KILBUF
-    call BiosInterSlotCall
+    ld a, (ZKEY_PUSHED)
+    or a
+    jr nz, REDRAW_SCREEN_PUSHZKEY
 
-    ld a, 5
-    ld ix, SNSMAT
-    call BiosInterSlotCall
+    ld a, (XKEY_PUSHED)
+    or a
+    jr nz, REDRAW_SCREEN_PUSHXKEY
 
-    ; Zキーが押された？ 
-    cp 01111111B
-    jr z, PUSHZKEY
-
-    ; Xキーが押された？
-    cp 11011111B
-    jr z, PUSHXKEY
-    
     jr REDRAW_PROC
 
-PUSHZKEY:
+REDRAW_SCREEN_PUSHZKEY:
     
     ; 効果音を鳴らす 
     ld a, $01 ; SOUND EFFECT NUMBER
@@ -326,7 +323,7 @@ PUSHZKEY:
     
     jr REDRAW_PROC
 
-PUSHXKEY:
+REDRAW_SCREEN_PUSHXKEY:
     
     ; 効果音を鳴らす 
     ld a, $02 ; SOUND EFFECT NUMBER
@@ -874,9 +871,6 @@ defm "MSX-DOS DEMO   " ; LENGTH 15 byte
 ;   
 include "AKGPlay.asm"
 
-; ALIGNMENT
-DEFS $C000 - $0100 - $
-
 ;=================================
 ; This program's own H.TIMI hook process. 
 ; At the end of this process, it jumps to the 
@@ -950,6 +944,40 @@ SkipPatterNameTableRedraw:
     ; 場合があるため必ずEIして終了する
     ; ==============================================
     ei ; Enable Interrupt.
+
+    ; キー入力を受け付ける
+    ; BIOSを呼び出すためインタースロットコールで呼び出す
+
+    xor a
+    ld (ZKEY_PUSHED), a
+    ld (XKEY_PUSHED), a
+
+    ld ix, KILBUF
+    call BiosInterSlotCall
+
+    ld a, 5
+    ld ix, SNSMAT
+    call BiosInterSlotCall
+
+    ; Zキーが押された？ 
+    cp 01111111B
+    jr nz, NOTPUSHZKEY
+
+    ld a, 1
+    ld (ZKEY_PUSHED), a
+    jr  H_TIMI_HANDLER_END
+
+NOTPUSHZKEY:
+
+    ; Xキーが押された？
+    cp 11011111B
+    jr nz, H_TIMI_HANDLER_END
+
+    ld a, 1
+    ld (XKEY_PUSHED), a
+    jr  H_TIMI_HANDLER_END
+    
+H_TIMI_HANDLER_END:
 
     ; Submit the original H.TIMI procedure.
     ; H_TIMI_BACKUPに戻る
