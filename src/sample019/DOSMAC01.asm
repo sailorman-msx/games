@@ -281,8 +281,8 @@ INIT_H_TIMI_HANDLER:
     ld a, (RAMAD3)         ; H_TIMI + 1 <- Page#3のスロット
     ld (H_TIMI + 1), a
     ld hl, H_TIMI_HANDLER
-    ld (H_TIMI + 2), hl    ; H_TIMI + 2 <- 呼び出し先アドレス上位8it
-                           ; H_TIMI + 3 <- 呼び出し先アドレス下位8it
+    ld (H_TIMI + 2), hl    ; H_TIMI + 2 <- 呼び出し先アドレス下位8bit
+                           ; H_TIMI + 3 <- 呼び出し先アドレス上位8bit
     ld a, $C9              ; H_TIMI + 4 <- RET
     ld (H_TIMI + 4) , a
 
