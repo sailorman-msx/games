@@ -27,9 +27,6 @@ KeyInputProc:
     ; PLAYERDISTの初期化
     ld (WK_PLAYERDIST), a
 
-    call KILBUF
-
-
     ; 最初にキーマトリクスにて押されているキーを調べる
     ; Z,スペース : ジョイスティック1 A
     ; X          : ジョイスティック2 B
@@ -287,5 +284,7 @@ KeyInputProc_SetDist:
     ld (WK_PLAYERDIST), a
 
 KeyInputProc_End:
+
+    call KILBUF
 
     ret
