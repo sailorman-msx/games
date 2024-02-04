@@ -288,3 +288,7 @@ FCB:
                     NOP                                     ;[02BD] 00
                     NOP                                     ;[02BE] 00
                     NOP                                     ;[02BF] 00
+                    NOP                                     ;[02C0] 00
+                    NOP                                     ;[02C1] 00
+                    NOP                                     ;[02C2] 00
+                    NOP                                     ;[02C3] 00

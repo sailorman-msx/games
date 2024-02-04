@@ -57,5 +57,5 @@ REDVRMSERIALLOOP                = $027C ; addr, local, , DOSMAC02, , DOSMAC02.as
 WRTVRMFILLOOP                   = $0288 ; addr, local, , DOSMAC02, , DOSMAC02.asm:561
 WRTVRMSERIALLOOP                = $0297 ; addr, local, , DOSMAC02, , DOSMAC02.asm:596
 __head                          = $0100 ; const, public, def, , ,
-__tail                          = $02C0 ; const, public, def, , ,
-__size                          = $01C0 ; const, public, def, , ,
+__tail                          = $02C4 ; const, public, def, , ,
+__size                          = $01C4 ; const, public, def, , ,
