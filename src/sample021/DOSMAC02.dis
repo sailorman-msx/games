@@ -1,0 +1,290 @@
+START:
+                    LD      A,$0F                           ;[0100] 3E 0F
+                    LD      ($F3E9),A                       ;[0102] 32 E9 F3
+                    LD      A,$01                           ;[0105] 3E 01
+                    LD      ($F3EA),A                       ;[0107] 32 EA F3
+                    LD      ($F3EB),A                       ;[010A] 32 EB F3
+                    LD      A,($F3E0)                       ;[010D] 3A E0 F3
+                    OR      $02                             ;[0110] F6 02
+                    LD      ($F3E0),A                       ;[0112] 32 E0 F3
+                    LD      A,$01                           ;[0115] 3E 01
+                    LD      IX,$005F                        ;[0117] DD 21 5F 00
+                    CALL    BIOSINTERSLOTCALL               ;[011B] CD 02 02
+                    LD      IX,$007E                        ;[011E] DD 21 7E 00
+                    CALL    BIOSINTERSLOTCALL               ;[0122] CD 02 02
+                    LD      IX,$00CC                        ;[0125] DD 21 CC 00
+                    CALL    BIOSINTERSLOTCALL               ;[0129] CD 02 02
+                    CALL    INITRANDOM                      ;[012C] CD E0 01
+                    LD      HL,$C800                        ;[012F] 21 00 C8
+                    LD      BC,$0300                        ;[0132] 01 00 03
+                    LD      A,$20                           ;[0135] 3E 20
+                    CALL    MEMFIL                          ;[0137] CD D9 01
+                    LD      HL,$2000                        ;[013A] 21 00 20
+                    LD      BC,$1800                        ;[013D] 01 00 18
+                    LD      A,$F1                           ;[0140] 3E F1
+                    CALL    WRTVRMFIL                       ;[0142] CD 85 02
+FILSCREEN:
+                    LD      HL,$C800                        ;[0145] 21 00 C8
+FILSCREEN_UP:
+                    XOR     A                               ;[0148] AF
+FILSCREEN_UP_LOOP:
+                    LD      (HL),A                          ;[0149] 77
+                    INC     HL                              ;[014A] 23
+                    CP      $FF                             ;[014B] FE FF
+                    JR      Z,FILSCREEN_MID                 ;[014D] 28 03
+                    INC     A                               ;[014F] 3C
+                    JR      FILSCREEN_UP_LOOP               ;[0150] 18 F7
+FILSCREEN_MID:
+                    XOR     A                               ;[0152] AF
+FILSCREEN_MID_LOOP:
+                    LD      (HL),A                          ;[0153] 77
+                    INC     HL                              ;[0154] 23
+                    CP      $FF                             ;[0155] FE FF
+                    JR      Z,FILSCREEN_DOWN                ;[0157] 28 03
+                    INC     A                               ;[0159] 3C
+                    JR      FILSCREEN_MID_LOOP              ;[015A] 18 F7
+FILSCREEN_DOWN:
+                    XOR     A                               ;[015C] AF
+FILSCREEN_DOWN_LOOP:
+                    LD      (HL),A                          ;[015D] 77
+                    INC     HL                              ;[015E] 23
+                    CP      $FF                             ;[015F] FE FF
+                    JR      Z,FILSCREEN_END                 ;[0161] 28 03
+                    INC     A                               ;[0163] 3C
+                    JR      FILSCREEN_DOWN_LOOP             ;[0164] 18 F7
+FILSCREEN_END:
+                    LD      DE,$02A0                        ;[0166] 11 A0 02
+                    LD      C,$0F                           ;[0169] 0E 0F
+                    CALL    $0005                           ;[016B] CD 05 00
+                    OR      A                               ;[016E] B7
+                    JP      NZ,RETMSXDOS                    ;[016F] C2 D2 01
+                    LD      DE,$4000                        ;[0172] 11 00 40
+                    LD      C,$1A                           ;[0175] 0E 1A
+                    CALL    $0005                           ;[0177] CD 05 00
+                    LD      DE,$0000                        ;[017A] 11 00 00
+                    LD      (DEREGBACK),DE                  ;[017D] ED 53 D7 01
+FREAD_LOOP:
+                    LD      DE,$02A0                        ;[0181] 11 A0 02
+                    LD      C,$14                           ;[0184] 0E 14
+                    CALL    $0005                           ;[0186] CD 05 00
+                    CP      $01                             ;[0189] FE 01
+                    JR      Z,FREAD_LOOPEND                 ;[018B] 28 1D
+                    LD      DE,(DEREGBACK)                  ;[018D] ED 5B D7 01
+                    LD      HL,$4000                        ;[0191] 21 00 40
+                    LD      BC,$0080                        ;[0194] 01 80 00
+                    CALL    WRTVRMSERIAL                    ;[0197] CD 90 02
+                    LD      DE,(DEREGBACK)                  ;[019A] ED 5B D7 01
+                    LD      HL,$0080                        ;[019E] 21 80 00
+                    ADD     HL,DE                           ;[01A1] 19
+                    LD      D,H                             ;[01A2] 54
+                    LD      E,L                             ;[01A3] 5D
+                    LD      (DEREGBACK),DE                  ;[01A4] ED 53 D7 01
+                    JR      FREAD_LOOP                      ;[01A8] 18 D7
+FREAD_LOOPEND:
+                    LD      DE,$02A0                        ;[01AA] 11 A0 02
+                    LD      C,$10                           ;[01AD] 0E 10
+                    CALL    $0005                           ;[01AF] CD 05 00
+                    LD      HL,$C800                        ;[01B2] 21 00 C8
+                    LD      DE,$1800                        ;[01B5] 11 00 18
+                    LD      BC,$0300                        ;[01B8] 01 00 03
+                    CALL    WRTVRMSERIAL                    ;[01BB] CD 90 02
+KEYIN_LOOP:
+                    LD      IX,$0156                        ;[01BE] DD 21 56 01
+                    CALL    BIOSINTERSLOTCALL               ;[01C2] CD 02 02
+                    LD      A,$05                           ;[01C5] 3E 05
+                    LD      IX,$0141                        ;[01C7] DD 21 41 01
+                    CALL    BIOSINTERSLOTCALL               ;[01CB] CD 02 02
+                    CP      $7F                             ;[01CE] FE 7F
+                    JR      NZ,KEYIN_LOOP                   ;[01D0] 20 EC
+RETMSXDOS:
+                    LD      C,$00                           ;[01D2] 0E 00
+                    CALL    $0005                           ;[01D4] CD 05 00
+DEREGBACK:
+                    NOP                                     ;[01D7] 00
+                    NOP                                     ;[01D8] 00
+MEMFIL:
+                    LD      (HL),A                          ;[01D9] 77
+                    CPI                                     ;[01DA] ED A1
+                    JP      PE,MEMFIL                       ;[01DC] EA D9 01
+                    RET                                     ;[01DF] C9
+
+INITRANDOM:
+                    LD      A,R                             ;[01E0] ED 5F
+                    LD      (RANDOM_SEED),A                 ;[01E2] 32 FA 01
+                    RET                                     ;[01E5] C9
+
+RANDOMVALUE:
+                    PUSH    BC                              ;[01E6] C5
+                    LD      A,(RANDOM_SEED)                 ;[01E7] 3A FA 01
+                    LD      B,A                             ;[01EA] 47
+                    LD      A,B                             ;[01EB] 78
+                    ADD     A                               ;[01EC] 87
+                    ADD     A                               ;[01ED] 87
+                    ADD     B                               ;[01EE] 80
+                    ADD     $7B                             ;[01EF] C6 7B
+                    LD      B,A                             ;[01F1] 47
+                    LD      A,R                             ;[01F2] ED 5F
+                    ADD     B                               ;[01F4] 80
+                    LD      (RANDOM_SEED),A                 ;[01F5] 32 FA 01
+                    POP     BC                              ;[01F8] C1
+                    RET                                     ;[01F9] C9
+
+RANDOM_SEED:
+                    NOP                                     ;[01FA] 00
+BIOSCALL:
+                    PUSH    DE                              ;[01FB] D5
+                    RET                                     ;[01FC] C9
+
+BIOSCALLNOTFDD:
+                    JP      (HL)                            ;[01FD] E9
+BIOSNOTFDDSUBROMCALL:
+                    LD      HL,$015F                        ;[01FE] 21 5F 01
+                    JP      (HL)                            ;[0201] E9
+BIOSINTERSLOTCALL:
+                    LD      IY,($FCC0)                      ;[0202] FD 2A C0 FC
+                    LD      DE,$001C                        ;[0206] 11 1C 00
+                    PUSH    DE                              ;[0209] D5
+                    RET                                     ;[020A] C9
+
+BIOSFDDSUBROMCALL:
+                    EXX                                     ;[020B] D9
+                    EX      AF,AF'                          ;[020C] 08
+                    LD      HL,$015F                        ;[020D] 21 5F 01
+                    PUSH    HL                              ;[0210] E5
+                    LD      HL,$C300                        ;[0211] 21 00 C3
+                    PUSH    HL                              ;[0214] E5
+                    PUSH    IX                              ;[0215] DD E5
+                    LD      HL,$21DD                        ;[0217] 21 DD 21
+                    PUSH    HL                              ;[021A] E5
+                    LD      HL,$3333                        ;[021B] 21 33 33
+                    PUSH    HL                              ;[021E] E5
+                    LD      HL,$0000                        ;[021F] 21 00 00
+                    ADD     HL,SP                           ;[0222] 39
+                    LD      A,$C3                           ;[0223] 3E C3
+                    LD      ($015F),A                       ;[0225] 32 5F 01
+                    LD      ($0160),HL                      ;[0228] 22 60 01
+                    EX      AF,AF'                          ;[022B] 08
+                    EXX                                     ;[022C] D9
+                    LD      IX,$015F                        ;[022D] DD 21 5F 01
+                    LD      IY,($FCC0)                      ;[0231] FD 2A C0 FC
+                    LD      HL,$001C                        ;[0235] 21 1C 00
+                    JP      (HL)                            ;[0238] E9
+VDPRED:
+                    PUSH    AF                              ;[0239] F5
+                    PUSH    BC                              ;[023A] C5
+                    PUSH    DE                              ;[023B] D5
+                    DI                                      ;[023C] F3
+                    LD      A,L                             ;[023D] 7D
+                    OUT     ($99),A                         ;[023E] D3 99
+                    NOP                                     ;[0240] 00
+                    NOP                                     ;[0241] 00
+                    LD      A,H                             ;[0242] 7C
+                    AND     $3F                             ;[0243] E6 3F
+                    OUT     ($99),A                         ;[0245] D3 99
+                    NOP                                     ;[0247] 00
+                    NOP                                     ;[0248] 00
+                    EI                                      ;[0249] FB
+                    POP     DE                              ;[024A] D1
+                    POP     BC                              ;[024B] C1
+                    POP     AF                              ;[024C] F1
+                    RET                                     ;[024D] C9
+
+VDPWRT:
+                    PUSH    AF                              ;[024E] F5
+                    PUSH    BC                              ;[024F] C5
+                    PUSH    DE                              ;[0250] D5
+                    DI                                      ;[0251] F3
+                    LD      A,L                             ;[0252] 7D
+                    OUT     ($99),A                         ;[0253] D3 99
+                    NOP                                     ;[0255] 00
+                    NOP                                     ;[0256] 00
+                    LD      A,H                             ;[0257] 7C
+                    AND     $3F                             ;[0258] E6 3F
+                    OR      $40                             ;[025A] F6 40
+                    OUT     ($99),A                         ;[025C] D3 99
+                    NOP                                     ;[025E] 00
+                    NOP                                     ;[025F] 00
+                    EI                                      ;[0260] FB
+                    POP     DE                              ;[0261] D1
+                    POP     BC                              ;[0262] C1
+                    POP     AF                              ;[0263] F1
+                    RET                                     ;[0264] C9
+
+REDVRM:
+                    CALL    VDPRED                          ;[0265] CD 39 02
+                    IN      A,($98)                         ;[0268] DB 98
+                    NOP                                     ;[026A] 00
+                    NOP                                     ;[026B] 00
+                    RET                                     ;[026C] C9
+
+WRTVRM:
+                    CALL    VDPWRT                          ;[026D] CD 4E 02
+                    OUT     ($98),A                         ;[0270] D3 98
+                    NOP                                     ;[0272] 00
+                    NOP                                     ;[0273] 00
+                    RET                                     ;[0274] C9
+
+REDVRMSERIAL:
+                    PUSH    HL                              ;[0275] E5
+                    LD      H,D                             ;[0276] 62
+                    LD      L,E                             ;[0277] 6B
+                    CALL    VDPRED                          ;[0278] CD 39 02
+                    POP     HL                              ;[027B] E1
+REDVRMSERIALLOOP:
+                    IN      A,($98)                         ;[027C] DB 98
+                    LD      (HL),A                          ;[027E] 77
+                    CPI                                     ;[027F] ED A1
+                    JP      PE,REDVRMSERIALLOOP             ;[0281] EA 7C 02
+                    RET                                     ;[0284] C9
+
+WRTVRMFIL:
+                    CALL    VDPWRT                          ;[0285] CD 4E 02
+WRTVRMFILLOOP:
+                    OUT     ($98),A                         ;[0288] D3 98
+                    CPI                                     ;[028A] ED A1
+                    JP      PE,WRTVRMFILLOOP                ;[028C] EA 88 02
+                    RET                                     ;[028F] C9
+
+WRTVRMSERIAL:
+                    PUSH    HL                              ;[0290] E5
+                    LD      H,D                             ;[0291] 62
+                    LD      L,E                             ;[0292] 6B
+                    CALL    VDPWRT                          ;[0293] CD 4E 02
+                    POP     HL                              ;[0296] E1
+WRTVRMSERIALLOOP:
+                    LD      A,(HL)                          ;[0297] 7E
+                    OUT     ($98),A                         ;[0298] D3 98
+                    CPI                                     ;[029A] ED A1
+                    JP      PE,WRTVRMSERIALLOOP             ;[029C] EA 97 02
+                    RET                                     ;[029F] C9
+
+FCB:
+                    NOP                                     ;[02A0] 00
+                    LD      D,E                             ;[02A1] 53
+                    LD      B,C                             ;[02A2] 41
+                    LD      C,L                             ;[02A3] 4D
+                    LD      D,B                             ;[02A4] 50
+                    LD      C,H                             ;[02A5] 4C
+                    JR      NC,$02DA                        ;[02A6] 30 32
+                    LD      SP,$4144                        ;[02A8] 31 44 41
+                    LD      D,H                             ;[02AB] 54
+                    NOP                                     ;[02AC] 00
+                    NOP                                     ;[02AD] 00
+                    NOP                                     ;[02AE] 00
+                    NOP                                     ;[02AF] 00
+                    NOP                                     ;[02B0] 00
+                    NOP                                     ;[02B1] 00
+                    NOP                                     ;[02B2] 00
+                    NOP                                     ;[02B3] 00
+                    NOP                                     ;[02B4] 00
+                    NOP                                     ;[02B5] 00
+                    NOP                                     ;[02B6] 00
+                    NOP                                     ;[02B7] 00
+                    NOP                                     ;[02B8] 00
+                    NOP                                     ;[02B9] 00
+                    NOP                                     ;[02BA] 00
+                    NOP                                     ;[02BB] 00
+                    NOP                                     ;[02BC] 00
+                    NOP                                     ;[02BD] 00
+                    NOP                                     ;[02BE] 00
+                    NOP                                     ;[02BF] 00
