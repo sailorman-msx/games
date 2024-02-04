@@ -136,8 +136,8 @@ All right, I'm off to the mage now!
 ## NOTE
 THIS VERSION IS 1st RELEASE VERSION.
 IF YOU FIND A BUGS, LET KNOW ME. PLEASE.
-Game progression is limited due to this being a test version. You will only be able to progress about one-third of the way through the entire game.
 NTSC only.
+If you want play english version, please set "MSX America NTSC" on the WebMSX settings.
 
 ## Author: SAILORMAN STUDIO @brapunch2000
 
