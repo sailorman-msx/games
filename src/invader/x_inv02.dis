@@ -1,0 +1,667 @@
+HEADER:
+                    LD      B,C                             ;[4000] 41
+                    LD      B,D                             ;[4001] 42
+                    DJNZ    $4044                           ;[4002] 10 40
+                    NOP                                     ;[4004] 00
+                    NOP                                     ;[4005] 00
+                    NOP                                     ;[4006] 00
+                    NOP                                     ;[4007] 00
+                    NOP                                     ;[4008] 00
+                    NOP                                     ;[4009] 00
+                    NOP                                     ;[400A] 00
+                    NOP                                     ;[400B] 00
+                    NOP                                     ;[400C] 00
+                    NOP                                     ;[400D] 00
+                    NOP                                     ;[400E] 00
+                    NOP                                     ;[400F] 00
+                    CALL    SETINITIALDATA                  ;[4010] CD 36 44
+INIT:
+                    LD      A,$0F                           ;[4013] 3E 0F
+                    LD      ($F3E9),A                       ;[4015] 32 E9 F3
+                    LD      A,$01                           ;[4018] 3E 01
+                    LD      ($F3EA),A                       ;[401A] 32 EA F3
+                    LD      ($F3EB),A                       ;[401D] 32 EB F3
+                    CALL    $005F                           ;[4020] CD 5F 00
+                    CALL    CHRSET                          ;[4023] CD 85 43
+                    LD      A,$C0                           ;[4026] 3E C0
+                    LD      ($C006),A                       ;[4028] 32 06 C0
+                    LD      A,$00                           ;[402B] 3E 00
+                    LD      ($C004),A                       ;[402D] 32 04 C0
+                    CALL    INVINI                          ;[4030] CD 1A 43
+                    LD      A,$07                           ;[4033] 3E 07
+                    LD      ($C000),A                       ;[4035] 32 00 C0
+                    LD      IX,$C006                        ;[4038] DD 21 06 C0
+                    CALL    GETXY                           ;[403C] CD 6E 40
+                    LD      A,(IX+$00)                      ;[403F] DD 7E 00
+                    CALL    $004D                           ;[4042] CD 4D 00
+                    CALL    DSPINV                          ;[4045] CD 63 43
+MAIN:
+                    CALL    MOVCAN                          ;[4048] CD 7C 40
+                    CALL    SNSTRG                          ;[404B] CD C6 40
+                    CALL    MVMISL                          ;[404E] CD 11 41
+                    CALL    INVMOV                          ;[4051] CD F8 41
+                    CALL    HITCHK                          ;[4054] CD 93 41
+                    CALL    MSLHIT                          ;[4057] CD 5C 41
+                    LD      A,($C018)                       ;[405A] 3A 18 C0
+                    CP      $37                             ;[405D] FE 37
+                    JR      NC,INIT                         ;[405F] 30 B2
+                    LD      A,($C006)                       ;[4061] 3A 06 C0
+                    CP      $00                             ;[4064] FE 00
+                    JR      Z,INIT                          ;[4066] 28 AB
+                    CALL    $00B7                           ;[4068] CD B7 00
+                    RET     C                               ;[406B] D8
+                    JR      MAIN                            ;[406C] 18 DA
+GETXY:
+                    LD      L,(IX+$01)                      ;[406E] DD 6E 01
+                    LD      H,(IX+$02)                      ;[4071] DD 66 02
+                    RET                                     ;[4074] C9
+
+PUTXY:
+                    LD      (IX+$01),L                      ;[4075] DD 75 01
+                    LD      (IX+$02),H                      ;[4078] DD 74 02
+                    RET                                     ;[407B] C9
+
+MOVCAN:
+                    LD      HL,$C013                        ;[407C] 21 13 C0
+                    DEC     (HL)                            ;[407F] 35
+                    RET     NZ                              ;[4080] C0
+                    LD      A,($C001)                       ;[4081] 3A 01 C0
+                    LD      (HL),A                          ;[4084] 77
+                    LD      A,($C004)                       ;[4085] 3A 04 C0
+                    CALL    $00D5                           ;[4088] CD D5 00
+                    CP      $03                             ;[408B] FE 03
+                    JR      Z,RIGHT                         ;[408D] 28 05
+                    CP      $07                             ;[408F] FE 07
+                    JR      Z,LEFT                          ;[4091] 28 21
+                    RET                                     ;[4093] C9
+
+RIGHT:
+                    LD      IX,$C006                        ;[4094] DD 21 06 C0
+                    CALL    GETXY                           ;[4098] CD 6E 40
+                    LD      E,L                             ;[409B] 5D
+                    LD      D,H                             ;[409C] 54
+                    INC     DE                              ;[409D] 13
+                    LD      A,E                             ;[409E] 7B
+                    AND     $1F                             ;[409F] E6 1F
+                    CP      $1D                             ;[40A1] FE 1D
+                    RET     NC                              ;[40A3] D0
+MOVCHR:
+                    LD      A,$20                           ;[40A4] 3E 20
+                    CALL    $004D                           ;[40A6] CD 4D 00
+                    EX      DE,HL                           ;[40A9] EB
+                    CALL    PUTXY                           ;[40AA] CD 75 40
+                    LD      A,(IX+$00)                      ;[40AD] DD 7E 00
+                    CALL    $004D                           ;[40B0] CD 4D 00
+                    RET                                     ;[40B3] C9
+
+LEFT:
+                    LD      IX,$C006                        ;[40B4] DD 21 06 C0
+                    CALL    GETXY                           ;[40B8] CD 6E 40
+                    LD      E,L                             ;[40BB] 5D
+                    LD      D,H                             ;[40BC] 54
+                    DEC     DE                              ;[40BD] 1B
+                    LD      A,E                             ;[40BE] 7B
+                    AND     $1F                             ;[40BF] E6 1F
+                    CP      $03                             ;[40C1] FE 03
+                    RET     C                               ;[40C3] D8
+                    JR      MOVCHR                          ;[40C4] 18 DE
+SNSTRG:
+                    LD      A,($C004)                       ;[40C6] 3A 04 C0
+                    CALL    $00D8                           ;[40C9] CD D8 00
+                    LD      HL,$C005                        ;[40CC] 21 05 C0
+                    LD      C,(HL)                          ;[40CF] 4E
+                    LD      (HL),A                          ;[40D0] 77
+                    AND     A                               ;[40D1] A7
+                    RET     Z                               ;[40D2] C8
+                    CP      C                               ;[40D3] B9
+                    RET     Z                               ;[40D4] C8
+FIRE:
+                    LD      IX,$C009                        ;[40D5] DD 21 09 C0
+                    LD      A,(IX+$00)                      ;[40D9] DD 7E 00
+                    AND     A                               ;[40DC] A7
+                    JR      Z,FIRE1                         ;[40DD] 28 0D
+                    LD      A,(IX+$03)                      ;[40DF] DD 7E 03
+                    AND     A                               ;[40E2] A7
+                    JR      Z,FIRE2                         ;[40E3] 28 0D
+                    LD      A,(IX+$06)                      ;[40E5] DD 7E 06
+                    AND     A                               ;[40E8] A7
+                    JR      Z,FIRE3                         ;[40E9] 28 0D
+                    RET                                     ;[40EB] C9
+
+FIRE1:
+                    LD      IX,$C009                        ;[40EC] DD 21 09 C0
+                    JR      FIREON                          ;[40F0] 18 0A
+FIRE2:
+                    LD      IX,$C00C                        ;[40F2] DD 21 0C C0
+                    JR      FIREON                          ;[40F6] 18 04
+FIRE3:
+                    LD      IX,$C00F                        ;[40F8] DD 21 0F C0
+FIREON:
+                    LD      A,$FF                           ;[40FC] 3E FF
+                    LD      (IX+$00),A                      ;[40FE] DD 77 00
+                    LD      HL,($C007)                      ;[4101] 2A 07 C0
+                    LD      BC,$FFE0                        ;[4104] 01 E0 FF
+                    ADD     HL,BC                           ;[4107] 09
+                    CALL    PUTXY                           ;[4108] CD 75 40
+                    LD      A,$C1                           ;[410B] 3E C1
+                    CALL    $004D                           ;[410D] CD 4D 00
+                    RET                                     ;[4110] C9
+
+MVMISL:
+                    LD      HL,$C014                        ;[4111] 21 14 C0
+                    DEC     (HL)                            ;[4114] 35
+                    RET     NZ                              ;[4115] C0
+                    LD      A,($C002)                       ;[4116] 3A 02 C0
+                    LD      (HL),A                          ;[4119] 77
+                    LD      IX,$C009                        ;[411A] DD 21 09 C0
+                    CALL    MSLCHK                          ;[411E] CD 2C 41
+                    LD      IX,$C00C                        ;[4121] DD 21 0C C0
+                    CALL    MSLCHK                          ;[4125] CD 2C 41
+                    LD      IX,$C00F                        ;[4128] DD 21 0F C0
+MSLCHK:
+                    LD      A,(IX+$00)                      ;[412C] DD 7E 00
+                    INC     A                               ;[412F] 3C
+                    RET     NZ                              ;[4130] C0
+                    CALL    GETXY                           ;[4131] CD 6E 40
+                    LD      D,H                             ;[4134] 54
+                    LD      E,L                             ;[4135] 5D
+                    LD      BC,$FFE0                        ;[4136] 01 E0 FF
+                    ADD     HL,BC                           ;[4139] 09
+                    PUSH    DE                              ;[413A] D5
+                    LD      DE,$181F                        ;[413B] 11 1F 18
+                    RST     $20                             ;[413E] E7
+                    POP     DE                              ;[413F] D1
+                    EX      DE,HL                           ;[4140] EB
+                    JR      C,MSLOFF                        ;[4141] 38 0F
+                    LD      A,$20                           ;[4143] 3E 20
+                    CALL    $004D                           ;[4145] CD 4D 00
+                    EX      DE,HL                           ;[4148] EB
+                    CALL    PUTXY                           ;[4149] CD 75 40
+                    LD      A,$C1                           ;[414C] 3E C1
+                    CALL    $004D                           ;[414E] CD 4D 00
+                    RET                                     ;[4151] C9
+
+MSLOFF:
+                    LD      A,$20                           ;[4152] 3E 20
+                    CALL    $004D                           ;[4154] CD 4D 00
+                    XOR     A                               ;[4157] AF
+                    LD      (IX+$00),A                      ;[4158] DD 77 00
+                    RET                                     ;[415B] C9
+
+MSLHIT:
+                    LD      HL,$C015                        ;[415C] 21 15 C0
+                    DEC     (HL)                            ;[415F] 35
+                    RET     NZ                              ;[4160] C0
+                    LD      A,($C003)                       ;[4161] 3A 03 C0
+                    LD      (HL),A                          ;[4164] 77
+                    LD      IX,$C009                        ;[4165] DD 21 09 C0
+                    CALL    HITON                           ;[4169] CD 7B 41
+                    LD      IX,$C00C                        ;[416C] DD 21 0C C0
+                    CALL    HITON                           ;[4170] CD 7B 41
+                    LD      IX,$C00F                        ;[4173] DD 21 0F C0
+                    CALL    HITON                           ;[4177] CD 7B 41
+                    RET                                     ;[417A] C9
+
+HITON:
+                    LD      A,(IX+$00)                      ;[417B] DD 7E 00
+                    CP      $F0                             ;[417E] FE F0
+                    RET     C                               ;[4180] D8
+                    CP      $F4                             ;[4181] FE F4
+                    RET     NC                              ;[4183] D0
+                    CALL    GETXY                           ;[4184] CD 6E 40
+                    INC     A                               ;[4187] 3C
+                    CP      $F3                             ;[4188] FE F3
+                    JR      Z,MSLOFF                        ;[418A] 28 C6
+                    LD      (IX+$00),A                      ;[418C] DD 77 00
+                    CALL    $004D                           ;[418F] CD 4D 00
+                    RET                                     ;[4192] C9
+
+HITCHK:
+                    LD      IX,$C009                        ;[4193] DD 21 09 C0
+                    CALL    HIT1                            ;[4197] CD A5 41
+                    LD      IX,$C00C                        ;[419A] DD 21 0C C0
+                    CALL    HIT1                            ;[419E] CD A5 41
+                    LD      IX,$C00F                        ;[41A1] DD 21 0F C0
+HIT1:
+                    LD      B,$46                           ;[41A5] 06 46
+                    LD      IY,$C01D                        ;[41A7] FD 21 1D C0
+HIT2:
+                    CALL    HITMSL                          ;[41AB] CD B7 41
+                    INC     IY                              ;[41AE] FD 23
+                    INC     IY                              ;[41B0] FD 23
+                    INC     IY                              ;[41B2] FD 23
+                    DJNZ    HIT2                            ;[41B4] 10 F5
+                    RET                                     ;[41B6] C9
+
+HITMSL:
+                    LD      A,(IY+$00)                      ;[41B7] FD 7E 00
+                    AND     A                               ;[41BA] A7
+                    RET     Z                               ;[41BB] C8
+                    CALL    GETXY                           ;[41BC] CD 6E 40
+                    LD      E,(IY+$01)                      ;[41BF] FD 5E 01
+                    LD      D,(IY+$02)                      ;[41C2] FD 56 02
+                    RST     $20                             ;[41C5] E7
+                    RET     NZ                              ;[41C6] C0
+                    LD      A,(IX+$00)                      ;[41C7] DD 7E 00
+                    AND     A                               ;[41CA] A7
+                    RET     Z                               ;[41CB] C8
+                    XOR     A                               ;[41CC] AF
+                    LD      (IY+$00),A                      ;[41CD] FD 77 00
+                    LD      A,$F0                           ;[41D0] 3E F0
+                    LD      (IX+$00),A                      ;[41D2] DD 77 00
+                    CALL    $004D                           ;[41D5] CD 4D 00
+                    LD      HL,$C018                        ;[41D8] 21 18 C0
+                    INC     (HL)                            ;[41DB] 34
+                    LD      A,(HL)                          ;[41DC] 7E
+                    CP      $11                             ;[41DD] FE 11
+                    CALL    Z,SPDUP                         ;[41DF] CC F3 41
+                    CP      $1E                             ;[41E2] FE 1E
+                    CALL    Z,SPDUP                         ;[41E4] CC F3 41
+                    CP      $2C                             ;[41E7] FE 2C
+                    CALL    Z,SPDUP                         ;[41E9] CC F3 41
+                    CP      $34                             ;[41EC] FE 34
+                    CALL    Z,SPDUP                         ;[41EE] CC F3 41
+                    JR      HIT1                            ;[41F1] 18 B2
+SPDUP:
+                    LD      HL,$C000                        ;[41F3] 21 00 C0
+                    DEC     (HL)                            ;[41F6] 35
+                    RET                                     ;[41F7] C9
+
+INVMOV:
+                    LD      HL,$C012                        ;[41F8] 21 12 C0
+                    DEC     (HL)                            ;[41FB] 35
+                    RET     NZ                              ;[41FC] C0
+                    LD      A,($C000)                       ;[41FD] 3A 00 C0
+                    LD      (HL),A                          ;[4200] 77
+                    LD      IX,($C01B)                      ;[4201] DD 2A 1B C0
+                    LD      A,($C019)                       ;[4205] 3A 19 C0
+                    CP      $03                             ;[4208] FE 03
+                    JR      Z,INVMVR                        ;[420A] 28 2D
+                    CP      $05                             ;[420C] FE 05
+                    JR      Z,INVMVD                        ;[420E] 28 4D
+                    CP      $07                             ;[4210] FE 07
+                    JR      Z,INVMVL                        ;[4212] 28 01
+                    RET                                     ;[4214] C9
+
+INVMVL:
+                    CALL    INVLL                           ;[4215] CD 98 42
+                    RET     C                               ;[4218] D8
+                    INC     IX                              ;[4219] DD 23
+                    INC     IX                              ;[421B] DD 23
+                    INC     IX                              ;[421D] DD 23
+                    LD      ($C01B),IX                      ;[421F] DD 22 1B C0
+                    LD      HL,$C017                        ;[4223] 21 17 C0
+                    DEC     (HL)                            ;[4226] 35
+                    JR      Z,MVL                           ;[4227] 28 07
+                    LD      A,(IX-$03)                      ;[4229] DD 7E FD
+                    AND     A                               ;[422C] A7
+                    JR      Z,INVMVL                        ;[422D] 28 E6
+                    RET                                     ;[422F] C9
+
+MVL:
+                    LD      (HL),$37                        ;[4230] 36 37
+                    LD      HL,$C01D                        ;[4232] 21 1D C0
+                    LD      ($C01B),HL                      ;[4235] 22 1B C0
+                    RET                                     ;[4238] C9
+
+INVMVR:
+                    CALL    INVRR                           ;[4239] CD C6 42
+                    RET     C                               ;[423C] D8
+                    DEC     IX                              ;[423D] DD 2B
+                    DEC     IX                              ;[423F] DD 2B
+                    DEC     IX                              ;[4241] DD 2B
+                    LD      ($C01B),IX                      ;[4243] DD 22 1B C0
+                    LD      HL,$C017                        ;[4247] 21 17 C0
+                    DEC     (HL)                            ;[424A] 35
+                    JR      Z,MVR                           ;[424B] 28 07
+                    LD      A,(IX+$03)                      ;[424D] DD 7E 03
+                    AND     A                               ;[4250] A7
+                    JR      Z,INVMVR                        ;[4251] 28 E6
+                    RET                                     ;[4253] C9
+
+MVR:
+                    LD      (HL),$37                        ;[4254] 36 37
+                    LD      HL,$C0BF                        ;[4256] 21 BF C0
+                    LD      ($C01B),HL                      ;[4259] 22 1B C0
+                    RET                                     ;[425C] C9
+
+INVMVD:
+                    CALL    INVDWN                          ;[425D] CD F3 42
+                    INC     IX                              ;[4260] DD 23
+                    INC     IX                              ;[4262] DD 23
+                    INC     IX                              ;[4264] DD 23
+                    LD      ($C01B),IX                      ;[4266] DD 22 1B C0
+                    LD      HL,$C017                        ;[426A] 21 17 C0
+                    DEC     (HL)                            ;[426D] 35
+                    JR      Z,MVD                           ;[426E] 28 07
+                    LD      A,(IX-$03)                      ;[4270] DD 7E FD
+                    AND     A                               ;[4273] A7
+                    JR      Z,INVMVD                        ;[4274] 28 E7
+                    RET                                     ;[4276] C9
+
+MVD:
+                    LD      (HL),$37                        ;[4277] 36 37
+                    LD      A,($C01A)                       ;[4279] 3A 1A C0
+                    CP      $07                             ;[427C] FE 07
+                    JR      NZ,INVNXT                       ;[427E] 20 0C
+                    LD      HL,$C0BF                        ;[4280] 21 BF C0
+                    LD      ($C01B),HL                      ;[4283] 22 1B C0
+                    LD      A,$03                           ;[4286] 3E 03
+                    LD      ($C019),A                       ;[4288] 32 19 C0
+                    RET                                     ;[428B] C9
+
+INVNXT:
+                    LD      HL,$C01D                        ;[428C] 21 1D C0
+                    LD      ($C01B),HL                      ;[428F] 22 1B C0
+                    LD      A,$07                           ;[4292] 3E 07
+                    LD      ($C019),A                       ;[4294] 32 19 C0
+                    RET                                     ;[4297] C9
+
+INVLL:
+                    LD      A,(IX+$00)                      ;[4298] DD 7E 00
+                    AND     A                               ;[429B] A7
+                    RET     Z                               ;[429C] C8
+                    CALL    GETXY                           ;[429D] CD 6E 40
+                    LD      D,H                             ;[42A0] 54
+                    LD      E,L                             ;[42A1] 5D
+                    DEC     DE                              ;[42A2] 1B
+                    LD      A,E                             ;[42A3] 7B
+                    AND     $1F                             ;[42A4] E6 1F
+                    CP      $00                             ;[42A6] FE 00
+                    JR      Z,INVDD                         ;[42A8] 28 30
+INVLR:
+                    LD      A,$20                           ;[42AA] 3E 20
+                    PUSH    DE                              ;[42AC] D5
+                    CALL    $004D                           ;[42AD] CD 4D 00
+                    CALL    WALK                            ;[42B0] CD 04 43
+                    POP     HL                              ;[42B3] E1
+                    LD      A,(IX+$00)                      ;[42B4] DD 7E 00
+                    CALL    PUTXY                           ;[42B7] CD 75 40
+                    CALL    $004D                           ;[42BA] CD 4D 00
+                    LD      DE,$1AE0                        ;[42BD] 11 E0 1A
+                    RST     $20                             ;[42C0] E7
+                    CALL    NC,CANHIT                       ;[42C1] D4 14 43
+                    AND     A                               ;[42C4] A7
+                    RET                                     ;[42C5] C9
+
+INVRR:
+                    LD      A,(IX+$00)                      ;[42C6] DD 7E 00
+                    AND     A                               ;[42C9] A7
+                    RET     Z                               ;[42CA] C8
+                    CALL    GETXY                           ;[42CB] CD 6E 40
+                    LD      D,H                             ;[42CE] 54
+                    LD      E,L                             ;[42CF] 5D
+                    INC     DE                              ;[42D0] 13
+                    LD      A,E                             ;[42D1] 7B
+                    AND     $1F                             ;[42D2] E6 1F
+                    CP      $1F                             ;[42D4] FE 1F
+                    JR      Z,INVDD                         ;[42D6] 28 02
+                    JR      INVLR                           ;[42D8] 18 D0
+INVDD:
+                    LD      A,($C019)                       ;[42DA] 3A 19 C0
+                    LD      ($C01A),A                       ;[42DD] 32 1A C0
+                    LD      A,$05                           ;[42E0] 3E 05
+                    LD      ($C019),A                       ;[42E2] 32 19 C0
+                    LD      A,($C016)                       ;[42E5] 3A 16 C0
+                    LD      ($C017),A                       ;[42E8] 32 17 C0
+                    LD      HL,$C01D                        ;[42EB] 21 1D C0
+                    LD      ($C01B),HL                      ;[42EE] 22 1B C0
+                    SCF                                     ;[42F1] 37
+                    RET                                     ;[42F2] C9
+
+INVDWN:
+                    LD      A,(IX+$00)                      ;[42F3] DD 7E 00
+                    AND     A                               ;[42F6] A7
+                    RET     Z                               ;[42F7] C8
+                    CALL    GETXY                           ;[42F8] CD 6E 40
+                    LD      D,H                             ;[42FB] 54
+                    LD      E,L                             ;[42FC] 5D
+                    LD      BC,$0020                        ;[42FD] 01 20 00
+                    ADD     HL,BC                           ;[4300] 09
+                    EX      DE,HL                           ;[4301] EB
+                    JR      INVLR                           ;[4302] 18 A6
+WALK:
+                    BIT     0,(IX+$00)                      ;[4304] DD CB 00 46
+                    JR      Z,WALK2                         ;[4308] 28 05
+WALK1:
+                    RES     0,(IX+$00)                      ;[430A] DD CB 00 86
+                    RET                                     ;[430E] C9
+
+WALK2:
+                    SET     0,(IX+$00)                      ;[430F] DD CB 00 C6
+                    RET                                     ;[4313] C9
+
+CANHIT:
+                    LD      A,$00                           ;[4314] 3E 00
+                    LD      ($C006),A                       ;[4316] 32 06 C0
+                    RET                                     ;[4319] C9
+
+INVINI:
+                    LD      HL,$C01D                        ;[431A] 21 1D C0
+                    LD      ($C01B),HL                      ;[431D] 22 1B C0
+                    XOR     A                               ;[4320] AF
+                    LD      ($C018),A                       ;[4321] 32 18 C0
+                    LD      B,$0B                           ;[4324] 06 0B
+                    LD      HL,$1928                        ;[4326] 21 28 19
+                    LD      DE,$FFC0                        ;[4329] 11 C0 FF
+                    LD      IX,$C01D                        ;[432C] DD 21 1D C0
+INVIN1:
+                    PUSH    HL                              ;[4330] E5
+                    LD      C,$05                           ;[4331] 0E 05
+INVIN2:
+                    PUSH    HL                              ;[4333] E5
+                    PUSH    DE                              ;[4334] D5
+                    LD      HL,$437A                        ;[4335] 21 7A 43
+                    LD      D,$00                           ;[4338] 16 00
+                    LD      E,C                             ;[433A] 59
+                    ADD     HL,DE                           ;[433B] 19
+                    LD      A,(HL)                          ;[433C] 7E
+                    POP     DE                              ;[433D] D1
+                    POP     HL                              ;[433E] E1
+                    LD      (IX+$00),A                      ;[433F] DD 77 00
+                    LD      (IX+$01),L                      ;[4342] DD 75 01
+                    LD      (IX+$02),H                      ;[4345] DD 74 02
+                    ADD     HL,DE                           ;[4348] 19
+                    INC     IX                              ;[4349] DD 23
+                    INC     IX                              ;[434B] DD 23
+                    INC     IX                              ;[434D] DD 23
+                    DEC     C                               ;[434F] 0D
+                    JR      NZ,INVIN2                       ;[4350] 20 E1
+                    POP     HL                              ;[4352] E1
+                    INC     HL                              ;[4353] 23
+                    INC     HL                              ;[4354] 23
+                    DJNZ    INVIN1                          ;[4355] 10 D9
+                    LD      HL,$4380                        ;[4357] 21 80 43
+                    LD      DE,$C016                        ;[435A] 11 16 C0
+                    LD      BC,$0005                        ;[435D] 01 05 00
+                    LDIR                                    ;[4360] ED B0
+                    RET                                     ;[4362] C9
+
+DSPINV:
+                    LD      B,$37                           ;[4363] 06 37
+                    LD      IX,$C01D                        ;[4365] DD 21 1D C0
+DSPLOP:
+                    LD      A,(IX+$00)                      ;[4369] DD 7E 00
+                    CALL    GETXY                           ;[436C] CD 6E 40
+                    CALL    $004D                           ;[436F] CD 4D 00
+                    INC     IX                              ;[4372] DD 23
+                    INC     IX                              ;[4374] DD 23
+                    INC     IX                              ;[4376] DD 23
+                    DJNZ    DSPLOP                          ;[4378] 10 EF
+                    RET                                     ;[437A] C9
+
+INVCHR:
+                    RET     Z                               ;[437B] C8
+                    RET     NC                              ;[437C] D0
+                    RET     NC                              ;[437D] D0
+                    RET     C                               ;[437E] D8
+                    RET     C                               ;[437F] D8
+INVDAT:
+                    SCF                                     ;[4380] 37
+                    SCF                                     ;[4381] 37
+                    NOP                                     ;[4382] 00
+                    RLCA                                    ;[4383] 07
+                    RLCA                                    ;[4384] 07
+CHRSET:
+                    LD      HL,$43CE                        ;[4385] 21 CE 43
+                    LD      DE,$0600                        ;[4388] 11 00 06
+                    LD      BC,$0010                        ;[438B] 01 10 00
+                    CALL    $005C                           ;[438E] CD 5C 00
+                    LD      HL,$43DE                        ;[4391] 21 DE 43
+                    LD      DE,$0640                        ;[4394] 11 40 06
+                    LD      BC,$0010                        ;[4397] 01 10 00
+                    CALL    $005C                           ;[439A] CD 5C 00
+                    LD      HL,$43EE                        ;[439D] 21 EE 43
+                    LD      DE,$0680                        ;[43A0] 11 80 06
+                    LD      BC,$0010                        ;[43A3] 01 10 00
+                    CALL    $005C                           ;[43A6] CD 5C 00
+                    LD      HL,$43FE                        ;[43A9] 21 FE 43
+                    LD      DE,$06C0                        ;[43AC] 11 C0 06
+                    LD      BC,$0010                        ;[43AF] 01 10 00
+                    CALL    $005C                           ;[43B2] CD 5C 00
+                    LD      HL,$440E                        ;[43B5] 21 0E 44
+                    LD      DE,$0780                        ;[43B8] 11 80 07
+                    LD      BC,$0030                        ;[43BB] 01 30 00
+                    CALL    $005C                           ;[43BE] CD 5C 00
+                    LD      HL,$442E                        ;[43C1] 21 2E 44
+                    LD      DE,$2018                        ;[43C4] 11 18 20
+                    LD      BC,$0007                        ;[43C7] 01 07 00
+                    CALL    $005C                           ;[43CA] CD 5C 00
+                    RET                                     ;[43CD] C9
+
+CHRDAT:
+                    NOP                                     ;[43CE] 00
+                    JR      $43E9                           ;[43CF] 18 18
+                    LD      A,(HL)                          ;[43D1] 7E
+                    RST     $38                             ;[43D2] FF
+                    RST     $38                             ;[43D3] FF
+                    RST     $38                             ;[43D4] FF
+                    NOP                                     ;[43D5] 00
+                    NOP                                     ;[43D6] 00
+                    JR      $43F1                           ;[43D7] 18 18
+                    JR      $43F3                           ;[43D9] 18 18
+                    JR      $43F5                           ;[43DB] 18 18
+                    NOP                                     ;[43DD] 00
+CHRDA1:
+                    JR      $441C                           ;[43DE] 18 3C
+                    LD      A,(HL)                          ;[43E0] 7E
+                    IN      A,($FF)                         ;[43E1] DB FF
+                    INC     H                               ;[43E3] 24
+                    LD      E,D                             ;[43E4] 5A
+                    AND     L                               ;[43E5] A5
+                    JR      $4424                           ;[43E6] 18 3C
+                    LD      A,(HL)                          ;[43E8] 7E
+                    IN      A,($FF)                         ;[43E9] DB FF
+                    LD      E,D                             ;[43EB] 5A
+                    ADD     C                               ;[43EC] 81
+                    NOP                                     ;[43ED] 00
+CHRDA2:
+                    JP      $7E3C                           ;[43EE] C3 3C 7E
+                    RST     $38                             ;[43F1] FF
+                    IN      A,($FF)                         ;[43F2] DB FF
+                    NOP                                     ;[43F4] 00
+                    NOP                                     ;[43F5] 00
+                    JP      $7E3C                           ;[43F6] C3 3C 7E
+                    RST     $38                             ;[43F9] FF
+                    IN      A,($FF)                         ;[43FA] DB FF
+                    NOP                                     ;[43FC] 00
+                    NOP                                     ;[43FD] 00
+CHRDA3:
+                    ADD     C                               ;[43FE] 81
+                    AND     L                               ;[43FF] A5
+                    CP      L                               ;[4400] BD
+                    RST     $38                             ;[4401] FF
+                    CP      L                               ;[4402] BD
+                    LD      A,(HL)                          ;[4403] 7E
+                    NOP                                     ;[4404] 00
+                    NOP                                     ;[4405] 00
+                    LD      B,D                             ;[4406] 42
+                    INC     H                               ;[4407] 24
+                    INC     A                               ;[4408] 3C
+                    RST     $38                             ;[4409] FF
+                    CP      L                               ;[440A] BD
+                    RST     $38                             ;[440B] FF
+                    NOP                                     ;[440C] 00
+                    NOP                                     ;[440D] 00
+CHRDA4:
+                    DJNZ    $4454                           ;[440E] 10 44
+                    DJNZ    $43BC                           ;[4410] 10 AA
+                    DJNZ    $4458                           ;[4412] 10 44
+                    DJNZ    $4416                           ;[4414] 10 00
+                    NOP                                     ;[4416] 00
+                    DJNZ    $4441                           ;[4417] 10 28
+                    LD      D,H                             ;[4419] 54
+                    JR      Z,$442C                         ;[441A] 28 10
+                    NOP                                     ;[441C] 00
+                    NOP                                     ;[441D] 00
+                    NOP                                     ;[441E] 00
+                    NOP                                     ;[441F] 00
+                    DJNZ    $444A                           ;[4420] 10 28
+                    DJNZ    $4424                           ;[4422] 10 00
+                    NOP                                     ;[4424] 00
+                    NOP                                     ;[4425] 00
+                    DJNZ    $4430                           ;[4426] 10 08
+                    DJNZ    $444A                           ;[4428] 10 20
+                    DJNZ    $4434                           ;[442A] 10 08
+                    DJNZ    COLOR                           ;[442C] 10 00
+COLOR:
+                    RET     PO                              ;[442E] E0
+                    JR      NZ,$4471                        ;[442F] 20 40
+                    RET     NC                              ;[4431] D0
+                    NOP                                     ;[4432] 00
+                    NOP                                     ;[4433] 00
+                    LD      H,B                             ;[4434] 60
+                    NOP                                     ;[4435] 00
+SETINITIALDATA:
+                    LD      A,$07                           ;[4436] 3E 07
+                    LD      ($C000),A                       ;[4438] 32 00 C0
+                    LD      ($C001),A                       ;[443B] 32 01 C0
+                    LD      A,$05                           ;[443E] 3E 05
+                    LD      ($C002),A                       ;[4440] 32 02 C0
+                    LD      A,$07                           ;[4443] 3E 07
+                    LD      ($C003),A                       ;[4445] 32 03 C0
+                    XOR     A                               ;[4448] AF
+                    LD      ($C004),A                       ;[4449] 32 04 C0
+                    LD      ($C005),A                       ;[444C] 32 05 C0
+                    LD      A,$C0                           ;[444F] 3E C0
+                    LD      ($C006),A                       ;[4451] 32 06 C0
+                    LD      HL,$1AF0                        ;[4454] 21 F0 1A
+                    LD      ($C007),HL                      ;[4457] 22 07 C0
+                    XOR     A                               ;[445A] AF
+                    LD      ($C009),A                       ;[445B] 32 09 C0
+                    LD      ($C00C),A                       ;[445E] 32 0C C0
+                    LD      ($C00F),A                       ;[4461] 32 0F C0
+                    LD      ($C00A),A                       ;[4464] 32 0A C0
+                    LD      ($C00D),A                       ;[4467] 32 0D C0
+                    LD      ($C010),A                       ;[446A] 32 10 C0
+                    LD      ($C00B),A                       ;[446D] 32 0B C0
+                    LD      ($C00E),A                       ;[4470] 32 0E C0
+                    LD      ($C011),A                       ;[4473] 32 11 C0
+                    LD      A,$01                           ;[4476] 3E 01
+                    LD      ($C012),A                       ;[4478] 32 12 C0
+                    LD      ($C013),A                       ;[447B] 32 13 C0
+                    LD      ($C014),A                       ;[447E] 32 14 C0
+                    LD      ($C015),A                       ;[4481] 32 15 C0
+                    LD      A,$37                           ;[4484] 3E 37
+                    LD      ($C016),A                       ;[4486] 32 16 C0
+                    LD      ($C017),A                       ;[4489] 32 17 C0
+                    XOR     A                               ;[448C] AF
+                    LD      ($C018),A                       ;[448D] 32 18 C0
+                    LD      A,$07                           ;[4490] 3E 07
+                    LD      ($C019),A                       ;[4492] 32 19 C0
+                    LD      ($C01A),A                       ;[4495] 32 1A C0
+                    LD      HL,$C01D                        ;[4498] 21 1D C0
+                    LD      ($C01B),HL                      ;[449B] 22 1B C0
+                    LD      HL,$C01D                        ;[449E] 21 1D C0
+                    LD      B,$A2                           ;[44A1] 06 A2
+                    XOR     A                               ;[44A3] AF
+INV1_MEMSET:
+                    LD      (HL),A                          ;[44A4] 77
+                    INC     HL                              ;[44A5] 23
+                    DJNZ    INV1_MEMSET                     ;[44A6] 10 FC
+                    XOR     A                               ;[44A8] AF
+                    LD      ($C0BF),A                       ;[44A9] 32 BF C0
+                    LD      ($C0C0),A                       ;[44AC] 32 C0 C0
+                    LD      ($C0C1),A                       ;[44AF] 32 C1 C0
+                    RET                                     ;[44B2] C9
+
