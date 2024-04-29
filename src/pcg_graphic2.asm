@@ -60,11 +60,19 @@ CreateCharacterPatternLoop:
     ;
     call GetCharacterVRAMAddress
 
-    ld hl, de
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld hl, de
+    ld l, e
+    ld h, d
+
     ld bc, $0800  ; HLレジスタに0800Hを加算する
     add hl, bc
 
-    ld de, hl     ; DEレジスタにHLレジスタの値を転送する
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld de, hl     ; DEレジスタにHLレジスタの値を転送する
+
+    ld e, l ; DEレジスタにHLレジスタの値を転送する
+    ld d, h
 
     ld hl, (WK_CHARDATAADR)
     ld bc, 8  ; 8バイト転送する
@@ -75,18 +83,31 @@ CreateCharacterPatternLoop:
     ;
     call GetCharacterVRAMAddress
 
-    ld hl, de
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld hl, de
+    ld l, e
+    ld h, d
+
     ld bc, $1000  ; HLレジスタに1000Hを加算する
     add hl, bc
 
-    ld de, hl     ; DEレジスタにHLレジスタの値を転送する
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld de, hl     ; DEレジスタにHLレジスタの値を転送する
+
+    ld e, l ; DEレジスタにHLレジスタの値を転送する
+    ld d, h
 
     ld hl, (WK_CHARDATAADR)
     ld bc, 8  ; 8バイト転送する
     call LDIRVM
 
     ld hl, (WK_CHARDATAADR)
-    add hl, 8
+
+    ; ↓DEBUG:こんな命令は存在しない
+    ; add hl, 8
+    ld bc, $0008
+    add hl, bc
+
     ld (WK_CHARDATAADR), hl ; CHRPTNのアドレスを8バイト進める
 
     ;-----------------------------------------------
@@ -97,14 +118,21 @@ CreateCharacterPatternLoop:
     ; その結果をDEレジスタに格納する
     call GetCharacterVRAMAddress
 
-    ld hl, de
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld hl, de
+    ld l, e
+    ld h, d
 
     ;
     ; 画面上段のカラーテーブルに書き込む
     ;
     ld hl, $2000     ; HLレジスタに2000Hを加算する
     add hl, de
-    ld de, hl        ; DEレジスタにHLレジスタの値を転送する
+
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld de, hl        ; DEレジスタにHLレジスタの値を転送する
+    ld e, l
+    ld d, h
 
     ld hl, (WK_CHARDATAADR)
     ld bc, 8  ; 8バイト転送する
@@ -118,7 +146,10 @@ CreateCharacterPatternLoop:
     ld bc, $2800     ; HLアドレスに2800Hを加算する
     add hl, bc
 
-    ld de, hl        ; DEレジスタにHLレジスタの値を転送する
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld de, hl        ; DEレジスタにHLレジスタの値を転送する
+    ld e, l
+    ld d, h
 
     ld hl, (WK_CHARDATAADR)
     ld bc, 8  ; 8バイト転送する
@@ -129,18 +160,30 @@ CreateCharacterPatternLoop:
     ;
     call GetCharacterVRAMAddress
 
-    ld hl, de
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld hl, de
+    ld l, e
+    ld h, d
+
     ld bc, $3000     ; HLアドレスに3000Hを加算する
     add hl, bc
 
-    ld de, hl        ; DEレジスタにHLレジスタの値を転送する
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld de, hl        ; DEレジスタにHLレジスタの値を転送する
+    ld e, l
+    ld d, h
 
     ld hl, (WK_CHARDATAADR)
     ld bc, 8  ; 8バイト転送する
     call LDIRVM
 
     ld hl, (WK_CHARDATAADR)
-    add hl, 8
+
+    ; ↓DEBUG:こんな命令は存在しない
+    ; add hl, 8
+    ld bc, $0008
+    add hl, bc
+
     ld (WK_CHARDATAADR), hl ; CHRPTNのアドレスを8バイト進める
 
     jp CreateCharacterPatternLoop
@@ -175,7 +218,11 @@ GetCharacterVRAMAddress:
     ; HLレジスタの値にはVRAMのパターンジェネレータテーブルの
     ; アドレスが格納されているためDEレジスタにセットする
     ;
-    ld de, hl
+
+    ; ↓DEBUG:こんな命令は存在しない
+    ; ld de, hl
+    ld e, l
+    ld d, h
 
     ret
 
