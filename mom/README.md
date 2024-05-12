@@ -139,5 +139,31 @@ IF YOU FIND A BUGS, LET KNOW ME. PLEASE.
 NTSC only.
 If you want play english version, please set "MSX America NTSC" on the WebMSX settings.
 
+This game was created using OpenMSX and Z88DK:Z80ASM as the development environment.
+The source code is stored in the following location.
+
+https://github.com/sailorman-msx/games/tree/main/src/mom
+
+This code is open source.
+It will work on 16KB MSX because Page#1 and Page#2 of MSX basic slot are switched to Page#1 and Page#2 of ROM.
+The message is switched in both Japanese and English by referring to 002DH of MSX.
+Some problems have been reported when running on WebMSX, but we are struggling to reproduce them on OpenMSX.
+I have no plans to modify this source code.
+Many people have given me advice on how to complete this game.
+Thank you very much.
+
+このゲームはOpenMSXとZ88DK:Z80ASMを開発環境として作成しました。
+ソースコードは以下の場所に格納しています。
+
+https://github.com/sailorman-msx/games/tree/main/src/mom
+
+このコードはオープンソースです。
+MSX基本スロットのPage#1とPage#2をROMのPage#1とPage#2に切り替えているため16KBのMSXでも動作すると思います。
+MSXの002DHを参照して日本語と英語両方でメッセージが切り替わるようにしています。
+WebMSXでの動作時にいくつか不具合が発生する事象が報告されていますが、OpenMSXで再現せず苦慮しています。
+私はこのソースコードに改変を加える予定はありません。
+このゲームが完成するまでにたくさんのひとにアドバイスをいただきました。
+とても感謝しています。ありがとうございました。
+
 ## Author: SAILORMAN STUDIO @brapunch2000
 
