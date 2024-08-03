@@ -39,5 +39,5 @@ WRTVRMSERIALLOOP                = $414D ; addr, local, , sample024, , sample024.
 WRTVRMFIL_End                   = $4175 ; addr, local, , sample024, , sample024.asm:479
 WRTVRMFILLOOP                   = $416A ; addr, local, , sample024, , sample024.asm:466
 __head                          = $4000 ; const, public, def, , ,
-__tail                          = $418D ; const, public, def, , ,
-__size                          = $018D ; const, public, def, , ,
+__tail                          = $418C ; const, public, def, , ,
+__size                          = $018C ; const, public, def, , ,

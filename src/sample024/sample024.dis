@@ -45,7 +45,7 @@ START:
                     CALL    WRTVRMFIL                       ;[4055] CD 5A 41
                     LD      HL,$4176                        ;[4058] 21 76 41
                     LD      DE,$1820                        ;[405B] 11 20 18
-                    LD      BC,$0017                        ;[405E] 01 17 00
+                    LD      BC,$0016                        ;[405E] 01 16 00
                     CALL    WRTVRMSERIAL                    ;[4061] CD 3B 41
                     EI                                      ;[4064] FB
                     LD      HL,$C002                        ;[4065] 21 02 C0
@@ -243,7 +243,7 @@ MESSAGE:
                     LD      D,D                             ;[4182] 52
                     LD      E,C                             ;[4183] 59
                     JR      NZ,$41B6                        ;[4184] 20 30
-                    LD      L,$30                           ;[4186] 2E 30
-                    LD      SP,$5320                        ;[4188] 31 20 53
-                    LD      B,L                             ;[418B] 45
-                    LD      B,E                             ;[418C] 43
+                    LD      L,$31                           ;[4186] 2E 31
+                    JR      NZ,$41DD                        ;[4188] 20 53
+                    LD      B,L                             ;[418A] 45
+                    LD      B,E                             ;[418B] 43

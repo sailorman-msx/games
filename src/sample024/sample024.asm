@@ -79,7 +79,7 @@ Start:
     ; タイトルの表記
     ld hl, MESSAGE
     ld de, $1820
-    ld bc, 23
+    ld bc, 22
     call WRTVRMSERIAL
 
     ei
@@ -483,7 +483,7 @@ WRTVRMFIL_End:
 ; 変数
 
 MESSAGE:
-defm "COUNT UP EVERY 0.01 SEC"
+defm "COUNT UP EVERY 0.1 SEC"
 
 DEFVARS $C000
 {
