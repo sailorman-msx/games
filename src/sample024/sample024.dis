@@ -38,24 +38,24 @@ START:
                     LD      HL,$2006                        ;[4042] 21 06 20
                     LD      BC,$0002                        ;[4045] 01 02 00
                     LD      A,$71                           ;[4048] 3E 71
-                    CALL    WRTVRMFIL                       ;[404A] CD 59 41
+                    CALL    WRTVRMFIL                       ;[404A] CD 5A 41
                     LD      HL,$2008                        ;[404D] 21 08 20
                     LD      BC,$0004                        ;[4050] 01 04 00
                     LD      A,$81                           ;[4053] 3E 81
-                    CALL    WRTVRMFIL                       ;[4055] CD 59 41
-                    LD      HL,$4175                        ;[4058] 21 75 41
+                    CALL    WRTVRMFIL                       ;[4055] CD 5A 41
+                    LD      HL,$4176                        ;[4058] 21 76 41
                     LD      DE,$1820                        ;[405B] 11 20 18
                     LD      BC,$0017                        ;[405E] 01 17 00
-                    CALL    WRTVRMSERIAL                    ;[4061] CD 3A 41
+                    CALL    WRTVRMSERIAL                    ;[4061] CD 3B 41
                     EI                                      ;[4064] FB
                     LD      HL,$C002                        ;[4065] 21 02 C0
                     LD      BC,$0005                        ;[4068] 01 05 00
                     LD      A,$00                           ;[406B] 3E 00
-                    CALL    MEMFIL                          ;[406D] CD 0F 41
+                    CALL    MEMFIL                          ;[406D] CD 10 41
                     LD      HL,$C007                        ;[4070] 21 07 C0
                     LD      BC,$000A                        ;[4073] 01 0A 00
                     LD      A,$00                           ;[4076] 3E 00
-                    CALL    MEMFIL                          ;[4078] CD 0F 41
+                    CALL    MEMFIL                          ;[4078] CD 10 41
                     CALL    INIT_H_TIMI_HANDLER             ;[407B] CD 84 40
                     XOR     A                               ;[407E] AF
                     LD      ($C011),A                       ;[407F] 32 11 C0
@@ -120,7 +120,7 @@ DISPDIGIT:
                     LD      HL,$C007                        ;[40DE] 21 07 C0
                     LD      DE,$1840                        ;[40E1] 11 40 18
                     LD      BC,$000A                        ;[40E4] 01 0A 00
-                    CALL    WRTVRMSERIAL                    ;[40E7] CD 3A 41
+                    CALL    WRTVRMSERIAL                    ;[40E7] CD 3B 41
                     JR      INTERVALEND                     ;[40EA] 18 04
 DECINTERVALWAIT:
                     DEC     A                               ;[40EC] 3D
@@ -137,112 +137,113 @@ ADDBCD_ONE:
                     ADD     E                               ;[40FB] 83
                     DAA                                     ;[40FC] 27
                     LD      (HL),A                          ;[40FD] 77
-                    JR      NC,ADDBCDEND                    ;[40FE] 30 0E
+                    JR      NC,ADDBCDEND                    ;[40FE] 30 0F
                     PUSH    HL                              ;[4100] E5
-                    LD      BC,$C002                        ;[4101] 01 02 C0
-                    SBC     HL,BC                           ;[4104] ED 42
-                    EX      AF,AF'                          ;[4106] 08
-                    POP     HL                              ;[4107] E1
-                    EX      AF,AF'                          ;[4108] 08
-                    JR      Z,ADDBCDEND                     ;[4109] 28 03
-                    DEC     HL                              ;[410B] 2B
-                    JR      ADDBCD_ONE                      ;[410C] 18 EA
+                    OR      A                               ;[4101] B7
+                    LD      BC,$C002                        ;[4102] 01 02 C0
+                    SBC     HL,BC                           ;[4105] ED 42
+                    EX      AF,AF'                          ;[4107] 08
+                    POP     HL                              ;[4108] E1
+                    EX      AF,AF'                          ;[4109] 08
+                    JR      Z,ADDBCDEND                     ;[410A] 28 03
+                    DEC     HL                              ;[410C] 2B
+                    JR      ADDBCD_ONE                      ;[410D] 18 E9
 ADDBCDEND:
-                    RET                                     ;[410E] C9
+                    RET                                     ;[410F] C9
 
 MEMFIL:
-                    LD      (HL),A                          ;[410F] 77
-                    CPI                                     ;[4110] ED A1
-                    JP      PE,MEMFIL                       ;[4112] EA 0F 41
-                    RET                                     ;[4115] C9
+                    LD      (HL),A                          ;[4110] 77
+                    CPI                                     ;[4111] ED A1
+                    JP      PE,MEMFIL                       ;[4113] EA 10 41
+                    RET                                     ;[4116] C9
 
 VDPWRT:
-                    PUSH    AF                              ;[4116] F5
-                    PUSH    BC                              ;[4117] C5
-                    PUSH    DE                              ;[4118] D5
-                    DI                                      ;[4119] F3
-                    LD      A,L                             ;[411A] 7D
-                    OUT     ($99),A                         ;[411B] D3 99
-                    NOP                                     ;[411D] 00
+                    PUSH    AF                              ;[4117] F5
+                    PUSH    BC                              ;[4118] C5
+                    PUSH    DE                              ;[4119] D5
+                    DI                                      ;[411A] F3
+                    LD      A,L                             ;[411B] 7D
+                    OUT     ($99),A                         ;[411C] D3 99
                     NOP                                     ;[411E] 00
                     NOP                                     ;[411F] 00
                     NOP                                     ;[4120] 00
-                    LD      A,H                             ;[4121] 7C
-                    AND     $3F                             ;[4122] E6 3F
-                    OR      $40                             ;[4124] F6 40
-                    OUT     ($99),A                         ;[4126] D3 99
-                    NOP                                     ;[4128] 00
+                    NOP                                     ;[4121] 00
+                    LD      A,H                             ;[4122] 7C
+                    AND     $3F                             ;[4123] E6 3F
+                    OR      $40                             ;[4125] F6 40
+                    OUT     ($99),A                         ;[4127] D3 99
                     NOP                                     ;[4129] 00
                     NOP                                     ;[412A] 00
                     NOP                                     ;[412B] 00
-                    POP     DE                              ;[412C] D1
-                    POP     BC                              ;[412D] C1
-                    POP     AF                              ;[412E] F1
-                    RET                                     ;[412F] C9
+                    NOP                                     ;[412C] 00
+                    POP     DE                              ;[412D] D1
+                    POP     BC                              ;[412E] C1
+                    POP     AF                              ;[412F] F1
+                    RET                                     ;[4130] C9
 
 WRTVRM:
-                    CALL    VDPWRT                          ;[4130] CD 16 41
-                    OUT     ($98),A                         ;[4133] D3 98
-                    NOP                                     ;[4135] 00
+                    CALL    VDPWRT                          ;[4131] CD 17 41
+                    OUT     ($98),A                         ;[4134] D3 98
                     NOP                                     ;[4136] 00
                     NOP                                     ;[4137] 00
                     NOP                                     ;[4138] 00
-                    RET                                     ;[4139] C9
+                    NOP                                     ;[4139] 00
+                    RET                                     ;[413A] C9
 
 WRTVRMSERIAL:
-                    LD      A,($C000)                       ;[413A] 3A 00 C0
-                    OR      A                               ;[413D] B7
-                    JR      NZ,WRTVRMSERIAL_END             ;[413E] 20 18
-                    LD      A,$01                           ;[4140] 3E 01
-                    LD      ($C000),A                       ;[4142] 32 00 C0
-                    PUSH    HL                              ;[4145] E5
-                    LD      H,D                             ;[4146] 62
-                    LD      L,E                             ;[4147] 6B
-                    CALL    VDPWRT                          ;[4148] CD 16 41
-                    POP     HL                              ;[414B] E1
+                    LD      A,($C000)                       ;[413B] 3A 00 C0
+                    OR      A                               ;[413E] B7
+                    JR      NZ,WRTVRMSERIAL_END             ;[413F] 20 18
+                    LD      A,$01                           ;[4141] 3E 01
+                    LD      ($C000),A                       ;[4143] 32 00 C0
+                    PUSH    HL                              ;[4146] E5
+                    LD      H,D                             ;[4147] 62
+                    LD      L,E                             ;[4148] 6B
+                    CALL    VDPWRT                          ;[4149] CD 17 41
+                    POP     HL                              ;[414C] E1
 WRTVRMSERIALLOOP:
-                    LD      A,(HL)                          ;[414C] 7E
-                    OUT     ($98),A                         ;[414D] D3 98
-                    CPI                                     ;[414F] ED A1
-                    JP      PE,WRTVRMSERIALLOOP             ;[4151] EA 4C 41
-                    XOR     A                               ;[4154] AF
-                    LD      ($C000),A                       ;[4155] 32 00 C0
+                    LD      A,(HL)                          ;[414D] 7E
+                    OUT     ($98),A                         ;[414E] D3 98
+                    CPI                                     ;[4150] ED A1
+                    JP      PE,WRTVRMSERIALLOOP             ;[4152] EA 4D 41
+                    XOR     A                               ;[4155] AF
+                    LD      ($C000),A                       ;[4156] 32 00 C0
 WRTVRMSERIAL_END:
-                    RET                                     ;[4158] C9
+                    RET                                     ;[4159] C9
 
 WRTVRMFIL:
-                    LD      D,A                             ;[4159] 57
-                    LD      A,($C000)                       ;[415A] 3A 00 C0
-                    OR      A                               ;[415D] B7
-                    JR      NZ,WRTVRMFIL_END                ;[415E] 20 14
-                    LD      A,$01                           ;[4160] 3E 01
-                    LD      ($C000),A                       ;[4162] 32 00 C0
-                    LD      A,D                             ;[4165] 7A
-                    CALL    VDPWRT                          ;[4166] CD 16 41
+                    LD      D,A                             ;[415A] 57
+                    LD      A,($C000)                       ;[415B] 3A 00 C0
+                    OR      A                               ;[415E] B7
+                    JR      NZ,WRTVRMFIL_END                ;[415F] 20 14
+                    LD      A,$01                           ;[4161] 3E 01
+                    LD      ($C000),A                       ;[4163] 32 00 C0
+                    LD      A,D                             ;[4166] 7A
+                    CALL    VDPWRT                          ;[4167] CD 17 41
 WRTVRMFILLOOP:
-                    OUT     ($98),A                         ;[4169] D3 98
-                    CPI                                     ;[416B] ED A1
-                    JP      PE,WRTVRMFILLOOP                ;[416D] EA 69 41
-                    XOR     A                               ;[4170] AF
-                    LD      ($C000),A                       ;[4171] 32 00 C0
+                    OUT     ($98),A                         ;[416A] D3 98
+                    CPI                                     ;[416C] ED A1
+                    JP      PE,WRTVRMFILLOOP                ;[416E] EA 6A 41
+                    XOR     A                               ;[4171] AF
+                    LD      ($C000),A                       ;[4172] 32 00 C0
 WRTVRMFIL_END:
-                    RET                                     ;[4174] C9
+                    RET                                     ;[4175] C9
 
 MESSAGE:
-                    LD      B,E                             ;[4175] 43
-                    LD      C,A                             ;[4176] 4F
-                    LD      D,L                             ;[4177] 55
-                    LD      C,(HL)                          ;[4178] 4E
-                    LD      D,H                             ;[4179] 54
-                    JR      NZ,$41D1                        ;[417A] 20 55
-                    LD      D,B                             ;[417C] 50
-                    JR      NZ,$41C4                        ;[417D] 20 45
-                    LD      D,(HL)                          ;[417F] 56
-                    LD      B,L                             ;[4180] 45
-                    LD      D,D                             ;[4181] 52
-                    LD      E,C                             ;[4182] 59
-                    JR      NZ,$41B5                        ;[4183] 20 30
-                    LD      L,$30                           ;[4185] 2E 30
-                    LD      SP,$5320                        ;[4187] 31 20 53
-                    LD      B,L                             ;[418A] 45
-                    LD      B,E                             ;[418B] 43
+                    LD      B,E                             ;[4176] 43
+                    LD      C,A                             ;[4177] 4F
+                    LD      D,L                             ;[4178] 55
+                    LD      C,(HL)                          ;[4179] 4E
+                    LD      D,H                             ;[417A] 54
+                    JR      NZ,$41D2                        ;[417B] 20 55
+                    LD      D,B                             ;[417D] 50
+                    JR      NZ,$41C5                        ;[417E] 20 45
+                    LD      D,(HL)                          ;[4180] 56
+                    LD      B,L                             ;[4181] 45
+                    LD      D,D                             ;[4182] 52
+                    LD      E,C                             ;[4183] 59
+                    JR      NZ,$41B6                        ;[4184] 20 30
+                    LD      L,$30                           ;[4186] 2E 30
+                    LD      SP,$5320                        ;[4188] 31 20 53
+                    LD      B,L                             ;[418B] 45
+                    LD      B,E                             ;[418C] 43

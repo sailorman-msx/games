@@ -299,6 +299,7 @@ AddBCD_One:
     ; なにもしない
 
     push hl
+    or a        ; CY Reset
     ld bc, NUMBER_DIGIT
     sbc hl, bc
     ex af, af'  ; フラグレジスタの退避
