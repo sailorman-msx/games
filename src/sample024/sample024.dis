@@ -134,7 +134,7 @@ ADDBCD:
 ADDBCD_ONE:
                     LD      A,(HL)                          ;[40F8] 7E
                     LD      E,$01                           ;[40F9] 1E 01
-                    ADC     E                               ;[40FB] 8B
+                    ADD     E                               ;[40FB] 83
                     DAA                                     ;[40FC] 27
                     LD      (HL),A                          ;[40FD] 77
                     JR      NC,ADDBCDEND                    ;[40FE] 30 0E
