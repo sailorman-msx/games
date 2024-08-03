@@ -141,7 +141,8 @@ REDVRMSERIAL:
     push hl
 
     ; HLレジスタにVRAMアドレスをセット
-    ld hl, de
+    ld h, d
+    ld l, e
 
     ; 読み込み宣言
     call VDPRED
@@ -227,7 +228,8 @@ WRTVRMSERIAL:
     push hl
 
     ; HLレジスタにVRAMアドレスをセット
-    ld hl, de
+    ld h, d
+    ld l, e
 
     ; 読み込み宣言
     call VDPWRT
