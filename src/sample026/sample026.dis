@@ -1,0 +1,140 @@
+INITIALIZEPROC:
+                    PUSH    AF                              ;[C000] F5
+                    PUSH    BC                              ;[C001] C5
+                    PUSH    DE                              ;[C002] D5
+                    PUSH    HL                              ;[C003] E5
+                    DI                                      ;[C004] F3
+                    LD      HL,$FD9F                        ;[C005] 21 9F FD
+                    LD      DE,$C0AD                        ;[C008] 11 AD C0
+                    LD      BC,$0005                        ;[C00B] 01 05 00
+                    LDIR                                    ;[C00E] ED B0
+                    LD      A,$C3                           ;[C010] 3E C3
+                    LD      HL,$C052                        ;[C012] 21 52 C0
+                    LD      ($FD9F),A                       ;[C015] 32 9F FD
+                    LD      ($FDA0),HL                      ;[C018] 22 A0 FD
+                    XOR     A                               ;[C01B] AF
+                    LD      (WK_VRAM_SYNC),A                ;[C01C] 32 AC C0
+                    EI                                      ;[C01F] FB
+                    POP     HL                              ;[C020] E1
+                    POP     DE                              ;[C021] D1
+                    POP     BC                              ;[C022] C1
+                    POP     AF                              ;[C023] F1
+                    RET                                     ;[C024] C9
+
+GETVARADDRESS:
+                    CP      $03                             ;[C025] FE 03
+                    RET     NZ                              ;[C027] C0
+                    INC     DE                              ;[C028] 13
+                    LD      A,(DE)                          ;[C029] 1A
+                    LD      L,A                             ;[C02A] 6F
+                    INC     DE                              ;[C02B] 13
+                    LD      A,(DE)                          ;[C02C] 1A
+                    LD      H,A                             ;[C02D] 67
+                    LD      B,(HL)                          ;[C02E] 46
+                    INC     HL                              ;[C02F] 23
+                    LD      C,(HL)                          ;[C030] 4E
+                    LD      A,($F6C2)                       ;[C031] 3A C2 F6
+                    LD      E,A                             ;[C034] 5F
+                    LD      A,($F6C3)                       ;[C035] 3A C3 F6
+                    LD      D,A                             ;[C038] 57
+GVALOOP:
+                    INC     DE                              ;[C039] 13
+                    LD      A,(DE)                          ;[C03A] 1A
+                    LD      H,A                             ;[C03B] 67
+                    INC     DE                              ;[C03C] 13
+                    LD      A,(DE)                          ;[C03D] 1A
+                    LD      L,A                             ;[C03E] 6F
+                    INC     DE                              ;[C03F] 13
+                    OR      A                               ;[C040] B7
+                    SBC     HL,BC                           ;[C041] ED 42
+                    JR      Z,GVALOOPEND                    ;[C043] 28 04
+                    INC     DE                              ;[C045] 13
+                    INC     DE                              ;[C046] 13
+                    JR      GVALOOP                         ;[C047] 18 F0
+GVALOOPEND:
+                    LD      A,E                             ;[C049] 7B
+                    LD      ($C800),A                       ;[C04A] 32 00 C8
+                    LD      A,D                             ;[C04D] 7A
+                    LD      ($C801),A                       ;[C04E] 32 01 C8
+                    RET                                     ;[C051] C9
+
+VBLANK_PROC:
+                    DI                                      ;[C052] F3
+                    PUSH    AF                              ;[C053] F5
+                    CALL    MAINPROC                        ;[C054] CD 5A C0
+                    POP     AF                              ;[C057] F1
+                    EI                                      ;[C058] FB
+                    RET                                     ;[C059] C9
+
+MAINPROC:
+                    PUSH    HL                              ;[C05A] E5
+                    PUSH    DE                              ;[C05B] D5
+                    PUSH    BC                              ;[C05C] C5
+                    PUSH    AF                              ;[C05D] F5
+                    CALL    $0156                           ;[C05E] CD 56 01
+                    LD      A,$00                           ;[C061] 3E 00
+                    CALL    $00D5                           ;[C063] CD D5 00
+                    LD      D,A                             ;[C066] 57
+                    PUSH    DE                              ;[C067] D5
+                    LD      A,$01                           ;[C068] 3E 01
+                    CALL    $00D5                           ;[C06A] CD D5 00
+                    POP     DE                              ;[C06D] D1
+                    OR      D                               ;[C06E] B2
+                    JR      Z,KEYINPUTTRIGGER               ;[C06F] 28 04
+                    LD      HL,($C804)                      ;[C071] 2A 04 C8
+                    LD      (HL),A                          ;[C074] 77
+KEYINPUTTRIGGER:
+                    XOR     A                               ;[C075] AF
+                    CALL    $00D8                           ;[C076] CD D8 00
+                    LD      D,A                             ;[C079] 57
+                    LD      A,$01                           ;[C07A] 3E 01
+                    CALL    $00D8                           ;[C07C] CD D8 00
+                    OR      D                               ;[C07F] B2
+                    LD      HL,($C806)                      ;[C080] 2A 06 C8
+                    LD      (HL),A                          ;[C083] 77
+ENEMYMOVE:
+                    LD      HL,($C808)                      ;[C084] 2A 08 C8
+                    LD      A,(HL)                          ;[C087] 7E
+                    INC     A                               ;[C088] 3C
+                    LD      (HL),A                          ;[C089] 77
+PLAYERSHOTMOVE:
+                    LD      HL,($C80A)                      ;[C08A] 2A 0A C8
+                    LD      A,(HL)                          ;[C08D] 7E
+                    DEC     A                               ;[C08E] 3D
+                    DEC     A                               ;[C08F] 3D
+                    JR      C,PLAYERSHOTINIT                ;[C090] 38 03
+                    LD      (HL),A                          ;[C092] 77
+                    JR      ENEMYSHOTMOVE                   ;[C093] 18 02
+PLAYERSHOTINIT:
+                    XOR     A                               ;[C095] AF
+                    LD      (HL),A                          ;[C096] 77
+ENEMYSHOTMOVE:
+                    LD      HL,($C80C)                      ;[C097] 2A 0C C8
+                    LD      A,(HL)                          ;[C09A] 7E
+                    CP      $BF                             ;[C09B] FE BF
+                    JR      Z,ENEMYSHOTINIT                 ;[C09D] 28 05
+                    INC     A                               ;[C09F] 3C
+                    INC     A                               ;[C0A0] 3C
+                    LD      (HL),A                          ;[C0A1] 77
+                    JR      MAINPROCEND                     ;[C0A2] 18 03
+ENEMYSHOTINIT:
+                    LD      A,$C0                           ;[C0A4] 3E C0
+                    LD      (HL),A                          ;[C0A6] 77
+MAINPROCEND:
+                    POP     AF                              ;[C0A7] F1
+                    POP     BC                              ;[C0A8] C1
+                    POP     DE                              ;[C0A9] D1
+                    POP     HL                              ;[C0AA] E1
+                    RET                                     ;[C0AB] C9
+
+WK_VRAM_SYNC:
+                    NOP                                     ;[C0AC] 00
+H_TIMI_BACKUP:
+                    NOP                                     ;[C0AD] 00
+                    NOP                                     ;[C0AE] 00
+                    NOP                                     ;[C0AF] 00
+                    NOP                                     ;[C0B0] 00
+                    NOP                                     ;[C0B1] 00
+FUNCADDR:
+                    DEC     H                               ;[C0B2] 25
+                    RET     NZ                              ;[C0B3] C0
