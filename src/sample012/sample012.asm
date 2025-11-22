@@ -102,7 +102,6 @@ EnemyPtrTblInitLoop:
 ;-------------------------------------------------
     ld a, 0
     ld (VSYNC_WAIT_CNT), a
-    ld (VSYNC_ENEMYMOVE_CNT), a
 
     call INIT_H_TIMI_HANDLER
 

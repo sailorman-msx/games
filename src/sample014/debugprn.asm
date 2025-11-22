@@ -8,7 +8,7 @@ DebugPrint:
     ;
     ; DUMP出力するためのデータを準備する
     ;
-    ld hl, WK_FIREBALL_MAPX1
+    ld hl, (WK_PLAYERPOSX)
     ld de, WK_DUMPDATA            ; WK_DUMPDATAのアドレスに
     ld bc, 16                     ; 16バイト転送する
     ldir

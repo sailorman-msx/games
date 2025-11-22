@@ -796,38 +796,40 @@ SOUNDEFFECTS_SOUND1:
                     NOP                                     ;[4467] 00
 SOUNDEFFECTS_SOUND1_LOOP:
                     CP      L                               ;[4468] BD
-                    LD      BC,$00A8                        ;[4469] 01 A8 00
+                    LD      BC,$005F                        ;[4469] 01 5F 00
                     CP      L                               ;[446C] BD
-                    LD      BC,$00AC                        ;[446D] 01 AC 00
+                    LD      BC,$0063                        ;[446D] 01 63 00
                     OR      C                               ;[4470] B1
-                    LD      BC,$00AF                        ;[4471] 01 AF 00
+                    LD      BC,$0066                        ;[4471] 01 66 00
                     XOR     L                               ;[4474] AD
-                    LD      BC,$00B3                        ;[4475] 01 B3 00
+                    LD      BC,$006A                        ;[4475] 01 6A 00
                     INC     B                               ;[4478] 04
 SOUNDEFFECTS_SOUND2:
                     LD      BC,$01BD                        ;[4479] 01 BD 01
-                    LD      D,$02                           ;[447C] 16 02
-                    CP      L                               ;[447E] BD
-                    EX      AF,AF'                          ;[447F] 08
-                    LD      (HL),$02                        ;[4480] 36 02
-                    CP      C                               ;[4482] B9
-                    LD      (BC),A                          ;[4483] 02
-                    RET     Z                               ;[4484] C8
-                    LD      (BC),A                          ;[4485] 02
-                    OR      L                               ;[4486] B5
-                    DJNZ    $4502                           ;[4487] 10 79
-                    LD      BC,$02B1                        ;[4489] 01 B1 02
-                    SUB     B                               ;[448C] 90
-                    LD      BC,$02AD                        ;[448D] 01 AD 02
-                    XOR     B                               ;[4490] A8
-                    LD      BC,$10A5                        ;[4491] 01 A5 10
-                    LD      A,E                             ;[4494] 7B
-                    LD      (BC),A                          ;[4495] 02
-                    SBC     L                               ;[4496] 9D
-                    RRA                                     ;[4497] 1F
-                    CALL    NC,$9900                        ;[4498] D4 00 99
+                    DEC     L                               ;[447C] 2D
+                    LD      BC,$08BD                        ;[447D] 01 BD 08
+                    CCF                                     ;[4480] 3F
+                    LD      BC,$02B9                        ;[4481] 01 B9 02
+                    SUB     D                               ;[4484] 92
+                    LD      BC,$10B5                        ;[4485] 01 B5 10
+                    PUSH    DE                              ;[4488] D5
+                    NOP                                     ;[4489] 00
+                    OR      C                               ;[448A] B1
+                    LD      (BC),A                          ;[448B] 02
+                    POP     HL                              ;[448C] E1
+                    NOP                                     ;[448D] 00
+                    XOR     L                               ;[448E] AD
+                    LD      (BC),A                          ;[448F] 02
+                    RST     $28                             ;[4490] EF
+                    NOP                                     ;[4491] 00
+                    AND     L                               ;[4492] A5
+                    DJNZ    $44FB                           ;[4493] 10 66
+                    LD      BC,$1F9D                        ;[4495] 01 9D 1F
+                    LD      (HL),A                          ;[4498] 77
+                    NOP                                     ;[4499] 00
+                    SBC     C                               ;[449A] 99
                     RLCA                                    ;[449B] 07
-                    ADC     L                               ;[449C] 8D
+                    LD      D,B                             ;[449C] 50
                     NOP                                     ;[449D] 00
                     INC     B                               ;[449E] 04
 PLY_AKG_START:

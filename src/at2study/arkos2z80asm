@@ -1,4 +1,4 @@
-#!python3
+#!python
 #
 # Converts the Disark output files included 
 # with Arkos Tracker2 to Z88DK:Z80ASM syntax.

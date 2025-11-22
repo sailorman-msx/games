@@ -231,7 +231,6 @@ SFX00_TRK_2:
     defb 255      ; End of Data
 
 ;
-;
 ; SFX_01 : 弾の発射音
 ; MML
 ;  TRK#1 : None
@@ -251,37 +250,6 @@ SFX01_TRK_3:
     defb 3        ; 
     defb 212      ; Volume = 12
     defb 89       ; O8 F16
-    defb 3        ; 
-    defb 210      ; Volume = 0 休符
-    defb 89       ; 
-    defb 3        ; 
-    defb 255      ; End of Data
-
-; SFX_02 : テキキャラに弾が当たった音
-; MML
-;  TRK#1 : None
-;  TRK#2 : None
-;  TRK#3 : T160 O8 F16 G16 F16 G16
-;
-SFX_02:
-    defb 255 ; Priority
-    defw 0
-    defw 0
-    defw SFX01_TRK_3
-
-SFX02_TRK_3:
-    defb 217, 10B ; Mixing Tone/Noise off
-    defb 215      ; Volume = 15
-    defb 89       ; O8 F16
-    defb 3        ; 
-    defb 212      ; Volume = 12
-    defb 90       ; O8 G16
-    defb 3        ; 
-    defb 215      ; Volume = 15
-    defb 89       ; O8 F16
-    defb 3        ; 
-    defb 212      ; Volume = 12
-    defb 90       ; O8 G16
     defb 3        ; 
     defb 210      ; Volume = 0 休符
     defb 89       ; 

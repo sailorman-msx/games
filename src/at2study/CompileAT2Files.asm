@@ -4,8 +4,6 @@
     ;This is the music, and its config file.
     include "TRAINING_BGM.asm" 
     include "TRAINING_BGM_playerconfig.asm" 
-    include "TRAINING_SFX.asm" 
-    include "TRAINING_SFX_playerconfig.asm" 
  
     ;What hardware? Uncomment the right one.
     PLY_AKG_HARDWARE_MSX = 1        

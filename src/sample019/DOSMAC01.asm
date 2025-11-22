@@ -32,53 +32,50 @@ EXPTBL:equ $FCC1
 ; =================
 H_TIMI:equ $FD9F ; H.TIMI hook address
 
-VBLANK_WAIT_FLG:equ $8000
-TIMER_COUNTER:equ $8001
-ADDR_BACK:equ $8002
-H_TIMI_BACKUP:equ $8004
+VBLANK_WAIT_FLG:equ $4000
+TIMER_COUNTER:equ $4001
+ADDR_BACK:equ $4002
+H_TIMI_BACKUP:equ $4004
 
 ; VDPポート番号(定数)
 CONST_VDPPORT0:equ $98
 CONST_VDPPORT1:equ $99
 
 ; 表示するキャラクタコード
-DISP_CHAR_CODE:equ $8009
+DISP_CHAR_CODE:equ $4009
 
 ; キャラクタのアニメーション番号
-ANIME_NUM:equ $800A
+ANIME_NUM:equ $400A
 
 ; 乱数生成SEED値
-RANDOM_SEED:equ $800B
+RANDOM_SEED:equ $400B
 
 ; ダブルバッファリング
 ; 仮想VRAM用(768バイト)
-VIRTVRAM:equ $800C
+VIRTVRAM:equ $400C
 
 ; スクロール用(768バイト)
-SCROLLBUF:equ $830C
+SCROLLBUF:equ $130C
 
 ; LAST　COL生成用(32バイト)
-SCREENLASTCOL:equ $860C
+SCREENLASTCOL:equ $160C
 
 ; LAST COLのアドレス(2バイト)
-SCREENLASTCOLADDR:equ $862C
+SCREENLASTCOLADDR:equ $162C
 
 ; スクロール先アドレス(２バイト)
-SCROLLDESTADDR:equ $862E
+SCROLLDESTADDR:equ $162E
 
 ; 画面書き換え可能フラグ(1バイト)
-PATTERNNAMETB_REDRAW:equ $862F
+PATTERNNAMETB_REDRAW:equ $162F
 
 ; Zキー押されたフラグ
-ZKEY_PUSHED:equ $8630
+ZKEY_PUSHED:equ $1630
 
 ; Xキー押されたフラグ
-XKEY_PUSHED:equ $8631
+XKEY_PUSHED:equ $1631
 
-; 各Pageのスロット番号格納用
-RAMAD0:equ $F341
-RAMAD1:equ $F342
-RAMAD2:equ $F343
+; Page#3のスロット番号格納用
 RAMAD3:equ $F344
 
 ; ========================================
@@ -281,7 +278,7 @@ INIT_H_TIMI_HANDLER:
     ; ==============================================
     ld a, $F7              ; H_TIMI + 0 <- RST30H
     ld (H_TIMI + 0) , a
-    ld a, (RAMAD0)         ; H_TIMI + 1 <- Page#0のスロット
+    ld a, (RAMAD3)         ; H_TIMI + 1 <- Page#3のスロット
     ld (H_TIMI + 1), a
     ld hl, H_TIMI_HANDLER
     ld (H_TIMI + 2), hl    ; H_TIMI + 2 <- 呼び出し先アドレス下位8bit

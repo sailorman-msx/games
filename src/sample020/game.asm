@@ -7,7 +7,7 @@ GameMainProc:
     ;-------------------------------------------
 
     ld a, (WK_TIME05)
-    cp 2
+    cp 5
     jp nz, GameMainProcEnd
 
     ; 半径64の円周を描くようにスプライトを表示する
