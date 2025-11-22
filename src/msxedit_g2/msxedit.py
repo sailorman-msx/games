@@ -437,33 +437,32 @@ class App:
         _arrIdx = 0
         _orgX = 0
         _orgY = 0
-        for _area in range(3):
-            for _i in range(256): 
-                if (_i % 32 == 0 ) and _i != 0:
-                    _orgX = 0
-                    _orgY = _orgY + 8
-                _y = _orgY
-                for _j in range(8):
-                    _ptn = self.PtnData[_arrIdx][_j]
-                    _clr = self.ClrData[_arrIdx][_j]
-                    # 前景色
-                    _forecolor = _clr >> 4
-                    # 背景色
-                    _backcolor = _clr & 0x0f
-                    _binStr="{:08b}".format(_ptn)
-                    # 1ラインの描画
-                    for _dot in range(len(_binStr)):
-                        if _binStr[_dot] == "1": # bit on
-                            _clrStr = "#" + "{:06X}".format(_clrList[_forecolor])
-                            _rect=_svgimg.rect(insert=(_orgX+_dot*4, _y*4), size=(4, 4), fill=_clrStr)
-                            _svgimg.add(_rect)
-                        else:
-                            _clrStr = "#" + "{:06X}".format(_clrList[_backcolor])
-                            _rect=_svgimg.rect(insert=(_orgX+_dot*4, _y*4), size=(4, 4), fill=_clrStr)
-                            _svgimg.add(_rect)
-                    _y += 1
-                _orgX += 32
-                _arrIdx += 1
+        for _i in range(256*3): 
+            if (_i % 32 == 0 ) and _i != 0:
+                _orgX = 0
+                _orgY = _orgY + 8
+            _y = _orgY
+            for _j in range(8):
+                _ptn = self.PtnData[_arrIdx][_j]
+                _clr = self.ClrData[_arrIdx][_j]
+                # 前景色
+                _forecolor = _clr >> 4
+                # 背景色
+                _backcolor = _clr & 0x0f
+                _binStr="{:08b}".format(_ptn)
+                # 1ラインの描画
+                for _dot in range(len(_binStr)):
+                    if _binStr[_dot] == "1": # bit on
+                        _clrStr = "#" + "{:06X}".format(_clrList[_forecolor])
+                        _rect=_svgimg.rect(insert=(_orgX+_dot*4, _y*4), size=(4, 4), fill=_clrStr)
+                        _svgimg.add(_rect)
+                    else:
+                        _clrStr = "#" + "{:06X}".format(_clrList[_backcolor])
+                        _rect=_svgimg.rect(insert=(_orgX+_dot*4, _y*4), size=(4, 4), fill=_clrStr)
+                        _svgimg.add(_rect)
+                _y += 1
+            _orgX += 32
+            _arrIdx += 1
 
         # SVGファイルを出力
         _svgimg.save()
@@ -921,7 +920,7 @@ class App:
         # EXPORT SVG処理が実行されていればダイアログを表示する
         if self.EXPORTSVG == 1:
             # ダイアログの表示
-            _msg = "Export Imagefile to SVG."
+            _msg = "Export Image SVG file."
             self.putLabelArea(17,10,15,3,_msg)
             self.exportSVG()
             return
