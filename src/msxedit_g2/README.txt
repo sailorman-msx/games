@@ -177,6 +177,11 @@ MSXのGRAPHIC2の仕様は文字1文字あたり横8ドットx縦8ドットで�
 
       cp MSXGR2.DAT.org MSXGR2.DAT  <--- これでデータを初期化できます
 
+* データの消去
+
+  MSXGR2.DATを削除すると、空のパターンでファイルを作成しなおして
+  ツールが動作します。
+
 * このツールの作成の経緯
 
   MSXのパターンエディタはおそらく世界中で何万人もの先駆者が
@@ -332,6 +337,11 @@ There are two modes: Character Selection and Edit Mode.
 
     To start from the default set:
       cp MSXGR2.DAT.org MSXGR2.DAT
+
+* Clearing Data
+
+Deleting MSXGR2.DAT makes the tool recreate a fresh file filled 
+with blank patterns and keep running.
 
 * Why I built this
 
