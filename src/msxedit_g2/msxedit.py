@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import PyxelUniversalFont as puf
 from enum import Enum
+import svgwrite
 
 class SPC_KEY(Enum):
     NONE       = 0
@@ -66,12 +67,6 @@ class App:
         # グリッドエリアでのカーソル位置から取得したスロット番号
         self.SelSlot = 0
 
-        # 編集モードでCtrl+Fが押されたかどうか
-        self.FillExec = 0
-
-        # 編集モードでCtrl+Rが押されたかどうか
-        self.RemoveExec = 0
-
         # カラー選択エリアでのマウスカーソル位置（選択色）
         self.fsx = 0
         self.fsy = 0
@@ -95,6 +90,9 @@ class App:
         # SAVEボタン用変数
         self.MSXBSAVE   = 0
         self.PLAINSAVE  = 0
+
+        # EXPORT SVGボタン用変数
+        self.EXPORTSVG  = 0
 
         # グリッドに表示しているキャラクターのパターンIDX（配列の添字）
         self.GridChar = [0 for _i in range(4)]
@@ -181,6 +179,9 @@ class App:
                 if (self.mx > 0 and self.mx < 33) and (self.my > 1 and self.my < 26):
                     # 文字選択モードで左クリックが選択された
                     self.KEY_SPC_Event = SPC_KEY.PRESS_DOWN
+                if (self.mx >= 33 and self.mx <= 39) and (self.my >= 28 and self.my <= 29):
+                    # SVG EXPORTボタンが押された
+                    self.EXPORTSVG = 1
                 if (self.mx >= 41 and self.mx <= 47) and (self.my >= 28 and self.my <= 29):
                     # MSX BSAVEボタンが押された
                     self.MSXBSAVE = 1
@@ -421,6 +422,56 @@ class App:
         # Plain SAVE処理の終了
         self.PLAINSAVE = 0
         self.timer = 120
+
+    def exportSVG(self):
+
+        # Pyxelのカラーデータを取得する
+        _clrList = [ 0 for _i in range(16) ]
+        for _i in range(16):
+            _clrList[_i] = pyxel.colors[_i]
+
+        # グラフィックデータをSVG形式で出力する
+        # SVGに出力する画像は1ドットあたり4px x 4pxとする
+        _svgimg = svgwrite.Drawing("MSXGR2.svg", size=("%dpx" % (256*4), "%dpx" % (192*4)))
+
+        _arrIdx = 0
+        _orgX = 0
+        _orgY = 0
+        for _area in range(3):
+            for _i in range(256): 
+                if (_i % 32 == 0 ) and _i != 0:
+                    _orgX = 0
+                    _orgY = _orgY + 8
+                _y = _orgY
+                for _j in range(8):
+                    _ptn = self.PtnData[_arrIdx][_j]
+                    _clr = self.ClrData[_arrIdx][_j]
+                    # 前景色
+                    _forecolor = _clr >> 4
+                    # 背景色
+                    _backcolor = _clr & 0x0f
+                    _binStr="{:08b}".format(_ptn)
+                    # 1ラインの描画
+                    for _dot in range(len(_binStr)):
+                        if _binStr[_dot] == "1": # bit on
+                            _clrStr = "#" + "{:06X}".format(_clrList[_forecolor])
+                            _rect=_svgimg.rect(insert=(_orgX+_dot*4, _y*4), size=(4, 4), fill=_clrStr)
+                            _svgimg.add(_rect)
+                        else:
+                            _clrStr = "#" + "{:06X}".format(_clrList[_backcolor])
+                            _rect=_svgimg.rect(insert=(_orgX+_dot*4, _y*4), size=(4, 4), fill=_clrStr)
+                            _svgimg.add(_rect)
+                    _y += 1
+                _orgX += 32
+                _arrIdx += 1
+
+        # SVGファイルを出力
+        _svgimg.save()
+
+        # タイマーセット
+        self.timer = 120
+
+        self.EXPORTSVG = 0
 
     def dotPlot(self,proc=None):
 
@@ -854,18 +905,26 @@ class App:
 
         # SAVE処理が実行されていればダイアログを表示する
         if self.MSXBSAVE == 1:
-           # ダイアログの表示
-           _msg = "Data save now. [MSX BSAVE]"
-           self.putLabelArea(17,10,15,3,_msg)
-           self.writeMSXBSAVE()
-           return
+            # ダイアログの表示
+            _msg = "Data save now. [MSX BSAVE]"
+            self.putLabelArea(17,10,15,3,_msg)
+            self.writeMSXBSAVE()
+            return
 
         if self.PLAINSAVE == 1:
-           # ダイアログの表示
-           _msg = "Data save now. [PLAIN SAVE]"
-           self.putLabelArea(17,10,15,3,_msg)
-           self.writePLAINSAVE()
-           return
+            # ダイアログの表示
+            _msg = "Data save now. [PLAIN SAVE]"
+            self.putLabelArea(17,10,15,3,_msg)
+            self.writePLAINSAVE()
+            return
+
+        # EXPORT SVG処理が実行されていればダイアログを表示する
+        if self.EXPORTSVG == 1:
+            # ダイアログの表示
+            _msg = "Export Imagefile to SVG."
+            self.putLabelArea(17,10,15,3,_msg)
+            self.exportSVG()
+            return
 
         # タイマー値がセットされていたらデクリメントする
         # 0になったら通常処理を行う
@@ -1010,6 +1069,11 @@ class App:
             _clr = 17 # 無効時の表示色はグレー
         else:
             _clr = 15 # 有効時の表示色は白
+
+        # EXPORT SVGボタン ラベルの表示
+        pyxel.rect(33*8,28*8,7*8,2*8,5)
+        _msg=" SVG EXPORT"
+        self.putMsg(34,29,-2,-4,_clr,_msg)
 
         # BSAVEボタン ラベルの表示
         pyxel.rect(41*8,28*8,7*8,2*8,5)

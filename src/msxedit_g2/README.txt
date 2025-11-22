@@ -21,16 +21,19 @@ MSX SCREEN2 (GRAPHIC2) に対応したキャラクタパターンとカラーデ
   ** Windows
     pip install -U pyxel
     pip install -U pyxel-universal-font
+    pip install -U svgwrite
 
   ** macOS X
     brew install pip3
     pip3 ensurepath
     pip3 install pyxel
     pip3 install pyxel-universal-font
+    pip3 install svgwrite
 
   ** Linux
     sudo pip3 install -U pyxel
     sudo pip3 install -U pyxel-universal-font
+    sudo pip3 install -U svgwrite
 
 * MSXでのSCREEN2（GRAPHIC2）モードの仕様
 
@@ -91,6 +94,10 @@ MSXのGRAPHIC2の仕様は文字1文字あたり横8ドットx縦8ドットで�
        MSXGR2.DAT   : キャラクタとカラーがひとまとまりのデータです
 
      【上書きする、しないの確認は行いませんので注意してください】
+
+  EXPORT SVG -- 文字選択エリアに表示されている画像をSVGで出力します。
+     出力画像は1ドットあたり縦4px、横4pxで出力します。
+     ファイル名は MSXGR2.svg です。
 
 ** 編集モード
 
@@ -250,16 +257,19 @@ It lets you design character patterns and colors for SCREEN 2 (GRAPHIC 2) mode.
   **Windows**
     pip install -U pyxel
     pip install -U pyxel-universal-font
+    pip install -U svgwrite
 
   **macOS**
     brew install pip3
     pip3 ensurepath
     pip3 install pyxel
     pip3 install pyxel-universal-font
+    pip3 install svgwrite
 
   **Linux**
     sudo pip3 install -U pyxel
     sudo pip3 install -U pyxel-universal-font
+    sudo pip3 install -U svgwrite
 
 * MSX SCREEN 2 (GRAPHIC 2) basics
 
@@ -300,6 +310,13 @@ There are two modes: Character Selection and Edit Mode.
                 MSXGR2CL.BIN  (color data)
     PLAIN BSAVE -> save a single file this editor can open again
                   MSXGR2.DAT (patterns + colors)
+
+    EXPORT SVG -> Exports the image displayed in the 
+                  text selection area as an SVG.
+                  The output image will be rendered at 
+                  4px vertical and 4px horizontal per pixel.
+
+                MSXGR2.svg (SVG image file）
 
     Warning: Files are overwritten without asking!
 
