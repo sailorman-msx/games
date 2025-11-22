@@ -95,7 +95,7 @@ MSXのGRAPHIC2の仕様は文字1文字あたり横8ドットx縦8ドットで�
 
      【上書きする、しないの確認は行いませんので注意してください】
 
-  EXPORT SVG -- 文字選択エリアに表示されている画像をSVGで出力します。
+  SVG EXPORT -- 文字選択エリアに表示されている画像をSVGで出力します。
      出力画像は1ドットあたり縦4px、横4pxで出力します。
      ファイル名は MSXGR2.svg です。
 
@@ -311,7 +311,7 @@ There are two modes: Character Selection and Edit Mode.
     PLAIN BSAVE -> save a single file this editor can open again
                   MSXGR2.DAT (patterns + colors)
 
-    EXPORT SVG -> Exports the image displayed in the 
+    SVG EXPORT  -> Exports the image displayed in the 
                   text selection area as an SVG.
                   The output image will be rendered at 
                   4px vertical and 4px horizontal per pixel.
