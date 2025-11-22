@@ -325,7 +325,7 @@ There are two modes: Character Selection and Edit Mode.
 
     MSXGR2CL.BIN  - colors
       Header: FE 00 20 FF 37 00 00
-      Data  : 6144 bytes (1 byte x 256 chars x 3 banks)
+      Data  : 6144 bytes (8 byte x 256 chars x 3 banks)
       Size  : 6151 bytes
 
     (Pattern Name Table is not exported.)
