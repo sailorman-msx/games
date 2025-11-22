@@ -20,17 +20,17 @@ MSX SCREEN2 (GRAPHIC2) に対応したキャラクタパターンとカラーデ
 
   ** Windows
     pip install -U pyxel
-    pip install -U PyxelUniversalFont
+    pip install -U pyxel-universal-font
 
   ** macOS X
     brew install pip3
     pip3 ensurepath
     pip3 install pyxel
-    pip3 install PyxelUniversalFont
+    pip3 install pyxel-universal-font
 
   ** Linux
     sudo pip3 install -U pyxel
-    sudo pip3 install -U PyxelUniversalFont
+    sudo pip3 install -U pyxel-universal-font
 
 * MSXでのSCREEN2（GRAPHIC2）モードの仕様
 
@@ -249,17 +249,17 @@ It lets you design character patterns and colors for SCREEN 2 (GRAPHIC 2) mode.
 
   **Windows**
     pip install -U pyxel
-    pip install -U PyxelUniversalFont
+    pip install -U pyxel-universal-font
 
   **macOS**
     brew install pip3
     pip3 ensurepath
     pip3 install pyxel
-    pip3 install PyxelUniversalFont
+    pip3 install pyxel-universal-font
 
   **Linux**
     sudo pip3 install -U pyxel
-    sudo pip3 install -U PyxelUniversalFont
+    sudo pip3 install -U pyxel-universal-font
 
 * MSX SCREEN 2 (GRAPHIC 2) basics
 
