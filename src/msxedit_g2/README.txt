@@ -155,10 +155,10 @@ MSXのGRAPHIC2の仕様は文字1文字あたり横8ドットx縦8ドットで�
     -- MSXGR2CL.BIN
 
     先頭に以下のヘッダーバイトが付与され、後続にカラーデータが
-    256文字 * 3エリア分（768バイト）連続して出力されます。
+    1パターン8バイト x 256文字 * 3エリア分（6144バイト）連続して出力されます。
 
       ヘッダーバイト: FE 00 20 FF 37 00 00 
-      パターンデータ: 768バイト
+      パターンデータ: 6144バイト
 
     トータルでファイルサイズは 6151バイトになります
 
@@ -325,8 +325,8 @@ There are two modes: Character Selection and Edit Mode.
 
     MSXGR2CL.BIN  - colors
       Header: FE 00 20 FF 37 00 00
-      Data  : 768 bytes (1 byte x 256 chars x 3 banks)
-      Size  : 775 bytes
+      Data  : 6144 bytes (1 byte x 256 chars x 3 banks)
+      Size  : 6151 bytes
 
     (Pattern Name Table is not exported.)
 
