@@ -647,4 +647,3 @@ GameMainProcInitPutSprite:
     ld (hl), a ; +36 カラー
 
     ret
-

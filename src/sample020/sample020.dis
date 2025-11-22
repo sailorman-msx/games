@@ -211,7 +211,7 @@ GAMEINITIALSTARTGAME:
 
 GAMEMAINPROC:
                     LD      A,($C008)                       ;[417B] 3A 08 C0
-                    CP      $05                             ;[417E] FE 05
+                    CP      $02                             ;[417E] FE 02
                     JP      NZ,GAMEMAINPROCEND              ;[4180] C2 51 42
                     LD      A,($C241)                       ;[4183] 3A 41 C2
                     INC     A                               ;[4186] 3C
@@ -1356,7 +1356,7 @@ SKIPPUTSPRITE:
 SETTIME05:
                     LD      A,$01                           ;[48C2] 3E 01
                     LD      ($C00A),A                       ;[48C4] 32 0A C0
-                    LD      A,$05                           ;[48C7] 3E 05
+                    LD      A,$02                           ;[48C7] 3E 02
 DECTIME05END:
                     LD      ($C008),A                       ;[48C9] 32 08 C0
 SKIPDECTIME05:

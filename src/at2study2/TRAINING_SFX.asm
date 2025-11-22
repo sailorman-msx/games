@@ -19,19 +19,19 @@ SoundEffects_Sound1:
 
 SoundEffects_Sound1_Loop:	defb 189	; Soft only. Volume: 15.
 	defb 1	; Noise: 1.
-	defw 95	; Software period.
+	defw 168	; Software period.
 
 	defb 189	; Soft only. Volume: 15.
 	defb 1	; Noise: 1.
-	defw 99	; Software period.
+	defw 172	; Software period.
 
 	defb 177	; Soft only. Volume: 12.
 	defb 1	; Noise: 1.
-	defw 102	; Software period.
+	defw 175	; Software period.
 
 	defb 173	; Soft only. Volume: 11.
 	defb 1	; Noise: 1.
-	defw 106	; Software period.
+	defw 179	; Software period.
 
 	defb 4	; End of the sound effect.
 
@@ -41,39 +41,39 @@ SoundEffects_Sound2:
 
 SoundEffects_Sound2_Loop:	defb 189	; Soft only. Volume: 15.
 	defb 1	; Noise: 1.
-	defw 301	; Software period.
+	defw 534	; Software period.
 
 	defb 189	; Soft only. Volume: 15.
 	defb 8	; Noise: 8.
-	defw 319	; Software period.
+	defw 566	; Software period.
 
 	defb 185	; Soft only. Volume: 14.
 	defb 2	; Noise: 2.
-	defw 402	; Software period.
+	defw 712	; Software period.
 
 	defb 181	; Soft only. Volume: 13.
 	defb 16	; Noise: 16.
-	defw 213	; Software period.
+	defw 377	; Software period.
 
 	defb 177	; Soft only. Volume: 12.
 	defb 2	; Noise: 2.
-	defw 225	; Software period.
+	defw 400	; Software period.
 
 	defb 173	; Soft only. Volume: 11.
 	defb 2	; Noise: 2.
-	defw 239	; Software period.
+	defw 424	; Software period.
 
 	defb 165	; Soft only. Volume: 9.
 	defb 16	; Noise: 16.
-	defw 358	; Software period.
+	defw 635	; Software period.
 
 	defb 157	; Soft only. Volume: 7.
 	defb 31	; Noise: 31.
-	defw 119	; Software period.
+	defw 212	; Software period.
 
 	defb 153	; Soft only. Volume: 6.
 	defb 7	; Noise: 7.
-	defw 80	; Software period.
+	defw 141	; Software period.
 
 	defb 4	; End of the sound effect.
 

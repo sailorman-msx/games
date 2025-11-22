@@ -20,6 +20,11 @@ GTSTCK:equ $00D5 ; JOY STICKの状態を調べる
 GTTRIG:equ $00D8 ; トリガボタンの状態を返す
 CHGCLR:equ $0111 ; 画面の色を変える
 KILBUF:equ $0156 ; キーボードバッファをクリアする
+EXTROM:equ $015F ; SUB-ROMインタースロットコール
+SETPLT:equ $014D ; カラーパレットの設
+
+; カラーパレット設定用
+MSX1FLG:equ $002D ; 0であればMSX1と判定する
 
 ; ワークエリア
 LINWID:equ $F3AF ; WIDTHで設定する1行の幅が格納されているアドレス
@@ -284,6 +289,85 @@ Start:
 
     ; スタックポインタを初期化
     ld sp, $F380
+
+;-------------------------------------------
+; 画面カラーパレットの初期化
+;-------------------------------------------
+
+SetColorPalleteMSX1:
+
+    ld a, (MSX1FLG)
+    or a
+
+    ; MSX1FLGが0であればMSX1と判定
+    jp z, SkipColorPallete
+
+    ; MSX1FLGが0でなければカラーパレットを変更する
+    ld hl, ColorPalleteData
+    ld b, 15
+    ld c, 0
+
+    ; 15色ぶんループしてカラーパレットの値を
+    ; ColorPalleteDataの内容に書き換える
+
+ColorPalleteSetLoop:
+
+    ;
+    ; カラーパレットへの値書き込みを行う
+    ; Dレジスタ：
+    ;    カラーコード
+    ; Aレジスタ：
+    ;    上位4ビット=赤のコード
+    ;    下位4ビット=青のコード
+    ; Eレジスタ：
+    ;    上位4ビット=常に0000B
+    ;    下位4ビット=緑のコード
+    ; コード値は0-7(7階調)
+    ;
+    ld d, c
+    ld a, (hl)
+    inc hl
+    ld e, (hl)
+    inc hl
+
+    ; カラーパレット書き込みルーチン呼び出し
+    ; SETPLTはSUB-ROMに格納されてあるため
+    ; EXTROM経由で呼び出しを行う
+    ld ix, SETPLT
+    call EXTROM
+
+    ; インタースロットコール時に
+    ; InterruptがDisableになることがあるらしく
+    ; 明示的にEnableにする
+    ei
+
+    inc c
+    ld a, c
+    cp b
+    jp nz, ColorPalleteSetLoop
+
+    jp SkipColorPallete
+
+ColorPalleteData:
+
+    defb $00, $00 ; Color 0
+    defb $00, $00 ; Color 1
+    defb $11, $05 ; Color 2
+    defb $33, $06 ; Color 3
+    defb $26, $02 ; Color 4
+    defb $37, $03 ; Color 5
+    defb $52, $02 ; Color 6
+    defb $27, $06 ; Color 7
+    defb $62, $02 ; Color 8
+    defb $63, $03 ; Color 9
+    defb $52, $05 ; Color A
+    defb $63, $06 ; Color B
+    defb $11, $04 ; Color C
+    defb $55, $02 ; Color D
+    defb $55, $05 ; Color E
+    defb $77, $07 ; Color F
+
+SkipColorPallete:
 
     ; 画面構成の初期化
     ld a, $0F
