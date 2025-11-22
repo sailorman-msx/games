@@ -55,6 +55,10 @@ MSXのGRAPHIC2の仕様は文字1文字あたり横8ドットx縦8ドットで�
 作成したデータはMSX-BASICのBSAVE形式で出力可能です。
 出力データの形式は後述するデータ形式の箇所を参照ください。
 
+* ツールの実行方法
+
+  pyxel run msxeditor.py
+
 * 使い方
 
 文字選択モードと編集モードの2つのモードになっています。
@@ -276,6 +280,10 @@ uses one foreground color and one background color (out of 16 possible colors).
 This editor lets you draw patterns and set colors exactly the way the MSX expects.
 
 Files can be saved in MSX-BASIC BSAVE format (details at the end).
+
+* How to run the tool
+
+  pyxel run msxeditor.py
 
 * How to use
 
