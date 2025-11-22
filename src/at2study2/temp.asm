@@ -278,57 +278,57 @@ SOUNDEFFECTS dw SOUNDEFFECTS_SOUND1
 SOUNDEFFECTS_SOUND1 db 0
 SOUNDEFFECTS_SOUND1_LOOP db 189
     db 1
-    db 95
+    db 168
     db 0
     db 189
     db 1
-    db 99
+    db 172
     db 0
     db 177
     db 1
-    db 102
+    db 175
     db 0
     db 173
     db 1
-    db 106
+    db 179
     db 0
     db 4
 SOUNDEFFECTS_SOUND2 db 1
 SOUNDEFFECTS_SOUND2_LOOP db 189
     db 1
-    db 45
-    db 1
+    db 22
+    db 2
     db 189
     db 8
-    db 63
-    db 1
+    db 54
+    db 2
     db 185
     db 2
-    db 146
-    db 1
+    db 200
+    db 2
     db 181
     db 16
-    db 213
-    db 0
+    db 121
+    db 1
     db 177
     db 2
-    db 225
-    db 0
+    db 144
+    db 1
     db 173
     db 2
-    db 239
-    db 0
+    db 168
+    db 1
     db 165
     db 16
-    db 102
-    db 1
+    db 123
+    db 2
     db 157
     db 31
-    db 119
+    db 212
     db 0
     db 153
     db 7
-    db 80
+    db 141
     db 0
     db 4
 PLY_AKG_START jp PLY_AKG_INIT

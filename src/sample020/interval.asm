@@ -97,7 +97,7 @@ SetTime05:
 
     ld a, 1
     ld (WK_REDRAW_FINE), a
-    ld a, 5
+    ld a, 2
 
 DecTime05End:
     ld (WK_TIME05), a

@@ -1,7 +1,7 @@
 START:
                     XOR     A                               ;[0100] AF
-                    LD      ($4001),A                       ;[0101] 32 01 40
-                    LD      ($400A),A                       ;[0104] 32 0A 40
+                    LD      ($8001),A                       ;[0101] 32 01 80
+                    LD      ($800A),A                       ;[0104] 32 0A 80
                     LD      A,$0F                           ;[0107] 3E 0F
                     LD      ($F3E9),A                       ;[0109] 32 E9 F3
                     LD      A,$01                           ;[010C] 3E 01
@@ -16,7 +16,7 @@ START:
                     LD      IX,$00CC                        ;[0125] DD 21 CC 00
                     CALL    BIOSINTERSLOTCALL               ;[0129] CD E0 02
                     CALL    INITRANDOM                      ;[012C] CD BF 02
-                    LD      HL,$400C                        ;[012F] 21 0C 40
+                    LD      HL,$800C                        ;[012F] 21 0C 80
                     LD      BC,$0300                        ;[0132] 01 00 03
                     LD      A,$20                           ;[0135] 3E 20
                     CALL    MEMFIL                          ;[0137] CD B8 02
@@ -39,23 +39,23 @@ START:
                     LD      A,$81                           ;[0169] 3E 81
                     CALL    WRTVRM                          ;[016B] CD 4B 03
                     LD      A,$05                           ;[016E] 3E 05
-                    LD      ($4001),A                       ;[0170] 32 01 40
+                    LD      ($8001),A                       ;[0170] 32 01 80
                     XOR     A                               ;[0173] AF
-                    LD      ($162F),A                       ;[0174] 32 2F 16
+                    LD      ($862F),A                       ;[0174] 32 2F 86
                     LD      HL,$0441                        ;[0177] 21 41 04
                     XOR     A                               ;[017A] AF
                     CALL    PLY_AKG_INIT                    ;[017B] CD 8E 06
                     LD      HL,$0553                        ;[017E] 21 53 05
                     CALL    PLY_AKG_INITSOUNDEFFECTS        ;[0181] CD 9E 05
                     XOR     A                               ;[0184] AF
-                    LD      ($4000),A                       ;[0185] 32 00 40
+                    LD      ($8000),A                       ;[0185] 32 00 80
                     CALL    INIT_H_TIMI_HANDLER             ;[0188] CD 9C 01
 H_TIMI_HOOK_LOOP:
                     LD      A,$01                           ;[018B] 3E 01
-                    LD      ($4000),A                       ;[018D] 32 00 40
+                    LD      ($8000),A                       ;[018D] 32 00 80
                     JP      REDRAW_SCREEN                   ;[0190] C3 C6 01
 VBLANK_WAIT:
-                    LD      A,($4000)                       ;[0193] 3A 00 40
+                    LD      A,($8000)                       ;[0193] 3A 00 80
                     OR      A                               ;[0196] B7
                     JR      NZ,VBLANK_WAIT                  ;[0197] 20 FA
                     JP      H_TIMI_HOOK_LOOP                ;[0199] C3 8B 01
@@ -65,12 +65,12 @@ INIT_H_TIMI_HANDLER:
                     PUSH    DE                              ;[019E] D5
                     PUSH    HL                              ;[019F] E5
                     LD      HL,$FD9F                        ;[01A0] 21 9F FD
-                    LD      DE,$4004                        ;[01A3] 11 04 40
+                    LD      DE,$8004                        ;[01A3] 11 04 80
                     LD      BC,$0005                        ;[01A6] 01 05 00
                     LDIR                                    ;[01A9] ED B0
                     LD      A,$F7                           ;[01AB] 3E F7
                     LD      ($FD9F),A                       ;[01AD] 32 9F FD
-                    LD      A,($F344)                       ;[01B0] 3A 44 F3
+                    LD      A,($F341)                       ;[01B0] 3A 41 F3
                     LD      ($FDA0),A                       ;[01B3] 32 A0 FD
                     LD      HL,$0B69                        ;[01B6] 21 69 0B
                     LD      ($FDA1),HL                      ;[01B9] 22 A1 FD
@@ -83,10 +83,10 @@ INIT_H_TIMI_HANDLER:
                     RET                                     ;[01C5] C9
 
 REDRAW_SCREEN:
-                    LD      A,($1630)                       ;[01C6] 3A 30 16
+                    LD      A,($8630)                       ;[01C6] 3A 30 86
                     OR      A                               ;[01C9] B7
                     JR      NZ,REDRAW_SCREEN_PUSHZKEY       ;[01CA] 20 08
-                    LD      A,($1631)                       ;[01CC] 3A 31 16
+                    LD      A,($8631)                       ;[01CC] 3A 31 86
                     OR      A                               ;[01CF] B7
                     JR      NZ,REDRAW_SCREEN_PUSHXKEY       ;[01D0] 20 0D
                     JR      REDRAW_PROC                     ;[01D2] 18 14
@@ -102,97 +102,97 @@ REDRAW_SCREEN_PUSHXKEY:
                     LD      B,$00                           ;[01E3] 06 00
                     CALL    PLY_AKG_PLAYSOUNDEFFECT         ;[01E5] CD A2 05
 REDRAW_PROC:
-                    LD      A,($4001)                       ;[01E8] 3A 01 40
+                    LD      A,($8001)                       ;[01E8] 3A 01 80
                     OR      A                               ;[01EB] B7
                     JP      NZ,REDRAW_SCREEN_DEC_END        ;[01EC] C2 93 02
-                    LD      HL,$160C                        ;[01EF] 21 0C 16
+                    LD      HL,$860C                        ;[01EF] 21 0C 86
                     LD      BC,$0018                        ;[01F2] 01 18 00
                     LD      A,$20                           ;[01F5] 3E 20
                     CALL    MEMFIL                          ;[01F7] CD B8 02
 REDRAW_SCREEN_DISPLAY_SETLASTCOL:
                     LD      B,$18                           ;[01FA] 06 18
-                    LD      HL,$1624                        ;[01FC] 21 24 16
+                    LD      HL,$8624                        ;[01FC] 21 24 86
 REDRAW_SCREEN_DISPLAY_LOOP:
                     LD      A,$20                           ;[01FF] 3E 20
-                    LD      ($4009),A                       ;[0201] 32 09 40
+                    LD      ($8009),A                       ;[0201] 32 09 80
                     CALL    RANDOMVALUE                     ;[0204] CD C5 02
                     CP      $15                             ;[0207] FE 15
                     JP      NC,REDRAW_SCREEN_DISPLAY_LOOP_NEXT;[0209] D2 1E 02
                     CP      $06                             ;[020C] FE 06
                     JP      NC,GREENCHAR                    ;[020E] D2 19 02
                     LD      A,$88                           ;[0211] 3E 88
-                    LD      ($4009),A                       ;[0213] 32 09 40
+                    LD      ($8009),A                       ;[0213] 32 09 80
                     JP      REDRAW_SCREEN_DISPLAY_LOOP_NEXT ;[0216] C3 1E 02
 GREENCHAR:
                     LD      A,$80                           ;[0219] 3E 80
-                    LD      ($4009),A                       ;[021B] 32 09 40
+                    LD      ($8009),A                       ;[021B] 32 09 80
 REDRAW_SCREEN_DISPLAY_LOOP_NEXT:
-                    LD      A,($4009)                       ;[021E] 3A 09 40
+                    LD      A,($8009)                       ;[021E] 3A 09 80
                     DEC     HL                              ;[0221] 2B
                     LD      (HL),A                          ;[0222] 77
                     DJNZ    REDRAW_SCREEN_DISPLAY_LOOP      ;[0223] 10 DA
                     LD      A,$00                           ;[0225] 3E 00
-                    LD      BC,$160C                        ;[0227] 01 0C 16
-                    LD      ($162C),BC                      ;[022A] ED 43 2C 16
-                    LD      HL,$400D                        ;[022E] 21 0D 40
-                    LD      ($4002),HL                      ;[0231] 22 02 40
-                    LD      HL,$130C                        ;[0234] 21 0C 13
-                    LD      ($162E),HL                      ;[0237] 22 2E 16
+                    LD      BC,$860C                        ;[0227] 01 0C 86
+                    LD      ($862C),BC                      ;[022A] ED 43 2C 86
+                    LD      HL,$800D                        ;[022E] 21 0D 80
+                    LD      ($8002),HL                      ;[0231] 22 02 80
+                    LD      HL,$830C                        ;[0234] 21 0C 83
+                    LD      ($862E),HL                      ;[0237] 22 2E 86
 MULTILOOP1:
                     PUSH    AF                              ;[023A] F5
-                    LD      HL,($4002)                      ;[023B] 2A 02 40
-                    LD      DE,($162E)                      ;[023E] ED 5B 2E 16
+                    LD      HL,($8002)                      ;[023B] 2A 02 80
+                    LD      DE,($862E)                      ;[023E] ED 5B 2E 86
                     LD      BC,$001F                        ;[0242] 01 1F 00
                     LDIR                                    ;[0245] ED B0
                     POP     AF                              ;[0247] F1
-                    LD      HL,($162E)                      ;[0248] 2A 2E 16
+                    LD      HL,($862E)                      ;[0248] 2A 2E 86
                     LD      B,$00                           ;[024B] 06 00
                     LD      C,$1F                           ;[024D] 0E 1F
                     ADD     HL,BC                           ;[024F] 09
                     LD      D,H                             ;[0250] 54
                     LD      E,L                             ;[0251] 5D
                     LD      B,A                             ;[0252] 47
-                    LD      HL,($162C)                      ;[0253] 2A 2C 16
+                    LD      HL,($862C)                      ;[0253] 2A 2C 86
                     LD      A,(HL)                          ;[0256] 7E
                     LD      (DE),A                          ;[0257] 12
                     INC     HL                              ;[0258] 23
-                    LD      ($162C),HL                      ;[0259] 22 2C 16
+                    LD      ($862C),HL                      ;[0259] 22 2C 86
                     LD      A,B                             ;[025C] 78
                     CP      $17                             ;[025D] FE 17
                     JP      Z,REDRAW_SCREEN_DISP            ;[025F] CA 78 02
                     INC     A                               ;[0262] 3C
                     LD      B,$00                           ;[0263] 06 00
                     LD      C,$20                           ;[0265] 0E 20
-                    LD      HL,($4002)                      ;[0267] 2A 02 40
+                    LD      HL,($8002)                      ;[0267] 2A 02 80
                     ADD     HL,BC                           ;[026A] 09
-                    LD      ($4002),HL                      ;[026B] 22 02 40
-                    LD      HL,($162E)                      ;[026E] 2A 2E 16
+                    LD      ($8002),HL                      ;[026B] 22 02 80
+                    LD      HL,($862E)                      ;[026E] 2A 2E 86
                     ADD     HL,BC                           ;[0271] 09
-                    LD      ($162E),HL                      ;[0272] 22 2E 16
+                    LD      ($862E),HL                      ;[0272] 22 2E 86
                     JP      MULTILOOP1                      ;[0275] C3 3A 02
 REDRAW_SCREEN_DISP:
-                    LD      HL,$130C                        ;[0278] 21 0C 13
-                    LD      DE,$400C                        ;[027B] 11 0C 40
+                    LD      HL,$830C                        ;[0278] 21 0C 83
+                    LD      DE,$800C                        ;[027B] 11 0C 80
                     LD      BC,$0300                        ;[027E] 01 00 03
                     LDIR                                    ;[0281] ED B0
                     LD      A,$01                           ;[0283] 3E 01
-                    LD      ($162F),A                       ;[0285] 32 2F 16
+                    LD      ($862F),A                       ;[0285] 32 2F 86
                     JP      REDRAW_SCREEN_INIT_TIMER        ;[0288] C3 8B 02
 REDRAW_SCREEN_INIT_TIMER:
                     LD      A,$05                           ;[028B] 3E 05
-                    LD      ($4001),A                       ;[028D] 32 01 40
+                    LD      ($8001),A                       ;[028D] 32 01 80
                     JP      REDRAW_SCREEN_END               ;[0290] C3 9A 02
 REDRAW_SCREEN_DEC_END:
-                    LD      A,($4001)                       ;[0293] 3A 01 40
+                    LD      A,($8001)                       ;[0293] 3A 01 80
                     DEC     A                               ;[0296] 3D
-                    LD      ($4001),A                       ;[0297] 32 01 40
+                    LD      ($8001),A                       ;[0297] 32 01 80
 REDRAW_SCREEN_END:
                     JP      VBLANK_WAIT                     ;[029A] C3 93 01
 CREATE_CHAR_PATTERN:
                     PUSH    HL                              ;[029D] E5
                     PUSH    DE                              ;[029E] D5
                     PUSH    BC                              ;[029F] C5
-                    LD      A,($400A)                       ;[02A0] 3A 0A 40
+                    LD      A,($800A)                       ;[02A0] 3A 0A 80
                     ADD     A                               ;[02A3] 87
                     ADD     A                               ;[02A4] 87
                     ADD     A                               ;[02A5] 87
@@ -216,12 +216,12 @@ MEMFIL:
 
 INITRANDOM:
                     LD      A,R                             ;[02BF] ED 5F
-                    LD      ($400B),A                       ;[02C1] 32 0B 40
+                    LD      ($800B),A                       ;[02C1] 32 0B 80
                     RET                                     ;[02C4] C9
 
 RANDOMVALUE:
                     PUSH    BC                              ;[02C5] C5
-                    LD      A,($400B)                       ;[02C6] 3A 0B 40
+                    LD      A,($800B)                       ;[02C6] 3A 0B 80
                     LD      B,A                             ;[02C9] 47
                     LD      A,B                             ;[02CA] 78
                     ADD     A                               ;[02CB] 87
@@ -231,7 +231,7 @@ RANDOMVALUE:
                     LD      B,A                             ;[02D0] 47
                     LD      A,R                             ;[02D1] ED 5F
                     ADD     B                               ;[02D3] 80
-                    LD      ($400B),A                       ;[02D4] 32 0B 40
+                    LD      ($800B),A                       ;[02D4] 32 0B 80
                     POP     BC                              ;[02D7] C1
                     RET                                     ;[02D8] C9
 
@@ -329,11 +329,11 @@ WRTVRM:
                     RET                                     ;[0352] C9
 
 REDVRMSERIAL:
-                    LD      ($4002),HL                      ;[0353] 22 02 40
+                    LD      ($8002),HL                      ;[0353] 22 02 80
                     LD      H,D                             ;[0356] 62
                     LD      L,E                             ;[0357] 6B
                     CALL    VDPRED                          ;[0358] CD 17 03
-                    LD      HL,($4002)                      ;[035B] 2A 02 40
+                    LD      HL,($8002)                      ;[035B] 2A 02 80
 REDVRMSERIALLOOP:
                     IN      A,($98)                         ;[035E] DB 98
                     LD      (HL),A                          ;[0360] 77
@@ -350,11 +350,11 @@ WRTVRMFILLOOP:
                     RET                                     ;[0371] C9
 
 WRTVRMSERIAL:
-                    LD      ($4002),HL                      ;[0372] 22 02 40
+                    LD      ($8002),HL                      ;[0372] 22 02 80
                     LD      H,D                             ;[0375] 62
                     LD      L,E                             ;[0376] 6B
                     CALL    VDPWRT                          ;[0377] CD 2C 03
-                    LD      HL,($4002)                      ;[037A] 2A 02 40
+                    LD      HL,($8002)                      ;[037A] 2A 02 80
 WRTVRMSERIALLOOP:
                     LD      A,(HL)                          ;[037D] 7E
                     OUT     ($98),A                         ;[037E] D3 98
@@ -1859,21 +1859,21 @@ PLY_AKG_PERIODTABLE:
                     INC     B                               ;[0B67] 04
                     NOP                                     ;[0B68] 00
 H_TIMI_HANDLER:
-                    LD      A,($4000)                       ;[0B69] 3A 00 40
+                    LD      A,($8000)                       ;[0B69] 3A 00 80
                     OR      A                               ;[0B6C] B7
                     JR      Z,H_TIMI_HANDLER_GO_BACKUPPROC  ;[0B6D] 28 04
                     DEC     A                               ;[0B6F] 3D
-                    LD      ($4000),A                       ;[0B70] 32 00 40
+                    LD      ($8000),A                       ;[0B70] 32 00 80
 H_TIMI_HANDLER_GO_BACKUPPROC:
                     CALL    PLY_AKG_PLAY                    ;[0B73] CD 1C 07
-                    LD      A,($162F)                       ;[0B76] 3A 2F 16
+                    LD      A,($862F)                       ;[0B76] 3A 2F 86
                     OR      A                               ;[0B79] B7
                     JR      Z,SKIPPATTERNAMETABLEREDRAW     ;[0B7A] 28 27
                     LD      A,$80                           ;[0B7C] 3E 80
-                    LD      ($4009),A                       ;[0B7E] 32 09 40
+                    LD      ($8009),A                       ;[0B7E] 32 09 80
                     LD      DE,$0400                        ;[0B81] 11 00 04
                     CALL    CREATE_CHAR_PATTERN             ;[0B84] CD 9D 02
-                    LD      HL,$402C                        ;[0B87] 21 2C 40
+                    LD      HL,$802C                        ;[0B87] 21 2C 80
                     LD      DE,$1820                        ;[0B8A] 11 20 18
                     LD      BC,$02E0                        ;[0B8D] 01 E0 02
                     CALL    WRTVRMSERIAL                    ;[0B90] CD 72 03
@@ -1882,12 +1882,12 @@ H_TIMI_HANDLER_GO_BACKUPPROC:
                     LD      BC,$000F                        ;[0B99] 01 0F 00
                     CALL    WRTVRMSERIAL                    ;[0B9C] CD 72 03
                     XOR     A                               ;[0B9F] AF
-                    LD      ($162F),A                       ;[0BA0] 32 2F 16
+                    LD      ($862F),A                       ;[0BA0] 32 2F 86
 SKIPPATTERNAMETABLEREDRAW:
                     EI                                      ;[0BA3] FB
                     XOR     A                               ;[0BA4] AF
-                    LD      ($1630),A                       ;[0BA5] 32 30 16
-                    LD      ($1631),A                       ;[0BA8] 32 31 16
+                    LD      ($8630),A                       ;[0BA5] 32 30 86
+                    LD      ($8631),A                       ;[0BA8] 32 31 86
                     LD      IX,$0156                        ;[0BAB] DD 21 56 01
                     CALL    BIOSINTERSLOTCALL               ;[0BAF] CD E0 02
                     LD      A,$05                           ;[0BB2] 3E 05
@@ -1896,13 +1896,13 @@ SKIPPATTERNAMETABLEREDRAW:
                     CP      $7F                             ;[0BBB] FE 7F
                     JR      NZ,NOTPUSHZKEY                  ;[0BBD] 20 07
                     LD      A,$01                           ;[0BBF] 3E 01
-                    LD      ($1630),A                       ;[0BC1] 32 30 16
+                    LD      ($8630),A                       ;[0BC1] 32 30 86
                     JR      H_TIMI_HANDLER_END              ;[0BC4] 18 0B
 NOTPUSHZKEY:
                     CP      $DF                             ;[0BC6] FE DF
                     JR      NZ,H_TIMI_HANDLER_END           ;[0BC8] 20 07
                     LD      A,$01                           ;[0BCA] 3E 01
-                    LD      ($1631),A                       ;[0BCC] 32 31 16
+                    LD      ($8631),A                       ;[0BCC] 32 31 86
                     JR      H_TIMI_HANDLER_END              ;[0BCF] 18 00
 H_TIMI_HANDLER_END:
-                    JP      $4004                           ;[0BD1] C3 04 40
+                    JP      $8004                           ;[0BD1] C3 04 80

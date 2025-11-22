@@ -347,7 +347,7 @@ MoveEnemiesLoop1:
                                        ; テキキャラの移動情報を再構築する
 
     ld a, (ix + 5)              ; 進行カウンタの取得
-    cp 15 ; 進行カウンタが15未満の場合は進行カウンタをインクリメントするだけで次のデータ操作に進む
+    cp 30 ; 進行カウンタが30未満の場合は進行カウンタをインクリメントするだけで次のデータ操作に進む
     jr c, MoveEnemiesNextData
 
 MoveEnemiesMoveTile:

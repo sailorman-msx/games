@@ -268,7 +268,7 @@ GetEnemyDistEnd:
 
 ;--------------------------------------------
 ; SUB-ROUTINE: GetEnemyRange
-; テキキャラの進行距離を取得する(0 - 1)
+; テキキャラの進行距離を取得する(0 - 3)
 ; Aレジスタに種類がセットされて返却される
 ;--------------------------------------------
 GetEnemyRange:
@@ -278,7 +278,7 @@ GetEnemyRange:
 
     ld a, (WK_RANDOM_VALUE)    ; 乱数の値をAレジスタにセットする
 
-    and 00000001B              ; 00000001B でANDして0-1までの値にする
+    and 00000011B              ; 00000011B でANDして0-3までの値にする
 
 GetEnemyRangeEnd:
 
@@ -342,7 +342,10 @@ MoveEnemiesLoop1:
 
     ld a, (ix + 5)              ; 進行カウンタの取得
     cp 15 ; 進行カウンタが15未満の場合は進行カウンタをインクリメントするだけで次のデータ操作に進む
-    jr c, MoveEnemiesTileHalfMove
+
+    ; ld a, (VSYNC_ENEMYMOVE_CNT)
+    ; cp 128 ; 垂直同期でカウントされる値が60未満の場合は進行カウンタをインクリメントするだけで次のデータ操作に進む
+    jr c, MoveEnemiesNextData
 
 MoveEnemiesMoveTile:
 
@@ -440,6 +443,14 @@ MoveEnemiesMoveEnd:
     ; 移動前の座標のタイル番号を床(0)に変更する
     call ResetEnemyMoveSrc
 
+    ; 進行カウンタを0にする
+    ld a, 0
+    ld (ix + 5), a
+
+    ;
+    ; ld a, 0
+    ; ld (VSYNC_ENEMYMOVE_CNT), a
+
 MoveEnemiesLoop1End:
 
     jr MoveEnemiesNextData
@@ -450,8 +461,6 @@ MoveEnemiesRestructEnemyInfo:
     call RestructEnemyMoveData
 
     jr MoveEnemiesNextData
-
-MoveEnemiesTileHalfMove:
 
 MoveEnemiesNextData:
 
