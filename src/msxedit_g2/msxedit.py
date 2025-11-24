@@ -442,6 +442,11 @@ class App:
                 _orgX = 0
                 _orgY = _orgY + 8
             _y = _orgY
+            # グループID(<g>タグのID)は エリア番号 - キャラクタコード とする
+            _gid = 0
+            if _i != 0:
+                _gid = int(_i/256)
+            _svgG = _svgimg.g(id="%01d-%03d" % (_gid, (_i - (256*_gid))))
             for _j in range(8):
                 _ptn = self.PtnData[_arrIdx][_j]
                 _clr = self.ClrData[_arrIdx][_j]
@@ -455,14 +460,15 @@ class App:
                     if _binStr[_dot] == "1": # bit on
                         _clrStr = "#" + "{:06X}".format(_clrList[_forecolor])
                         _rect=_svgimg.rect(insert=(_orgX+_dot*4, _y*4), size=(4, 4), fill=_clrStr)
-                        _svgimg.add(_rect)
+                        _svgG.add(_rect)
                     else:
                         _clrStr = "#" + "{:06X}".format(_clrList[_backcolor])
                         _rect=_svgimg.rect(insert=(_orgX+_dot*4, _y*4), size=(4, 4), fill=_clrStr)
-                        _svgimg.add(_rect)
+                        _svgG.add(_rect)
                 _y += 1
             _orgX += 32
             _arrIdx += 1
+            _svgimg.add(_svgG)
 
         # SVGファイルを出力
         _svgimg.save()
