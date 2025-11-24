@@ -99,6 +99,12 @@ MSXのGRAPHIC2の仕様は文字1文字あたり横8ドットx縦8ドットで�
      出力画像は1ドットあたり縦4px、横4pxで出力します。
      ファイル名は MSXGR2.svg です。
 
+     また、文字毎にSVGでのグループ分けをしたSVGファイルも出力します。
+     ファイル名は MSXGR2_C.svg です。
+     SVG Splitツールにこのファイルを読み込ませるとグループごとに
+     SVGファイルを分割することができます。用途に応じて使ってください。
+     * https://svgsplit.com
+
 ** 編集モード
 
   選択した文字を編集するモードです。
@@ -316,7 +322,19 @@ There are two modes: Character Selection and Edit Mode.
                   The output image will be rendered at 
                   4px vertical and 4px horizontal per pixel.
 
-                MSXGR2.svg (SVG image file）
+                  MSXGR2.svg (SVG image file）
+
+                  Additionally,
+                  it outputs an SVG file where each character is grouped within SVG.
+                  The filename is 
+
+                  MSXGR2_C.svg.
+
+                  Loading this file into the "SVG Split" Web tool 
+                  allows you to split the SVG file into separate files 
+                  for each character. Use it as needed.
+
+                     * https://svgsplit.com
 
     Warning: Files are overwritten without asking!
 

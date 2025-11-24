@@ -434,6 +434,7 @@ class App:
         # SVGに出力する画像は1ドットあたり4px x 4pxとする
         _svgimg = svgwrite.Drawing("MSXGR2.svg", size=("%dpx" % (256*4), "%dpx" % (192*4)))
 
+        # 文字選択エリア同等の見た目で出力する
         _arrIdx = 0
         _orgX = 0
         _orgY = 0
@@ -467,6 +468,45 @@ class App:
                         _svgG.add(_rect)
                 _y += 1
             _orgX += 32
+            _arrIdx += 1
+            _svgimg.add(_svgG)
+
+        # SVGファイルを出力
+        _svgimg.save()
+
+        # グラフィックデータをSVG形式で出力する
+        # SVGに出力する画像は1ドットあたり4px x 4pxとする
+        _svgimg = svgwrite.Drawing("MSXGR2_C.svg", size=("32px", "32px"))
+
+        # 文字ごとに出力する
+        # このSVGファイルを読み込んでも一覧はできないので注意！
+        _arrIdx = 0
+        for _i in range(256*3): 
+            _y = 0
+            # グループID(<g>タグのID)は エリア番号 - キャラクタコード とする
+            _gid = 0
+            if _i != 0:
+                _gid = int(_i/256)
+            _svgG = _svgimg.g(id="%01d-%03d" % (_gid, (_i - (256*_gid))))
+            for _j in range(8):
+                _ptn = self.PtnData[_arrIdx][_j]
+                _clr = self.ClrData[_arrIdx][_j]
+                # 前景色
+                _forecolor = _clr >> 4
+                # 背景色
+                _backcolor = _clr & 0x0f
+                _binStr="{:08b}".format(_ptn)
+                # 1ラインの描画
+                for _dot in range(len(_binStr)):
+                    if _binStr[_dot] == "1": # bit on
+                        _clrStr = "#" + "{:06X}".format(_clrList[_forecolor])
+                        _rect=_svgimg.rect(insert=(_dot*4, _y*4), size=(4, 4), fill=_clrStr)
+                        _svgG.add(_rect)
+                    else:
+                        _clrStr = "#" + "{:06X}".format(_clrList[_backcolor])
+                        _rect=_svgimg.rect(insert=(_dot*4, _y*4), size=(4, 4), fill=_clrStr)
+                        _svgG.add(_rect)
+                _y += 1
             _arrIdx += 1
             _svgimg.add(_svgG)
 
