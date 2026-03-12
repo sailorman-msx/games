@@ -1,0 +1,18 @@
+XRND:
+                    LD      HL,($C100)                      ;[C000] 2A 00 C1
+                    LD      A,H                             ;[C003] 7C
+                    RRA                                     ;[C004] 1F
+                    LD      A,L                             ;[C005] 7D
+                    RRA                                     ;[C006] 1F
+                    XOR     H                               ;[C007] AC
+                    LD      H,A                             ;[C008] 67
+                    LD      A,H                             ;[C009] 7C
+                    RRA                                     ;[C00A] 1F
+                    XOR     L                               ;[C00B] AD
+                    LD      L,A                             ;[C00C] 6F
+                    LD      A,L                             ;[C00D] 7D
+                    XOR     H                               ;[C00E] AC
+                    LD      H,A                             ;[C00F] 67
+                    LD      ($C100),HL                      ;[C010] 22 00 C1
+                    RET                                     ;[C013] C9
+

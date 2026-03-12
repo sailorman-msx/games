@@ -1,0 +1,5 @@
+RNDVAL                          = $C100 ; const, local, , sample027, , sample027.asm:1
+xrnd                            = $C000 ; addr, local, , sample027, , sample027.asm:12
+__head                          = $C000 ; const, public, def, , ,
+__tail                          = $C014 ; const, public, def, , ,
+__size                          = $0014 ; const, public, def, , ,
