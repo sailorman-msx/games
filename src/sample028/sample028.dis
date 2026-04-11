@@ -1,0 +1,761 @@
+                    JR      INIT                            ;[B000] 18 15
+LINE_SEARCH:
+                    LD      HL,$8001                        ;[B002] 21 01 80
+LINE_SEARCH_LOOP:
+                    LD      E,(HL)                          ;[B005] 5E
+                    INC     HL                              ;[B006] 23
+                    LD      D,(HL)                          ;[B007] 56
+                    INC     HL                              ;[B008] 23
+                    LD      A,(HL)                          ;[B009] 7E
+                    CP      B                               ;[B00A] B8
+                    JR      Z,LINE_FOUND                    ;[B00B] 28 04
+                    LD      H,D                             ;[B00D] 62
+                    LD      L,E                             ;[B00E] 6B
+                    JR      LINE_SEARCH_LOOP                ;[B00F] 18 F4
+LINE_FOUND:
+                    INC     HL                              ;[B011] 23
+                    INC     HL                              ;[B012] 23
+                    INC     HL                              ;[B013] 23
+                    INC     HL                              ;[B014] 23
+                    INC     HL                              ;[B015] 23
+                    RET                                     ;[B016] C9
+
+INIT:
+                    DI                                      ;[B017] F3
+                    LD      HL,$FD9F                        ;[B018] 21 9F FD
+                    LD      DE,$B19F                        ;[B01B] 11 9F B1
+                    LD      BC,$0005                        ;[B01E] 01 05 00
+                    LDIR                                    ;[B021] ED B0
+                    LD      HL,$FD9F                        ;[B023] 21 9F FD
+                    LD      DE,$B0A4                        ;[B026] 11 A4 B0
+                    LD      A,$C3                           ;[B029] 3E C3
+                    LD      (HL),A                          ;[B02B] 77
+                    INC     HL                              ;[B02C] 23
+                    LD      A,E                             ;[B02D] 7B
+                    LD      (HL),A                          ;[B02E] 77
+                    INC     HL                              ;[B02F] 23
+                    LD      A,D                             ;[B030] 7A
+                    LD      (HL),A                          ;[B031] 77
+                    XOR     A                               ;[B032] AF
+                    LD      HL,$C600                        ;[B033] 21 00 C6
+                    LD      B,$60                           ;[B036] 06 60
+CLEAR_WKAREA:
+                    LD      (HL),A                          ;[B038] 77
+                    INC     HL                              ;[B039] 23
+                    DJNZ    CLEAR_WKAREA                    ;[B03A] 10 FC
+                    LD      HL,$C000                        ;[B03C] 21 00 C0
+                    XOR     A                               ;[B03F] AF
+                    LD      C,$03                           ;[B040] 0E 03
+                    LD      B,$80                           ;[B042] 06 80
+CLEAR_COURSE:
+                    LD      (HL),A                          ;[B044] 77
+                    INC     HL                              ;[B045] 23
+                    DJNZ    CLEAR_COURSE                    ;[B046] 10 FC
+                    DEC     C                               ;[B048] 0D
+                    JR      Z,CLEAR_COURSE_END              ;[B049] 28 04
+                    LD      B,$00                           ;[B04B] 06 00
+                    JR      CLEAR_COURSE                    ;[B04D] 18 F5
+CLEAR_COURSE_END:
+                    CALL    GEN_COURSE                      ;[B04F] CD 2C B4
+                    LD      HL,$C630                        ;[B052] 21 30 C6
+                    LD      B,$20                           ;[B055] 06 20
+                    LD      A,$20                           ;[B057] 3E 20
+INIT_VIRT_SCR_SPC:
+                    LD      (HL),A                          ;[B059] 77
+                    INC     HL                              ;[B05A] 23
+                    DJNZ    INIT_VIRT_SCR_SPC               ;[B05B] 10 FC
+                    LD      B,$10                           ;[B05D] 06 10
+                    LD      A,$28                           ;[B05F] 3E 28
+INIT_VIRT_SCR_FLOOR:
+                    LD      (HL),A                          ;[B061] 77
+                    INC     HL                              ;[B062] 23
+                    DJNZ    INIT_VIRT_SCR_FLOOR             ;[B063] 10 FC
+                    LD      A,$01                           ;[B065] 3E 01
+                    LD      ($C60A),A                       ;[B067] 32 0A C6
+                    XOR     A                               ;[B06A] AF
+                    LD      ($C613),A                       ;[B06B] 32 13 C6
+                    LD      ($C603),A                       ;[B06E] 32 03 C6
+                    LD      ($C602),A                       ;[B071] 32 02 C6
+                    LD      ($C606),A                       ;[B074] 32 06 C6
+                    LD      ($C619),A                       ;[B077] 32 19 C6
+                    LD      A,$58                           ;[B07A] 3E 58
+                    LD      ($C607),A                       ;[B07C] 32 07 C6
+                    LD      ($C615),A                       ;[B07F] 32 15 C6
+                    LD      A,$58                           ;[B082] 3E 58
+                    LD      ($C60F),A                       ;[B084] 32 0F C6
+                    LD      A,$50                           ;[B087] 3E 50
+                    LD      ($C610),A                       ;[B089] 32 10 C6
+                    XOR     A                               ;[B08C] AF
+                    LD      ($C611),A                       ;[B08D] 32 11 C6
+                    LD      A,$0F                           ;[B090] 3E 0F
+                    LD      ($C612),A                       ;[B092] 32 12 C6
+                    CALL    CHAR_GEN                        ;[B095] CD B9 B4
+                    CALL    SCROLL_PROC                     ;[B098] CD BA B3
+                    LD      A,$01                           ;[B09B] 3E 01
+                    LD      ($C618),A                       ;[B09D] 32 18 C6
+INIT_END:
+                    EI                                      ;[B0A0] FB
+                    JP      MAIN                            ;[B0A1] C3 66 B1
+MY_TIMI:
+                    DI                                      ;[B0A4] F3
+                    PUSH    AF                              ;[B0A5] F5
+                    PUSH    BC                              ;[B0A6] C5
+                    PUSH    DE                              ;[B0A7] D5
+                    PUSH    HL                              ;[B0A8] E5
+MY_TIMI_MAIN:
+                    LD      A,($C618)                       ;[B0A9] 3A 18 C6
+                    OR      A                               ;[B0AC] B7
+                    JP      Z,SKIP_REDRAW                   ;[B0AD] CA 32 B1
+                    LD      HL,$C630                        ;[B0B0] 21 30 C6
+                    LD      DE,$1908                        ;[B0B3] 11 08 19
+                    LD      B,$10                           ;[B0B6] 06 10
+                    CALL    WRITE_VRAM16                    ;[B0B8] CD 14 B4
+                    LD      HL,$C640                        ;[B0BB] 21 40 C6
+                    LD      DE,$1948                        ;[B0BE] 11 48 19
+                    LD      B,$10                           ;[B0C1] 06 10
+                    CALL    WRITE_VRAM16                    ;[B0C3] CD 14 B4
+                    LD      HL,$C650                        ;[B0C6] 21 50 C6
+                    LD      DE,$1988                        ;[B0C9] 11 88 19
+                    LD      B,$10                           ;[B0CC] 06 10
+                    CALL    WRITE_VRAM16                    ;[B0CE] CD 14 B4
+                    LD      HL,$B4F8                        ;[B0D1] 21 F8 B4
+                    LD      DE,$19C8                        ;[B0D4] 11 C8 19
+                    LD      B,$10                           ;[B0D7] 06 10
+                    CALL    WRITE_VRAM16                    ;[B0D9] CD 14 B4
+                    LD      D,$0F                           ;[B0DC] 16 0F
+CHECK_BRAKE:
+                    LD      A,($C60C)                       ;[B0DE] 3A 0C C6
+                    OR      A                               ;[B0E1] B7
+                    JR      Z,SKIP_CHECK_BRAKE              ;[B0E2] 28 03
+                    LD      D,$0A                           ;[B0E4] 16 0A
+                    XOR     A                               ;[B0E6] AF
+SKIP_CHECK_BRAKE:
+                    LD      A,($C607)                       ;[B0E7] 3A 07 C6
+                    LD      B,A                             ;[B0EA] 47
+                    LD      A,($C607)                       ;[B0EB] 3A 07 C6
+                    CP      $70                             ;[B0EE] FE 70
+                    JR      C,SPR_OK                        ;[B0F0] 38 04
+                    LD      B,$70                           ;[B0F2] 06 70
+                    LD      D,$08                           ;[B0F4] 16 08
+SPR_OK:
+                    LD      A,B                             ;[B0F6] 78
+                    LD      ($C60F),A                       ;[B0F7] 32 0F C6
+                    LD      A,D                             ;[B0FA] 7A
+                    LD      ($C612),A                       ;[B0FB] 32 12 C6
+                    LD      HL,$C60F                        ;[B0FE] 21 0F C6
+                    LD      DE,$1B00                        ;[B101] 11 00 1B
+                    LD      B,$04                           ;[B104] 06 04
+                    CALL    WRITE_VRAM16                    ;[B106] CD 14 B4
+                    LD      HL,$B50B                        ;[B109] 21 0B B5
+                    LD      A,$20                           ;[B10C] 3E 20
+                    LD      (HL),A                          ;[B10E] 77
+                    INC     HL                              ;[B10F] 23
+                    LD      (HL),A                          ;[B110] 77
+                    INC     HL                              ;[B111] 23
+                    LD      (HL),A                          ;[B112] 77
+                    LD      HL,$B50B                        ;[B113] 21 0B B5
+                    LD      A,($C602)                       ;[B116] 3A 02 C6
+                    OR      A                               ;[B119] B7
+                    JR      Z,SKIP_SPEED_METER              ;[B11A] 28 07
+                    LD      B,A                             ;[B11C] 47
+                    LD      A,$85                           ;[B11D] 3E 85
+SPEED_METER_LOOP:
+                    LD      (HL),A                          ;[B11F] 77
+                    INC     HL                              ;[B120] 23
+                    DJNZ    SPEED_METER_LOOP                ;[B121] 10 FC
+SKIP_SPEED_METER:
+                    LD      HL,$B508                        ;[B123] 21 08 B5
+                    LD      DE,$1828                        ;[B126] 11 28 18
+                    LD      B,$06                           ;[B129] 06 06
+                    CALL    WRITE_VRAM16                    ;[B12B] CD 14 B4
+                    XOR     A                               ;[B12E] AF
+                    LD      ($C618),A                       ;[B12F] 32 18 C6
+SKIP_REDRAW:
+                    LD      A,($C607)                       ;[B132] 3A 07 C6
+                    CP      $70                             ;[B135] FE 70
+                    JR      NC,SET_GAMEOVER                 ;[B137] 30 11
+                    LD      HL,($C620)                      ;[B139] 2A 20 C6
+                    LD      A,H                             ;[B13C] 7C
+                    SUB     $02                             ;[B13D] D6 02
+                    JR      Z,SET_GOAL                      ;[B13F] 28 02
+                    JR      MY_TIMI_END                     ;[B141] 18 17
+SET_GOAL:
+                    LD      A,$02                           ;[B143] 3E 02
+                    LD      ($C613),A                       ;[B145] 32 13 C6
+                    JR      RESTORE_HTIMI                   ;[B148] 18 05
+SET_GAMEOVER:
+                    LD      A,$01                           ;[B14A] 3E 01
+                    LD      ($C613),A                       ;[B14C] 32 13 C6
+RESTORE_HTIMI:
+                    LD      HL,$B19F                        ;[B14F] 21 9F B1
+                    LD      DE,$FD9F                        ;[B152] 11 9F FD
+                    LD      BC,$0005                        ;[B155] 01 05 00
+                    LDIR                                    ;[B158] ED B0
+MY_TIMI_END:
+                    POP     HL                              ;[B15A] E1
+                    POP     DE                              ;[B15B] D1
+                    POP     BC                              ;[B15C] C1
+                    POP     AF                              ;[B15D] F1
+                    XOR     A                               ;[B15E] AF
+                    LD      ($C619),A                       ;[B15F] 32 19 C6
+                    EI                                      ;[B162] FB
+                    JP      H_TIMI_OLD                      ;[B163] C3 9F B1
+MAIN:
+                    LD      A,($C613)                       ;[B166] 3A 13 C6
+                    OR      A                               ;[B169] B7
+                    RET     NZ                              ;[B16A] C0
+                    LD      A,$01                           ;[B16B] 3E 01
+                    LD      ($C619),A                       ;[B16D] 32 19 C6
+VSYNC_WAIT:
+                    LD      A,($C619)                       ;[B170] 3A 19 C6
+                    OR      A                               ;[B173] B7
+                    JR      NZ,VSYNC_WAIT                   ;[B174] 20 FA
+MAIN_NORMAL:
+                    CALL    UPDATE_SPEED                    ;[B176] CD A4 B1
+JUDGE_SCROLL:
+                    LD      A,($C603)                       ;[B179] 3A 03 C6
+                    OR      A                               ;[B17C] B7
+                    JR      Z,MAIN_END                      ;[B17D] 28 17
+                    LD      HL,$C600                        ;[B17F] 21 00 C6
+                    INC     (HL)                            ;[B182] 34
+                    LD      A,(HL)                          ;[B183] 7E
+                    LD      B,A                             ;[B184] 47
+                    LD      A,($C603)                       ;[B185] 3A 03 C6
+                    CP      B                               ;[B188] B8
+                    JR      NC,MAIN_END                     ;[B189] 30 0B
+                    LD      A,B                             ;[B18B] 78
+                    LD      HL,$C603                        ;[B18C] 21 03 C6
+                    SUB     (HL)                            ;[B18F] 96
+                    LD      ($C600),A                       ;[B190] 32 00 C6
+                    CALL    SCROLL_PROC                     ;[B193] CD BA B3
+MAIN_END:
+                    CALL    UPDATE_JUMP                     ;[B196] CD 4D B2
+                    CALL    UPDATE_PHYSICS                  ;[B199] CD 8D B2
+                    JP      MAIN                            ;[B19C] C3 66 B1
+H_TIMI_OLD:
+                    NOP                                     ;[B19F] 00
+                    NOP                                     ;[B1A0] 00
+                    NOP                                     ;[B1A1] 00
+                    NOP                                     ;[B1A2] 00
+                    NOP                                     ;[B1A3] 00
+UPDATE_SPEED:
+                    LD      A,$08                           ;[B1A4] 3E 08
+                    OUT     ($AA),A                         ;[B1A6] D3 AA
+                    IN      A,($A9)                         ;[B1A8] DB A9
+                    CPL                                     ;[B1AA] 2F
+                    LD      B,A                             ;[B1AB] 47
+                    AND     $10                             ;[B1AC] E6 10
+                    JR      NZ,BRAKE_SPEED                  ;[B1AE] 20 07
+                    LD      A,B                             ;[B1B0] 78
+                    AND     $80                             ;[B1B1] E6 80
+                    JR      Z,SPD_CR_OFF                    ;[B1B3] 28 49
+                    JR      SPD_CR_ON                       ;[B1B5] 18 10
+BRAKE_SPEED:
+                    XOR     A                               ;[B1B7] AF
+                    LD      ($C602),A                       ;[B1B8] 32 02 C6
+                    LD      ($C603),A                       ;[B1BB] 32 03 C6
+                    LD      ($C614),A                       ;[B1BE] 32 14 C6
+                    LD      A,$01                           ;[B1C1] 3E 01
+                    LD      ($C60C),A                       ;[B1C3] 32 0C C6
+                    RET                                     ;[B1C6] C9
+
+SPD_CR_ON:
+                    XOR     A                               ;[B1C7] AF
+                    LD      ($C60C),A                       ;[B1C8] 32 0C C6
+                    LD      A,($C614)                       ;[B1CB] 3A 14 C6
+                    OR      A                               ;[B1CE] B7
+                    JR      NZ,SPD_CR_COUNT                 ;[B1CF] 20 0B
+                    XOR     A                               ;[B1D1] AF
+                    LD      ($C606),A                       ;[B1D2] 32 06 C6
+                    LD      A,$01                           ;[B1D5] 3E 01
+                    LD      ($C602),A                       ;[B1D7] 32 02 C6
+                    JR      SPD_CR_SETPREV                  ;[B1DA] 18 1B
+SPD_CR_COUNT:
+                    LD      HL,$C606                        ;[B1DC] 21 06 C6
+                    INC     (HL)                            ;[B1DF] 34
+                    LD      A,(HL)                          ;[B1E0] 7E
+                    SUB     $1E                             ;[B1E1] D6 1E
+                    JR      C,SPD_CR_SETPREV                ;[B1E3] 38 12
+                    XOR     A                               ;[B1E5] AF
+                    LD      ($C606),A                       ;[B1E6] 32 06 C6
+                    LD      A,($C602)                       ;[B1E9] 3A 02 C6
+                    SUB     $03                             ;[B1EC] D6 03
+                    JR      NC,SPD_CR_SETPREV               ;[B1EE] 30 07
+                    LD      A,($C602)                       ;[B1F0] 3A 02 C6
+                    INC     A                               ;[B1F3] 3C
+                    LD      ($C602),A                       ;[B1F4] 32 02 C6
+SPD_CR_SETPREV:
+                    LD      A,$01                           ;[B1F7] 3E 01
+                    LD      ($C614),A                       ;[B1F9] 32 14 C6
+                    JR      SPD_APPLY                       ;[B1FC] 18 30
+SPD_CR_OFF:
+                    LD      A,($C614)                       ;[B1FE] 3A 14 C6
+                    OR      A                               ;[B201] B7
+                    JR      Z,SPD_OFF_COUNT                 ;[B202] 28 13
+                    XOR     A                               ;[B204] AF
+                    LD      ($C614),A                       ;[B205] 32 14 C6
+                    LD      ($C606),A                       ;[B208] 32 06 C6
+                    LD      A,($C602)                       ;[B20B] 3A 02 C6
+                    OR      A                               ;[B20E] B7
+                    JR      Z,SPD_APPLY                     ;[B20F] 28 1D
+                    DEC     A                               ;[B211] 3D
+                    LD      ($C602),A                       ;[B212] 32 02 C6
+                    JR      SPD_APPLY                       ;[B215] 18 17
+SPD_OFF_COUNT:
+                    LD      HL,$C606                        ;[B217] 21 06 C6
+                    INC     (HL)                            ;[B21A] 34
+                    LD      A,(HL)                          ;[B21B] 7E
+                    SUB     $1E                             ;[B21C] D6 1E
+                    JR      C,SPD_APPLY                     ;[B21E] 38 0E
+                    XOR     A                               ;[B220] AF
+                    LD      ($C606),A                       ;[B221] 32 06 C6
+                    LD      A,($C602)                       ;[B224] 3A 02 C6
+                    OR      A                               ;[B227] B7
+                    JR      Z,SPD_APPLY                     ;[B228] 28 04
+                    DEC     A                               ;[B22A] 3D
+                    LD      ($C602),A                       ;[B22B] 32 02 C6
+SPD_APPLY:
+                    LD      A,($C602)                       ;[B22E] 3A 02 C6
+                    OR      A                               ;[B231] B7
+                    JR      Z,SPD_STOP                      ;[B232] 28 14
+                    SUB     $01                             ;[B234] D6 01
+                    JR      NZ,SPD_CHK2                     ;[B236] 20 04
+                    LD      A,$1E                           ;[B238] 3E 1E
+                    JR      SPD_SET                         ;[B23A] 18 0D
+SPD_CHK2:
+                    SUB     $01                             ;[B23C] D6 01
+                    JR      NZ,SPD_HIGH                     ;[B23E] 20 04
+                    LD      A,$14                           ;[B240] 3E 14
+                    JR      SPD_SET                         ;[B242] 18 05
+SPD_HIGH:
+                    LD      A,$0A                           ;[B244] 3E 0A
+                    JR      SPD_SET                         ;[B246] 18 01
+SPD_STOP:
+                    XOR     A                               ;[B248] AF
+SPD_SET:
+                    LD      ($C603),A                       ;[B249] 32 03 C6
+                    RET                                     ;[B24C] C9
+
+UPDATE_JUMP:
+                    LD      A,$08                           ;[B24D] 3E 08
+                    OUT     ($AA),A                         ;[B24F] D3 AA
+                    IN      A,($A9)                         ;[B251] DB A9
+                    CPL                                     ;[B253] 2F
+                    AND     $01                             ;[B254] E6 01
+                    JR      Z,JUMP_BTN_OFF                  ;[B256] 28 30
+                    LD      A,($C60E)                       ;[B258] 3A 0E C6
+                    OR      A                               ;[B25B] B7
+                    RET     NZ                              ;[B25C] C0
+                    LD      A,($C60A)                       ;[B25D] 3A 0A C6
+                    OR      A                               ;[B260] B7
+                    RET     Z                               ;[B261] C8
+                    LD      A,$01                           ;[B262] 3E 01
+                    LD      ($C60E),A                       ;[B264] 32 0E C6
+                    XOR     A                               ;[B267] AF
+                    LD      ($C608),A                       ;[B268] 32 08 C6
+                    LD      ($C60A),A                       ;[B26B] 32 0A C6
+                    LD      A,($C603)                       ;[B26E] 3A 03 C6
+                    OR      A                               ;[B271] B7
+                    JR      Z,JUMP_NO_SCROLL                ;[B272] 28 04
+                    DEC     A                               ;[B274] 3D
+                    LD      ($C600),A                       ;[B275] 32 00 C6
+JUMP_NO_SCROLL:
+                    LD      A,$D0                           ;[B278] 3E D0
+                    ADD     $2D                             ;[B27A] C6 2D
+                    LD      ($C609),A                       ;[B27C] 32 09 C6
+                    LD      A,($C607)                       ;[B27F] 3A 07 C6
+                    SUB     $18                             ;[B282] D6 18
+                    LD      ($C60D),A                       ;[B284] 32 0D C6
+                    RET                                     ;[B287] C9
+
+JUMP_BTN_OFF:
+                    XOR     A                               ;[B288] AF
+                    LD      ($C60E),A                       ;[B289] 32 0E C6
+                    RET                                     ;[B28C] C9
+
+UPDATE_PHYSICS:
+                    LD      A,($C607)                       ;[B28D] 3A 07 C6
+                    LD      ($C615),A                       ;[B290] 32 15 C6
+                    LD      A,($C608)                       ;[B293] 3A 08 C6
+                    ADD     $30                             ;[B296] C6 30
+                    LD      ($C608),A                       ;[B298] 32 08 C6
+                    LD      A,($C609)                       ;[B29B] 3A 09 C6
+                    ADC     $00                             ;[B29E] CE 00
+                    LD      ($C609),A                       ;[B2A0] 32 09 C6
+APPLY_Y:
+                    LD      B,A                             ;[B2A3] 47
+                    LD      A,($C607)                       ;[B2A4] 3A 07 C6
+                    ADD     B                               ;[B2A7] 80
+                    LD      ($C607),A                       ;[B2A8] 32 07 C6
+                    LD      A,$01                           ;[B2AB] 3E 01
+                    LD      ($C618),A                       ;[B2AD] 32 18 C6
+                    LD      A,($C609)                       ;[B2B0] 3A 09 C6
+                    BIT     7,A                             ;[B2B3] CB 7F
+                    JR      Z,AFTER_CLAMP                   ;[B2B5] 28 19
+                    LD      A,($C607)                       ;[B2B7] 3A 07 C6
+                    LD      B,A                             ;[B2BA] 47
+                    LD      A,($C60D)                       ;[B2BB] 3A 0D C6
+                    CP      B                               ;[B2BE] B8
+                    JR      C,AFTER_CLAMP                   ;[B2BF] 38 0F
+                    LD      A,($C60D)                       ;[B2C1] 3A 0D C6
+                    LD      ($C607),A                       ;[B2C4] 32 07 C6
+                    LD      A,$30                           ;[B2C7] 3E 30
+                    LD      ($C608),A                       ;[B2C9] 32 08 C6
+                    XOR     A                               ;[B2CC] AF
+                    LD      ($C609),A                       ;[B2CD] 32 09 C6
+AFTER_CLAMP:
+                    CALL    CHECK_COLL                      ;[B2D0] CD F3 B2
+                    LD      A,($C616)                       ;[B2D3] 3A 16 C6
+                    OR      A                               ;[B2D6] B7
+                    JR      Z,PHYS_CHK_UP                   ;[B2D7] 28 0D
+                    LD      A,$01                           ;[B2D9] 3E 01
+                    LD      ($C60A),A                       ;[B2DB] 32 0A C6
+                    XOR     A                               ;[B2DE] AF
+                    LD      ($C608),A                       ;[B2DF] 32 08 C6
+                    LD      ($C609),A                       ;[B2E2] 32 09 C6
+                    RET                                     ;[B2E5] C9
+
+PHYS_CHK_UP:
+                    LD      A,($C617)                       ;[B2E6] 3A 17 C6
+                    OR      A                               ;[B2E9] B7
+                    RET     Z                               ;[B2EA] C8
+                    XOR     A                               ;[B2EB] AF
+                    LD      ($C608),A                       ;[B2EC] 32 08 C6
+                    LD      ($C609),A                       ;[B2EF] 32 09 C6
+                    RET                                     ;[B2F2] C9
+
+CHECK_COLL:
+                    XOR     A                               ;[B2F3] AF
+                    LD      ($C616),A                       ;[B2F4] 32 16 C6
+                    LD      ($C617),A                       ;[B2F7] 32 17 C6
+                    LD      A,($C60A)                       ;[B2FA] 3A 0A C6
+                    OR      A                               ;[B2FD] B7
+                    JR      NZ,CC_DO_FOOT                   ;[B2FE] 20 13
+                    LD      A,($C609)                       ;[B300] 3A 09 C6
+                    BIT     7,A                             ;[B303] CB 7F
+                    JR      NZ,CC_SKIP_FOOT                 ;[B305] 20 6E
+                    LD      A,($C607)                       ;[B307] 3A 07 C6
+                    LD      C,A                             ;[B30A] 4F
+                    LD      A,($C60D)                       ;[B30B] 3A 0D C6
+                    CP      C                               ;[B30E] B9
+                    JR      C,CC_DO_FOOT                    ;[B30F] 38 02
+                    JR      CC_SKIP_FOOT                    ;[B311] 18 62
+CC_DO_FOOT:
+                    XOR     A                               ;[B313] AF
+                    LD      ($C60A),A                       ;[B314] 32 0A C6
+                    LD      A,($C60B)                       ;[B317] 3A 0B C6
+                    OR      A                               ;[B31A] B7
+                    JR      Z,CC_DO_FOOT_EXEC               ;[B31B] 28 06
+                    XOR     A                               ;[B31D] AF
+                    LD      ($C60B),A                       ;[B31E] 32 0B C6
+                    JR      CC_SKIP_FOOT                    ;[B321] 18 52
+CC_DO_FOOT_EXEC:
+                    LD      A,($C607)                       ;[B323] 3A 07 C6
+                    ADD     $08                             ;[B326] C6 08
+                    SRL     A                               ;[B328] CB 3F
+                    SRL     A                               ;[B32A] CB 3F
+                    SRL     A                               ;[B32C] CB 3F
+                    LD      C,A                             ;[B32E] 4F
+                    LD      A,C                             ;[B32F] 79
+                    CP      $0C                             ;[B330] FE 0C
+                    JR      NZ,CC_FOOT_MID                  ;[B332] 20 10
+                    LD      HL,$C652                        ;[B334] 21 52 C6
+                    LD      A,(HL)                          ;[B337] 7E
+                    CALL    IS_FLOOR_CHAR                   ;[B338] CD AD B3
+                    JR      Z,CC_FOOT_MID                   ;[B33B] 28 07
+                    LD      A,$58                           ;[B33D] 3E 58
+                    LD      ($C607),A                       ;[B33F] 32 07 C6
+                    JR      CC_FOOT_HIT                     ;[B342] 18 28
+CC_FOOT_MID:
+                    LD      A,C                             ;[B344] 79
+                    CP      $0A                             ;[B345] FE 0A
+                    JR      NZ,CC_FOOT_UP                   ;[B347] 20 10
+                    LD      HL,$C642                        ;[B349] 21 42 C6
+                    LD      A,(HL)                          ;[B34C] 7E
+                    CALL    IS_FLOOR_CHAR                   ;[B34D] CD AD B3
+                    JR      Z,CC_FOOT_UP                    ;[B350] 28 07
+                    LD      A,$48                           ;[B352] 3E 48
+                    LD      ($C607),A                       ;[B354] 32 07 C6
+                    JR      CC_FOOT_HIT                     ;[B357] 18 13
+CC_FOOT_UP:
+                    LD      A,C                             ;[B359] 79
+                    CP      $08                             ;[B35A] FE 08
+                    JR      NZ,CC_SKIP_FOOT                 ;[B35C] 20 17
+                    LD      HL,$C632                        ;[B35E] 21 32 C6
+                    LD      A,(HL)                          ;[B361] 7E
+                    CALL    IS_FLOOR_CHAR                   ;[B362] CD AD B3
+                    JR      Z,CC_SKIP_FOOT                  ;[B365] 28 0E
+                    LD      A,$38                           ;[B367] 3E 38
+                    LD      ($C607),A                       ;[B369] 32 07 C6
+CC_FOOT_HIT:
+                    LD      A,$01                           ;[B36C] 3E 01
+                    LD      ($C60A),A                       ;[B36E] 32 0A C6
+                    LD      ($C616),A                       ;[B371] 32 16 C6
+                    RET                                     ;[B374] C9
+
+CC_SKIP_FOOT:
+                    LD      A,($C607)                       ;[B375] 3A 07 C6
+                    SRL     A                               ;[B378] CB 3F
+                    SRL     A                               ;[B37A] CB 3F
+                    SRL     A                               ;[B37C] CB 3F
+                    LD      C,A                             ;[B37E] 4F
+                    CP      $09                             ;[B37F] FE 09
+                    JR      NZ,CC_CEIL_MID                  ;[B381] 20 10
+                    LD      HL,$C642                        ;[B383] 21 42 C6
+                    LD      A,(HL)                          ;[B386] 7E
+                    CALL    IS_FLOOR_CHAR                   ;[B387] CD AD B3
+                    JR      Z,CC_CEIL_MID                   ;[B38A] 28 07
+                    LD      A,$50                           ;[B38C] 3E 50
+                    LD      ($C607),A                       ;[B38E] 32 07 C6
+                    JR      CC_CEIL_HIT                     ;[B391] 18 11
+CC_CEIL_MID:
+                    LD      A,C                             ;[B393] 79
+                    CP      $07                             ;[B394] FE 07
+                    RET     NZ                              ;[B396] C0
+                    LD      HL,$C632                        ;[B397] 21 32 C6
+                    LD      A,(HL)                          ;[B39A] 7E
+                    CALL    IS_FLOOR_CHAR                   ;[B39B] CD AD B3
+                    RET     Z                               ;[B39E] C8
+                    LD      A,$40                           ;[B39F] 3E 40
+                    LD      ($C607),A                       ;[B3A1] 32 07 C6
+CC_CEIL_HIT:
+                    LD      A,$01                           ;[B3A4] 3E 01
+                    LD      ($C617),A                       ;[B3A6] 32 17 C6
+                    LD      ($C60B),A                       ;[B3A9] 32 0B C6
+                    RET                                     ;[B3AC] C9
+
+IS_FLOOR_CHAR:
+                    CP      $28                             ;[B3AD] FE 28
+                    JR      Z,IFC_FOUND                     ;[B3AF] 28 06
+                    CP      $60                             ;[B3B1] FE 60
+                    JR      Z,IFC_FOUND                     ;[B3B3] 28 02
+                    XOR     A                               ;[B3B5] AF
+                    RET                                     ;[B3B6] C9
+
+IFC_FOUND:
+                    OR      $FF                             ;[B3B7] F6 FF
+                    RET                                     ;[B3B9] C9
+
+SCROLL_PROC:
+                    LD      HL,($C620)                      ;[B3BA] 2A 20 C6
+                    INC     HL                              ;[B3BD] 23
+                    LD      ($C620),HL                      ;[B3BE] 22 20 C6
+                    LD      HL,($C604)                      ;[B3C1] 2A 04 C6
+                    INC     HL                              ;[B3C4] 23
+                    LD      ($C604),HL                      ;[B3C5] 22 04 C6
+                    LD      A,L                             ;[B3C8] 7D
+                    SUB     $80                             ;[B3C9] D6 80
+                    JR      C,SET_SCRPOS                    ;[B3CB] 38 06
+                    XOR     A                               ;[B3CD] AF
+                    LD      H,A                             ;[B3CE] 67
+                    LD      L,A                             ;[B3CF] 6F
+                    LD      ($C604),HL                      ;[B3D0] 22 04 C6
+SET_SCRPOS:
+                    LD      HL,$C630                        ;[B3D3] 21 30 C6
+                    CALL    SHIFT_ONE_LINE                  ;[B3D6] CD 08 B4
+                    LD      HL,$C640                        ;[B3D9] 21 40 C6
+                    CALL    SHIFT_ONE_LINE                  ;[B3DC] CD 08 B4
+                    LD      HL,$C650                        ;[B3DF] 21 50 C6
+                    CALL    SHIFT_ONE_LINE                  ;[B3E2] CD 08 B4
+                    LD      HL,($C604)                      ;[B3E5] 2A 04 C6
+                    LD      E,L                             ;[B3E8] 5D
+                    LD      D,H                             ;[B3E9] 54
+                    LD      HL,$C000                        ;[B3EA] 21 00 C0
+                    ADD     HL,DE                           ;[B3ED] 19
+                    LD      A,(HL)                          ;[B3EE] 7E
+                    LD      ($C63F),A                       ;[B3EF] 32 3F C6
+                    LD      HL,$C080                        ;[B3F2] 21 80 C0
+                    ADD     HL,DE                           ;[B3F5] 19
+                    LD      A,(HL)                          ;[B3F6] 7E
+                    LD      ($C64F),A                       ;[B3F7] 32 4F C6
+                    LD      HL,$C100                        ;[B3FA] 21 00 C1
+                    ADD     HL,DE                           ;[B3FD] 19
+                    LD      A,(HL)                          ;[B3FE] 7E
+                    LD      ($C65F),A                       ;[B3FF] 32 5F C6
+                    LD      A,$01                           ;[B402] 3E 01
+                    LD      ($C618),A                       ;[B404] 32 18 C6
+                    RET                                     ;[B407] C9
+
+SHIFT_ONE_LINE:
+                    LD      D,H                             ;[B408] 54
+                    LD      E,L                             ;[B409] 5D
+                    INC     HL                              ;[B40A] 23
+                    LD      BC,$000F                        ;[B40B] 01 0F 00
+                    LDIR                                    ;[B40E] ED B0
+                    LD      A,$20                           ;[B410] 3E 20
+                    LD      (DE),A                          ;[B412] 12
+                    RET                                     ;[B413] C9
+
+WRITE_VRAM16:
+                    LD      A,E                             ;[B414] 7B
+                    OUT     ($99),A                         ;[B415] D3 99
+                    NOP                                     ;[B417] 00
+                    NOP                                     ;[B418] 00
+                    LD      A,D                             ;[B419] 7A
+                    ADD     $40                             ;[B41A] C6 40
+                    OUT     ($99),A                         ;[B41C] D3 99
+                    NOP                                     ;[B41E] 00
+                    NOP                                     ;[B41F] 00
+WRITE_VRAM16_LOOP:
+                    LD      A,(HL)                          ;[B420] 7E
+                    OUT     ($98),A                         ;[B421] D3 98
+                    INC     HL                              ;[B423] 23
+                    DEC     B                               ;[B424] 05
+                    NOP                                     ;[B425] 00
+                    NOP                                     ;[B426] 00
+                    NOP                                     ;[B427] 00
+                    JP      NZ,WRITE_VRAM16_LOOP            ;[B428] C2 20 B4
+                    RET                                     ;[B42B] C9
+
+GEN_COURSE:
+                    XOR     A                               ;[B42C] AF
+                    LD      ($C61A),A                       ;[B42D] 32 1A C6
+                    LD      B,$0A                           ;[B430] 06 0A
+                    CALL    LINE_SEARCH                     ;[B432] CD 02 B0
+                    LD      ($C61D),HL                      ;[B435] 22 1D C6
+                    LD      HL,$C000                        ;[B438] 21 00 C0
+                    LD      ($C61B),HL                      ;[B43B] 22 1B C6
+                    LD      B,$10                           ;[B43E] 06 10
+                    LD      C,$03                           ;[B440] 0E 03
+COURSE_LOOP:
+                    LD      HL,($C61D)                      ;[B442] 2A 1D C6
+                    LD      A,(HL)                          ;[B445] 7E
+                    CALL    CONV_DEC                        ;[B446] CD 8F B4
+                    LD      D,A                             ;[B449] 57
+                    SLA     A                               ;[B44A] CB 27
+                    SLA     A                               ;[B44C] CB 27
+                    SLA     A                               ;[B44E] CB 27
+                    SLA     A                               ;[B450] CB 27
+                    LD      E,A                             ;[B452] 5F
+                    INC     HL                              ;[B453] 23
+                    LD      A,(HL)                          ;[B454] 7E
+                    CALL    CONV_DEC                        ;[B455] CD 8F B4
+                    INC     HL                              ;[B458] 23
+                    OR      E                               ;[B459] B3
+                    LD      E,A                             ;[B45A] 5F
+                    PUSH    HL                              ;[B45B] E5
+                    PUSH    BC                              ;[B45C] C5
+                    LD      HL,($C61B)                      ;[B45D] 2A 1B C6
+                    LD      A,($C61A)                       ;[B460] 3A 1A C6
+                    LD      C,A                             ;[B463] 4F
+                    LD      B,$00                           ;[B464] 06 00
+                    ADD     HL,BC                           ;[B466] 09
+                    LD      A,E                             ;[B467] 7B
+                    CALL    PLOT_COURSE_DATA                ;[B468] CD 9C B4
+                    POP     BC                              ;[B46B] C1
+                    POP     HL                              ;[B46C] E1
+                    LD      HL,($C61D)                      ;[B46D] 2A 1D C6
+                    INC     HL                              ;[B470] 23
+                    INC     HL                              ;[B471] 23
+                    LD      ($C61D),HL                      ;[B472] 22 1D C6
+                    DJNZ    COURSE_LOOP                     ;[B475] 10 CB
+                    DEC     C                               ;[B477] 0D
+                    JR      Z,COURSE_LOOP_END               ;[B478] 28 14
+                    PUSH    BC                              ;[B47A] C5
+                    LD      HL,($C61B)                      ;[B47B] 2A 1B C6
+                    LD      BC,$0080                        ;[B47E] 01 80 00
+                    ADD     HL,BC                           ;[B481] 09
+                    LD      ($C61B),HL                      ;[B482] 22 1B C6
+                    XOR     A                               ;[B485] AF
+                    LD      ($C61A),A                       ;[B486] 32 1A C6
+                    POP     BC                              ;[B489] C1
+                    LD      B,$10                           ;[B48A] 06 10
+                    JR      COURSE_LOOP                     ;[B48C] 18 B4
+COURSE_LOOP_END:
+                    RET                                     ;[B48E] C9
+
+CONV_DEC:
+                    CP      $41                             ;[B48F] FE 41
+                    JR      NC,CD_ALPHABETIC                ;[B491] 30 04
+                    SUB     $30                             ;[B493] D6 30
+                    JR      CONV_DEC_END                    ;[B495] 18 04
+CD_ALPHABETIC:
+                    SUB     $41                             ;[B497] D6 41
+                    ADD     $0A                             ;[B499] C6 0A
+CONV_DEC_END:
+                    RET                                     ;[B49B] C9
+
+PLOT_COURSE_DATA:
+                    PUSH    BC                              ;[B49C] C5
+                    LD      B,$08                           ;[B49D] 06 08
+PCD_LOOP:
+                    OR      A                               ;[B49F] B7
+                    SLA     A                               ;[B4A0] CB 27
+                    LD      E,A                             ;[B4A2] 5F
+                    JR      C,PCD_SET_FLOOR                 ;[B4A3] 38 04
+                    LD      A,$20                           ;[B4A5] 3E 20
+                    JR      PCD_LOOP_NEXT                   ;[B4A7] 18 02
+PCD_SET_FLOOR:
+                    LD      A,$28                           ;[B4A9] 3E 28
+PCD_LOOP_NEXT:
+                    LD      (HL),A                          ;[B4AB] 77
+                    LD      A,($C61A)                       ;[B4AC] 3A 1A C6
+                    INC     A                               ;[B4AF] 3C
+                    LD      ($C61A),A                       ;[B4B0] 32 1A C6
+                    INC     HL                              ;[B4B3] 23
+                    LD      A,E                             ;[B4B4] 7B
+                    DJNZ    PCD_LOOP                        ;[B4B5] 10 E8
+                    POP     BC                              ;[B4B7] C1
+                    RET                                     ;[B4B8] C9
+
+CHAR_GEN:
+                    LD      HL,$B4E6                        ;[B4B9] 21 E6 B4
+                    LD      DE,$0140                        ;[B4BC] 11 40 01
+                    LD      B,$08                           ;[B4BF] 06 08
+                    CALL    WRITE_VRAM16                    ;[B4C1] CD 14 B4
+                    LD      HL,$B4EE                        ;[B4C4] 21 EE B4
+                    LD      DE,$0300                        ;[B4C7] 11 00 03
+                    LD      B,$08                           ;[B4CA] 06 08
+                    CALL    WRITE_VRAM16                    ;[B4CC] CD 14 B4
+                    LD      HL,$B4F6                        ;[B4CF] 21 F6 B4
+                    LD      DE,$2005                        ;[B4D2] 11 05 20
+                    LD      B,$01                           ;[B4D5] 06 01
+                    CALL    WRITE_VRAM16                    ;[B4D7] CD 14 B4
+                    LD      HL,$B4F7                        ;[B4DA] 21 F7 B4
+                    LD      DE,$200C                        ;[B4DD] 11 0C 20
+                    LD      B,$01                           ;[B4E0] 06 01
+                    CALL    WRITE_VRAM16                    ;[B4E2] CD 14 B4
+                    RET                                     ;[B4E5] C9
+
+CHAR_PTN_28H:
+                    XOR     D                               ;[B4E6] AA
+                    LD      D,L                             ;[B4E7] 55
+                    XOR     D                               ;[B4E8] AA
+                    LD      D,L                             ;[B4E9] 55
+                    XOR     D                               ;[B4EA] AA
+                    LD      D,L                             ;[B4EB] 55
+                    XOR     D                               ;[B4EC] AA
+                    LD      D,L                             ;[B4ED] 55
+CHAR_PTN_60H:
+                    DJNZ    $B528                           ;[B4EE] 10 38
+                    JR      C,$B56E                         ;[B4F0] 38 7C
+                    LD      (HL),H                          ;[B4F2] 74
+                    XOR     D                               ;[B4F3] AA
+                    SUB     $AA                             ;[B4F4] D6 AA
+CHAR_COLOR_28H:
+                    INC     L                               ;[B4F6] 2C
+CHAR_COLOR_60H:
+                    AND     H                               ;[B4F7] A4
+CHAR_SPIKE:
+                    LD      H,B                             ;[B4F8] 60
+                    LD      H,B                             ;[B4F9] 60
+                    LD      H,B                             ;[B4FA] 60
+                    LD      H,B                             ;[B4FB] 60
+                    LD      H,B                             ;[B4FC] 60
+                    LD      H,B                             ;[B4FD] 60
+                    LD      H,B                             ;[B4FE] 60
+                    LD      H,B                             ;[B4FF] 60
+                    LD      H,B                             ;[B500] 60
+                    LD      H,B                             ;[B501] 60
+                    LD      H,B                             ;[B502] 60
+                    LD      H,B                             ;[B503] 60
+                    LD      H,B                             ;[B504] 60
+                    LD      H,B                             ;[B505] 60
+                    LD      H,B                             ;[B506] 60
+                    LD      H,B                             ;[B507] 60
+SPEED_METER:
+                    LD      D,E                             ;[B508] 53
+                    LD      D,B                             ;[B509] 50
+                    JR      NZ,$B50C                        ;[B50A] 20 00
+                    NOP                                     ;[B50C] 00
+                    NOP                                     ;[B50D] 00

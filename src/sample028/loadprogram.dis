@@ -1,0 +1,88 @@
+                    DI                                      ;[B000] F3
+                    LD      HL,$050E                        ;[B001] 21 0E 05
+                    LD      ($C508),HL                      ;[B004] 22 08 C5
+                    LD      BC,$1392                        ;[B007] 01 92 13
+                    CALL    LINE_SEARCH                     ;[B00A] CD 65 B8
+                    LD      HL,$B000                        ;[B00D] 21 00 B0
+                    LD      ($C50A),HL                      ;[B010] 22 0A C5
+                    LD      HL,($C504)                      ;[B013] 2A 04 C5
+                    LD      C,(HL)                          ;[B016] 4E
+                    INC     HL                              ;[B017] 23
+                    LD      B,(HL)                          ;[B018] 46
+                    LD      ($C506),BC                      ;[B019] ED 43 06 C5
+                    INC     HL                              ;[B01D] 23
+                    INC     HL                              ;[B01E] 23
+                    INC     HL                              ;[B01F] 23
+                    INC     HL                              ;[B020] 23
+                    INC     HL                              ;[B021] 23
+                    INC     HL                              ;[B022] 23
+                    EX      DE,HL                           ;[B023] EB
+                    OR      A                               ;[B024] B7
+                    EX      DE,HL                           ;[B025] EB
+                    LD      B,$70                           ;[B026] 06 70
+                    LD      A,(HL)                          ;[B028] 7E
+                    CALL    CONV_DEC                        ;[B029] CD 87 B8
+                    LD      D,A                             ;[B02C] 57
+                    SLA     A                               ;[B02D] CB 27
+                    SLA     A                               ;[B02F] CB 27
+                    SLA     A                               ;[B031] CB 27
+                    SLA     A                               ;[B033] CB 27
+                    LD      E,A                             ;[B035] 5F
+                    INC     HL                              ;[B036] 23
+                    LD      A,(HL)                          ;[B037] 7E
+                    CALL    CONV_DEC                        ;[B038] CD 87 B8
+                    OR      E                               ;[B03B] B3
+                    PUSH    HL                              ;[B03C] E5
+                    LD      HL,($C50A)                      ;[B03D] 2A 0A C5
+                    LD      (HL),A                          ;[B040] 77
+                    INC     HL                              ;[B041] 23
+                    LD      ($C50A),HL                      ;[B042] 22 0A C5
+                    LD      HL,($C508)                      ;[B045] 2A 08 C5
+                    DEC     HL                              ;[B048] 2B
+                    LD      A,H                             ;[B049] 7C
+                    OR      A                               ;[B04A] B7
+                    JR      NZ,$B050                        ;[B04B] 20 03
+                    OR      L                               ;[B04D] B5
+                    JR      Z,$B062                         ;[B04E] 28 12
+                    LD      ($C508),HL                      ;[B050] 22 08 C5
+                    POP     HL                              ;[B053] E1
+                    INC     HL                              ;[B054] 23
+                    DJNZ    $B028                           ;[B055] 10 D1
+                    LD      BC,($C506)                      ;[B057] ED 4B 06 C5
+                    LD      H,B                             ;[B05B] 60
+                    LD      L,C                             ;[B05C] 69
+                    LD      ($C504),HL                      ;[B05D] 22 04 C5
+                    JR      $B013                           ;[B060] 18 B1
+                    POP     HL                              ;[B062] E1
+                    EI                                      ;[B063] FB
+                    RET                                     ;[B064] C9
+
+                    LD      HL,$8001                        ;[B065] 21 01 80
+                    LD      ($C500),BC                      ;[B068] ED 43 00 C5
+                    LD      ($C504),HL                      ;[B06C] 22 04 C5
+                    LD      E,(HL)                          ;[B06F] 5E
+                    INC     HL                              ;[B070] 23
+                    LD      D,(HL)                          ;[B071] 56
+                    INC     HL                              ;[B072] 23
+                    LD      A,(HL)                          ;[B073] 7E
+                    LD      C,A                             ;[B074] 4F
+                    INC     HL                              ;[B075] 23
+                    LD      A,(HL)                          ;[B076] 7E
+                    LD      B,A                             ;[B077] 47
+                    LD      HL,($C500)                      ;[B078] 2A 00 C5
+                    SBC     HL,BC                           ;[B07B] ED 42
+                    JR      Z,$B083                         ;[B07D] 28 04
+                    LD      H,D                             ;[B07F] 62
+                    LD      L,E                             ;[B080] 6B
+                    JR      $B06C                           ;[B081] 18 E9
+                    LD      HL,($C504)                      ;[B083] 2A 04 C5
+                    RET                                     ;[B086] C9
+
+                    CP      $41                             ;[B087] FE 41
+                    JR      NC,$B08F                        ;[B089] 30 04
+                    SUB     $30                             ;[B08B] D6 30
+                    JR      $B093                           ;[B08D] 18 04
+                    SUB     $41                             ;[B08F] D6 41
+                    ADD     $0A                             ;[B091] C6 0A
+                    RET                                     ;[B093] C9
+
